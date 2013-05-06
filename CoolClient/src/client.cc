@@ -9,6 +9,7 @@
 #include "torrent.pb.h"
 #include "client.pb.h"
 #include "job_history.pb.h"
+#include "resource_conn.h"
 
 #include <cstdio>
 #include <set>
@@ -29,6 +30,9 @@
 #include <Poco/Net/SocketAcceptor.h>
 #include <Poco/Thread.h>
 #include <Poco/RunnableAdapter.h>
+#include <Poco/UTF8Encoding.h>
+#include <Poco/Windows1252Encoding.h>
+#include <Poco/TextConverter.h>
 
 
 using std::set;
@@ -44,6 +48,7 @@ using Poco::Net::SocketReactor;
 using Poco::Net::SocketAcceptor;
 using Poco::Thread;
 using Poco::RunnableAdapter;
+
 using namespace TrackerProto;
 using namespace ClientProto;
 using namespace JobHistory;
@@ -124,114 +129,42 @@ namespace CoolDown{
 
                 string tracker_ip("127.0.0.1");
                 string tracker_address( format("%s:%d", tracker_ip, (int)CoolClient::TRACKER_PORT) );
-                poco_debug_f1(logger(), "run application with %d", (int)args.size());
+				poco_debug_f1(logger(), "run application with args count :%d", (int)args.size());
+				//init routine threads
                 this->job_info_collector_thread_.setOSPriority( Thread::getMaxOSPriority() );
                 this->job_info_collector_thread_.start( *(new JobInfoCollector) );
-
                 Poco::RunnableAdapter<CoolClient> reportProgressRunnable( *this, &CoolClient::ReportProgressRoutine );
                 this->report_progress_thread_.start( reportProgressRunnable );
 
-                if( args.size() == 1 ){
-                    this->history_file_path_ = "/tmp/download.history";
-                    this->clientid_ = "0123456789012345678901234567890123456789";
-                    if( ERROR_OK != this->LoginTracker(tracker_ip, CoolClient::TRACKER_PORT) ){
-                        poco_warning_f1(logger(), "cannot login tracker : %s", tracker_address);
-                        return Application::EXIT_TEMPFAIL;
-                    }
+				//Resource Server tests
+				{
+					StreamSocket sock;
+					sock.connect(Poco::Net::SocketAddress("115.156.229.166", 9978));
+					poco_trace(logger(), "After connect");
+					vector<Info> output;
+					//string gbstring("ÎÒ²Á");
+					//string utf8string;
+					//Poco::Windows1252Encoding w;
+					//Poco::UTF8Encoding u;
 
-                    this->ReloadJobHistory(this->history_file_path_);
+					//Poco::TextConverter convert(w, u);
+					//convert.convert(gbstring, utf8string);
+					//poco_debug_f1(logger(), "utf8string : %s", utf8string);
+					string utf8string("aksdjfakjsnvjusadnuweianfui");
 
-                    int handle = -1;
-                    Torrent::Torrent torrent;
-                    retcode_t ret = this->ParseTorrent(args[0], &torrent);
-                    if( ret != ERROR_OK ){
-                        return ret;
-                    }
-                    if( this->HasThisTorrent(torrent.torrentid()) ){
+					search(&sock, utf8string, 3, 0, 2, &output);
+					for(int i = 0; i != output.size(); ++i){
+						poco_debug_f1(logger(), "filename : %s", output[i].filename());
+						//string introduction;
+						//check(&sock, output[i].fileid(), &introduction);
+						//poco_debug_f1(logger(), "Introduction : %s", introduction);
+						//string seed_content;
+						//int ret = download(&sock, output[i].fileid(), &seed_content);
+						//poco_debug_f2(logger(), "ret : %d, seed_content : %s", ret, seed_content);
+					}
+				}
 
-                    }else{
-                        FileIdentityInfoList needs;
-                        for(int i = 0; i != torrent.file().size(); ++i){
-                            const Torrent::File& file = torrent.file().Get(i);
-                            needs.push_back(FileIdentityInfoList::value_type(file.relativepath(), file.filename()) );
-                        }
-
-                        ret = this->AddNewDownloadJob( args[0], torrent, needs, "/tmp/", &handle);
-                        poco_debug_f1(logger(), "AddNewJob retcode : %d", (int)ret);
-                        if( ret != ERROR_OK ){
-
-                        }else{
-                            ret = this->StartJob(handle);
-                            poco_debug_f1(logger(), "start_job retcode : %d", (int)ret);
-                            if( ret != ERROR_OK ){
-
-                            }else{
-                                //Thread::sleep(2);
-                                //this->RemoveJob(handle);
-                                jobThreads_.joinAll();
-                                poco_trace(logger(), "all jobThreads_ return.");
-                            }
-                        }
-                    }
-                    this->LogoutTracker(tracker_ip, TRACKER_PORT);
-
-                }else if( args.size() == 2 ){
-                    LOCAL_PORT = 9024;
-                    this->history_file_path_ = "/tmp/upload.history";
-                    if( ERROR_OK != this->LoginTracker(tracker_ip, CoolClient::TRACKER_PORT) ){
-                        poco_warning_f1(logger(), "cannot login tracker : %s", tracker_address);
-                    }
-
-                    retcode_t ret = this->ReloadJobHistory(history_file_path_);
-                    poco_debug_f1(logger(), "ReloadJobHistory return : %d", (int)ret);
-
-                    string resource_path( args[0] );
-                    Path parent( Path(resource_path).parent().toString() );
-                    string top_path( parent.toString() );
-                    string torrent_path( args[1] );
-
-                    ret = this->MakeTorrent(resource_path, torrent_path, 1 << 20, 1, tracker_address);
-                    poco_debug_f1(logger(), "MakeTorrent return : %d", (int)ret);
-
-                    Torrent::Torrent torrent;
-                    ret = this->ParseTorrent(torrent_path, &torrent);
-                    poco_debug_f1(logger(), "ParseTorrent returns %d", (int)ret);
-                    if( ERROR_OK != ret ){
-                        return Application::EXIT_TEMPFAIL;
-                    }
-
-                    int handle;
-                    ret = this->AddNewUploadJob( torrent_path, top_path, torrent, &handle);
-                    poco_debug_f1(logger(), "AddNewUploadJob returns %d", (int)ret);
-
-                    if( ret == ERROR_OK ){
-                        ret = this->ResumeJob(handle);
-                        poco_debug_f1(logger(), "ResumeJob returns %d", (int)ret);
-                    }
-
-                    poco_debug_f1(logger(), "client listen on port : %d", LOCAL_PORT);
-                    ServerSocket svs(LOCAL_PORT);
-                    svs.setReusePort(false);
-
-                    SocketReactor reactor;
-                    SocketAcceptor<ClientConnectionHandler> acceptor(svs, reactor);
-
-
-                    Thread thread;
-                    thread.start(reactor);
-
-                    waitForTerminationRequest();
-
-                    reactor.stop();
-                    thread.join();
-                    this->LogoutTracker(tracker_ip, TRACKER_PORT);
-                }else{
-					Thread::sleep(1);
-                    //poco_notice(logger(), "Usage : \n"
-                    //        "(1)Download File : Client TorrentFile\n" 
-                    //        "(2)Publish File and upload : Client LocalFile TorrentFile");
-					//printf("Invalid args count\n");
-                }
+				poco_debug(logger(), "End application");
                 return Application::EXIT_OK;
             }
 

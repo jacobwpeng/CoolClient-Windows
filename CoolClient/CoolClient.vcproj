@@ -41,11 +41,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)/include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -60,6 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="libprotobuf.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -233,6 +235,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\resource.pb.cc"
+				>
+			</File>
+			<File
+				RelativePath=".\src\resource_conn.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -332,6 +342,14 @@
 			</File>
 			<File
 				RelativePath=".\include\payload_type.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\resource.pb.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\resource_conn.h"
 				>
 			</File>
 			<File
