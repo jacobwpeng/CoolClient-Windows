@@ -10,6 +10,7 @@
 #include "client.pb.h"
 #include "job_history.pb.h"
 #include "resource_conn.h"
+#include "utilities.h"
 
 #include <cstdio>
 #include <set>
@@ -35,12 +36,14 @@
 #include <Poco/TextConverter.h>
 
 
+
 using std::set;
 using std::find;
 using std::ifstream;
 using std::ofstream;
 using Poco::Logger;
 using Poco::Exception;
+
 using Poco::Util::Application;
 using Poco::LocalDateTime;
 using Poco::Net::ServerSocket;
@@ -63,7 +66,7 @@ namespace CoolDown{
             }
 
             CoolClient::CoolClient()
-            :jobThreads_(),
+            :jobThreads_("JobThread"),
             uploadManager_(logger()){
 				
             }
@@ -94,6 +97,7 @@ namespace CoolDown{
                 }
                 catch(Exception& e){
                     poco_error_f1(logger(), "Got exception in initialize : %s", msg);
+					poco_error_f1(logger(), "%s", e.displayText());
                     this->init_error_ = true;
                 }
             }
@@ -126,6 +130,8 @@ namespace CoolDown{
                 if( this->init_error_ ){
                     return Application::EXIT_TEMPFAIL;
                 }
+				//poco_debug_f1(logger(), "%s", ConvertGBKToUtf8("UTF8 String of ascii charactors."));
+				//return Application::EXIT_OK;
 
                 string tracker_ip("127.0.0.1");
                 string tracker_address( format("%s:%d", tracker_ip, (int)CoolClient::TRACKER_PORT) );
@@ -140,31 +146,26 @@ namespace CoolDown{
 				{
 					StreamSocket sock;
 					sock.connect(Poco::Net::SocketAddress("115.156.229.166", 9978));
-					poco_trace(logger(), "After connect");
+					//poco_trace(logger(), "After connect");
 					vector<Info> output;
-					//string gbstring("我擦");
-					//string utf8string;
-					//Poco::Windows1252Encoding w;
-					//Poco::UTF8Encoding u;
+					string keystring("剑侠情缘");
+					int ret = upload(&sock, "this is the content of a seed.", 8, keystring, 
+						"这个游戏好像很好玩啊！", 1 << 30);
 
-					//Poco::TextConverter convert(w, u);
-					//convert.convert(gbstring, utf8string);
-					//poco_debug_f1(logger(), "utf8string : %s", utf8string);
-					string utf8string("aksdjfakjsnvjusadnuweianfui");
-
-					search(&sock, utf8string, 3, 0, 2, &output);
+					search(&sock, keystring, 8, 0, 10, &output);
 					for(int i = 0; i != output.size(); ++i){
-						poco_debug_f1(logger(), "filename : %s", output[i].filename());
-						//string introduction;
-						//check(&sock, output[i].fileid(), &introduction);
-						//poco_debug_f1(logger(), "Introduction : %s", introduction);
-						//string seed_content;
-						//int ret = download(&sock, output[i].fileid(), &seed_content);
-						//poco_debug_f2(logger(), "ret : %d, seed_content : %s", ret, seed_content);
+						printf("%s\n", output.at(i).filename().c_str());
+						poco_debug_f1(logger(), "filename : %s", GBK2UTF8(output.at(i).filename()) );
+						string introduction;
+						check(&sock, output[i].fileid(), &introduction);
+						poco_debug_f1(logger(), "Introduction : %s", GBK2UTF8(introduction) );
+						string seed_content;
+						int ret = download(&sock, output[i].fileid(), &seed_content);
+						poco_debug_f2(logger(), "ret : %d, seed_content : %s", ret, GBK2UTF8(seed_content) );
 					}
 				}
 
-				poco_debug(logger(), "End application");
+				//poco_debug(logger(), "End application");
                 return Application::EXIT_OK;
             }
 
@@ -744,7 +745,7 @@ namespace CoolDown{
                     string tracker_address( pInfo->torrentInfo.tracker_address());
                     BOOST_FOREACH(DownloadInfo::file_bitmap_map_t::value_type& p, pInfo->downloadInfo.bitmap_map){
                         string fileid(p.first);
-                        int percentage = (double)p.second->count() / p.second->size() * 100;
+                        int percentage = static_cast<int>( (double)p.second->count() / p.second->size() * 100 );
                         pInfo->downloadInfo.percentage_map[fileid] = percentage;
                         if( need_to_report ){
                             ProgressInfo oneInfo = { tracker_address, fileid, percentage };

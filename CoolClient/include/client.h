@@ -18,6 +18,7 @@
 #include <Poco/Timer.h>
 #include <Poco/Condition.h>
 #include <Poco/Mutex.h>
+#include <Poco/SharedPtr.h>
 #include <google/protobuf/message.h>
 using google::protobuf::Message;
 
@@ -38,6 +39,7 @@ using Poco::Timer;
 using Poco::TimerCallback;
 using Poco::Condition;
 using Poco::FastMutex;
+using Poco::SharedPtr;
 
 namespace Torrent{
     class Torrent;

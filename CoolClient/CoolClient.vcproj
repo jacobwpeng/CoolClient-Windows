@@ -275,6 +275,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\utilities.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\verification.cc"
 				>
 			</File>
@@ -370,6 +374,10 @@
 			</File>
 			<File
 				RelativePath=".\include\upload_task.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\utilities.h"
 				>
 			</File>
 			<File
