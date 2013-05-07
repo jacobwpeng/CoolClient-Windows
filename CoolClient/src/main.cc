@@ -18,7 +18,7 @@
 //        cerr << e.message() << endl;
 //    }
 //}
-#include "coolclient_luawrapper.h"
+#include "coolclientproxy.h"
 #include <windows.h>
 
 // C 运行时头文件
@@ -130,8 +130,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	}
 
 	XL_LRT_ENV_HANDLE hEnv = XLLRT_GetEnv(NULL);
-	CoolClientLuaWrapper::RegisterClass(hEnv);
-	CoolClientLuaWrapperFactory::RegisterObj(hEnv);
+	//CoolClientLuaWrapper::RegisterClass(hEnv);
+	CoolClientProxy::RegisterObj(hEnv);
 
 
 	if(!LoadMainXAR())

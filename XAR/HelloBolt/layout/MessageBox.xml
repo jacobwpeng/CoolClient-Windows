@@ -1,0 +1,120 @@
+<xlue>
+	<objtreetemplate id="Thunder.MessageBox">
+		<attr>
+			<left>-200</left>
+			<top>-200</top>
+			<width>2000</width>
+			<height>2000</height>
+		</attr>
+		<obj id="root" class="LayoutObject">
+			<attr>
+				<left></left>
+				<top></top>
+				<width>380</width>
+				<height>150</height>
+			</attr>
+			<children>
+			<obj id="bkg" class="TextureObject">
+				<attr>
+					<left></left>
+					<top></top>
+					<width>father.width</width>
+					<height>father.height</height>
+					<texture>texture.common.wndbkg</texture>
+				</attr>
+				<children>
+					<obj id="body" class="TextureObject">
+						<attr>
+							<left>2</left>
+							<top>2</top>
+							<width>father.width - 4</width>
+							<height>father.height - 4</height>
+							<texture>texture.theme.default.bkg</texture>
+						</attr>
+						<children>
+							<obj id="caption" class="CaptionObject">
+								<attr>
+									<width>father.width</width>
+									<height>32</height>
+									<zorder>-1000</zorder>
+								</attr>
+							</obj>
+							<obj id="title" class="TextObject">
+								<attr>
+									<left>5</left>
+									<top>5</top>
+									<width>50</width>
+									<height>12</height>
+									<text>删除</text>
+								</attr>
+							</obj>
+							<obj id="icon" class="ImageObject">
+								<attr>
+									<left>20</left>
+									<top>35</top>
+									<width>52</width>
+									<height>54</height>
+									<image></image>
+								</attr>
+							</obj>
+							<obj id="content" class="TextObject">
+								<attr>
+									<left>90</left>
+									<top>55</top>
+									<width>200</width>
+									<height>24</height>
+									<valign>center</valign>
+								</attr>
+							</obj>
+							<obj id="ok" class="BaseUI.TextureButton">
+								<attr>
+									<left>father.width - 75*2 - 10*2</left>
+									<top>father.height - 27</top>
+									<width>75</width>
+									<height>24</height>
+									<Text>确定</Text>
+								</attr>
+								<eventlist>
+									<event name="OnClick" file="MessageBox.xml.lua" func="OnOKClick" />
+								</eventlist>
+							</obj>
+							<obj id="cancel" class="BaseUI.TextureButton">
+								<attr>
+									<left>father.width - 75 - 10</left>
+									<top>father.height - 27</top>
+									<width>75</width>
+									<height>24</height>
+									<Text>取消</Text>
+								</attr>
+								<eventlist>
+									<event name="OnClick" file="MessageBox.xml.lua" func="OnCancelClick" />
+								</eventlist>
+							</obj>
+						</children>
+						<eventlist>
+							
+						</eventlist>
+					</obj>
+				</children>
+			</obj>
+			</children>
+			<eventlist>
+			</eventlist>
+		</obj>
+	</objtreetemplate>
+	<hostwndtemplate id="Thunder.MessageBox" class="ModalHostWnd" >
+		<attr> 
+			<layered>1</layered>
+			<left>0</left> 
+			<top>0</top>
+			<width>380</width>
+			<height>150</height>
+			<visible>1</visible>
+			<enable>1</enable>
+			<appwindow>0</appwindow>
+		</attr>
+		<eventlist>
+			<event name="OnCreate" file="MessageBox.xml.lua" func="OnCreate" />
+		</eventlist>		
+	</hostwndtemplate>	
+</xlue>

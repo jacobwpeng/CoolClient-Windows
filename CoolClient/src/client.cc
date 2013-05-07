@@ -87,7 +87,7 @@ namespace CoolDown{
                 loadConfiguration();
                 ServerApplication::initialize(self);
 
-				Logger& logger_ = Logger::get("ConsoleLogger");
+				Logger& logger_ = Logger::get("FileLogger");
                 setLogger(logger_);
 				
                 LOCAL_PORT = (unsigned short) config().getInt("client.message_port", 9025);
@@ -142,11 +142,18 @@ namespace CoolDown{
                 if( this->init_error_ ){
                     return Application::EXIT_TEMPFAIL;
                 }
+				poco_notice(logger(), "enter main of CoolClient.");
 				//poco_debug_f1(logger(), "%s", ConvertGBKToUtf8("UTF8 String of ascii charactors."));
 				//return Application::EXIT_OK;
 
                 string tracker_ip("127.0.0.1");
                 string tracker_address( format("%s:%d", tracker_ip, (int)CoolClient::TRACKER_PORT) );
+				string resource_server_ip("115.156.229.166");
+				string resource_server_address( format("%s:%d", resource_server_ip, (int)CoolClient::RESOURCE_SERVER_PORT));
+
+				this->LoginTracker(tracker_ip);
+				this->ConnectResourceServer(resource_server_ip);
+
 				poco_debug_f1(logger(), "run application with args count :%d", (int)args.size());
 				//init routine threads
                 this->job_info_collector_thread_.setOSPriority( Thread::getMaxOSPriority() );
@@ -154,27 +161,39 @@ namespace CoolDown{
                 Poco::RunnableAdapter<CoolClient> reportProgressRunnable( *this, &CoolClient::ReportProgressRoutine );
                 this->report_progress_thread_.start( reportProgressRunnable );
 
+				ServerSocket svs(LOCAL_PORT);
+				svs.setReusePort(false);
+
+				SocketReactor reactor;
+				SocketAcceptor<ClientConnectionHandler> acceptor(svs, reactor);
+
+
+				Thread thread;
+				thread.start(reactor);
+
+				thread.join();
+
 				//Resource Server tests
 				{
-					StreamSocket sock;
-					sock.connect(Poco::Net::SocketAddress("115.156.229.166", 9978));
-					//poco_trace(logger(), "After connect");
-					vector<Info> output;
-					string keystring("剑侠情缘");
-					int ret = upload(&sock, "this is the content of a seed.", 8, keystring, 
-						"这个游戏好像很好玩啊！", 1 << 30);
+					//StreamSocket sock;
+					//sock.connect(Poco::Net::SocketAddress("115.156.229.166", 9978));
+					////poco_trace(logger(), "After connect");
+					//vector<Info> output;
+					//string keystring("英雄无敌");
+					//int ret = upload(&sock, "this is the content of a seed.", 8, keystring, 
+					//	"这个游戏好像很好玩啊！", 1 << 30);
 
-					search(&sock, keystring, 8, 0, 10, &output);
-					for(int i = 0; i != output.size(); ++i){
-						printf("%s\n", output.at(i).filename().c_str());
-						poco_debug_f1(logger(), "filename : %s", GBK2UTF8(output.at(i).filename()) );
-						string introduction;
-						check(&sock, output[i].fileid(), &introduction);
-						poco_debug_f1(logger(), "Introduction : %s", GBK2UTF8(introduction) );
-						string seed_content;
-						int ret = download(&sock, output[i].fileid(), &seed_content);
-						poco_debug_f2(logger(), "ret : %d, seed_content : %s", ret, GBK2UTF8(seed_content) );
-					}
+					//search(&sock, keystring, 8, 0, 10, &output);
+					//for(int i = 0; i != output.size(); ++i){
+					//	printf("%s\n", output.at(i).filename().c_str());
+					//	poco_debug_f1(logger(), "filename : %s", GBK2UTF8(output.at(i).filename()) );
+					//	string introduction;
+					//	check(&sock, output[i].fileid(), &introduction);
+					//	poco_debug_f1(logger(), "Introduction : %s", GBK2UTF8(introduction) );
+					//	string seed_content;
+					//	int ret = download(&sock, output[i].fileid(), &seed_content);
+					//	poco_debug_f2(logger(), "ret : %d, seed_content : %s", ret, GBK2UTF8(seed_content) );
+					//}
 				}
 
 				//poco_debug(logger(), "End application");
@@ -214,6 +233,10 @@ namespace CoolDown{
                 retcode_t ret = handle_reply_message<MessageReply>( sock, msg, PAYLOAD_LOGOUT, &r);
                 return ret;
             }
+
+			retcode_t CoolClient::ConnectResourceServer(const string& resource_server_address, int port /* = RESOURCE_SERVER_PORT */){
+				return this->sockManager_->connect_resource_server(resource_server_address, port);
+			}
 
             retcode_t CoolClient::PublishResourceToTracker(const string& tracker_address, const string& fileid){
                 LocalSockManager::SockPtr sock( sockManager_->get_tracker_sock(tracker_address) );

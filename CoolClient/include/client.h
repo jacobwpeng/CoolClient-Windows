@@ -61,7 +61,7 @@ namespace CoolDown{
 
             typedef LocalSockManager::SockPtr SockPtr; 
 
-			class ClientThread : Poco::Runnable{
+			class ClientThread : public Poco::Runnable{
 			public:
 				ClientThread(CoolClient* pCoolClient);
 				virtual void run();
@@ -76,6 +76,7 @@ namespace CoolDown{
                     CoolClient();
                     enum {
                         TRACKER_PORT = 9977,
+						RESOURCE_SERVER_PORT = 9978,
                     };
                     typedef vector<string> ClientIdCollection;
                     typedef vector<File> FileList;
@@ -94,6 +95,7 @@ namespace CoolDown{
                     //communicate with tracker
                     retcode_t LoginTracker(const string& tracker_address, int port = TRACKER_PORT);
                     retcode_t LogoutTracker(const string& tracker_address, int port = TRACKER_PORT);
+					retcode_t ConnectResourceServer(const string& resource_server_address, int port = RESOURCE_SERVER_PORT);
                     retcode_t PublishResourceToTracker(const string& tracker_address, const string& fileid);
                     retcode_t ReportProgress(const string& tracker_address, const string& fileid, int percentage);
                     retcode_t RequestClients(const string& tracker_address, const string& fileid, int currentPercentage, 

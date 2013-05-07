@@ -67,6 +67,8 @@ namespace CoolDown{
 
             retcode_t connect_tracker(const string& tracker_address, int port = 9977);
             retcode_t logout_tracker(const string& tracker_address, int port = 9977);
+			retcode_t connect_resource_server(const string& resource_server_address, int port = 9978);
+
             retcode_t connect_client(const string& clientid, const string& ip, int port);
             retcode_t close_connection_to_tracker(const string& tracker_address);
             bool reach_connection_limit(const string& clientid);
@@ -75,6 +77,7 @@ namespace CoolDown{
             
             //SockPtr get_sock(const string& clientid);
             SockPtr get_tracker_sock(const string& tracker_address);
+			SockPtr get_resource_server_sock();
             SockPtr get_idle_client_sock(const string& clientid);
             void return_sock(const string& clientid, SockPtr sock);
             ConditionPtr get_sock_idel_condition(const string& clientid);
@@ -107,6 +110,7 @@ namespace CoolDown{
             
             const static size_t MAX_CONNECTION_PER_CLIENT = 10;
             server_sock_map_t server_sock_map_;
+			SockPtr resource_server_sock_;
             client_sock_map_t client_sock_map_;
             Logger& logger_;
             FastMutex server_sock_map_mutex_;

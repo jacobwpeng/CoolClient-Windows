@@ -1,0 +1,89 @@
+[2013-5-7 15:51:19,093][Threadid:7] FileLogger: [Notice] enter main of CoolClient.
+[2013-5-7 15:51:19,109][Threadid:7] FileLogger: [Debug] run application with args count :0
+[2013-5-7 15:53:05,625][Threadid:7] FileLogger: [Notice] enter main of CoolClient.
+[2013-5-7 15:53:05,656][Threadid:7] FileLogger: [Debug] run application with args count :0
+[2013-5-7 15:55:43,703][Threadid:7] FileLogger: [Notice] enter main of CoolClient.
+[2013-5-7 15:55:43,718][Threadid:7] FileLogger: [Debug] run application with args count :0
+[2013-5-7 15:57:09,046][Threadid:7] FileLogger: [Notice] enter main of CoolClient.
+[2013-5-7 15:57:09,093][Threadid:7] FileLogger: [Debug] run application with args count :0
+[2013-5-7 17:03:37,500][Threadid:7] FileLogger: [Notice] enter main of CoolClient.
+[2013-5-7 17:03:37,656][Threadid:7] FileLogger: [Debug] connect to tracker succeed, key : 127.0.0.1:9977
+[2013-5-7 17:03:37,750][Threadid:7] FileLogger: [Information] pack to send : 
+type : 10000
+name : TrackerProto.Login
+length : 45
+payload : 
+(4f1204131b59f814df90d49a14e431b2d142fd47ÁF
+[2013-5-7 17:03:37,765][Threadid:7] FileLogger: [Debug] headerLength to '127.0.0.1:9977' is '25', local addr : 127.0.0.1:10890
+[2013-5-7 17:03:37,781][Threadid:7] FileLogger: [Debug] NetPack::sendHeaderLength returns 0, local addr : 127.0.0.1:10890
+[2013-5-7 17:03:37,796][Threadid:7] FileLogger: [Debug] while send header : 25 bytes send.
+[2013-5-7 17:03:37,828][Threadid:7] FileLogger: [Debug] while send payload : 45 bytes send.
+[2013-5-7 17:03:37,843][Threadid:7] FileLogger: [Debug] send payload succeed!
+[2013-5-7 17:03:38,093][Threadid:7] FileLogger: [Debug] headerLength from '127.0.0.1:9977' is '33', local addr : 127.0.0.1:10890
+[2013-5-7 17:03:38,125][Threadid:7] FileLogger: [Debug] NetPack::receiveHeaderLength returns 0, local addr : 127.0.0.1:10890
+[2013-5-7 17:03:38,140][Threadid:7] FileLogger: [Debug] assert passed at file : e:\repos\coolclient-windows\coolclient\src\netpack.cc, line : [ERRFMT]
+[2013-5-7 17:03:38,156][Threadid:7] FileLogger: [Debug] HeaderLength 33
+[2013-5-7 17:03:38,187][Threadid:7] FileLogger: [Debug] while receive header : 33 bytes received.
+[2013-5-7 17:03:38,203][Threadid:7] FileLogger: [Debug] while receive payload : 2 bytes received.
+[2013-5-7 17:03:38,218][Threadid:7] FileLogger: [Debug] receive payload succeed!
+[2013-5-7 17:03:39,187][Threadid:7] FileLogger: [Warning] Cannot connect to Resource server, addr : 115.156.229.166, port :¡¡9978
+[2013-5-7 17:03:39,250][Threadid:7] FileLogger: [Debug] run application with args count :0
+[2013-5-7 19:44:15,375][Threadid:7] FileLogger: [Notice] enter main of CoolClient.
+[2013-5-7 19:44:16,625][Threadid:7] FileLogger: [Warning] Cannot connect to tracker, address : 127.0.0.1, port : 9977.
+[2013-5-7 19:44:16,718][Threadid:7] FileLogger: [Warning] Cannot connect tracker, ret : [ERRFMT], addr : 127.0.0.1, port : 9977.
+[2013-5-7 19:44:16,796][Threadid:7] FileLogger: [Debug] run application with args count :0
+[2013-5-7 19:45:24,421][Threadid:7] FileLogger: [Notice] enter main of CoolClient.
+[2013-5-7 19:45:25,437][Threadid:7] FileLogger: [Warning] Cannot connect to tracker, address : 127.0.0.1, port : 9977.
+[2013-5-7 19:45:25,453][Threadid:7] FileLogger: [Warning] Cannot connect tracker, ret : [ERRFMT], addr : 127.0.0.1, port : 9977.
+[2013-5-7 19:45:25,468][Threadid:7] FileLogger: [Debug] run application with args count :0
+[2013-5-7 19:47:19,312][Threadid:7] FileLogger: [Notice] enter main of CoolClient.
+[2013-5-7 19:47:20,406][Threadid:7] FileLogger: [Warning] Cannot connect to tracker, address : 127.0.0.1, port : 9977.
+[2013-5-7 19:47:20,421][Threadid:7] FileLogger: [Warning] Cannot connect tracker, ret : [ERRFMT], addr : 127.0.0.1, port : 9977.
+[2013-5-7 19:47:20,437][Threadid:7] FileLogger: [Debug] run application with args count :0
+[2013-5-7 19:47:30,515][Threadid:0] FileLogger: [Notice] Call TestTable with argument not function.
+[2013-5-7 19:49:39,171][Threadid:7] FileLogger: [Notice] enter main of CoolClient.
+[2013-5-7 19:49:40,109][Threadid:7] FileLogger: [Warning] Cannot connect to tracker, address : 127.0.0.1, port : 9977.
+[2013-5-7 19:49:40,156][Threadid:7] FileLogger: [Warning] Cannot connect tracker, ret : [ERRFMT], addr : 127.0.0.1, port : 9977.
+[2013-5-7 19:49:40,171][Threadid:7] FileLogger: [Debug] run application with args count :0
+[2013-5-7 19:49:41,468][Threadid:0] FileLogger: [Notice] Call TestTable with argument type : userdata
+[2013-5-7 19:51:42,437][Threadid:7] FileLogger: [Notice] enter main of CoolClient.
+[2013-5-7 19:51:43,531][Threadid:7] FileLogger: [Warning] Cannot connect to tracker, address : 127.0.0.1, port : 9977.
+[2013-5-7 19:51:43,546][Threadid:7] FileLogger: [Warning] Cannot connect tracker, ret : [ERRFMT], addr : 127.0.0.1, port : 9977.
+[2013-5-7 19:51:43,578][Threadid:7] FileLogger: [Debug] run application with args count :0
+[2013-5-7 19:51:49,296][Threadid:0] FileLogger: [Notice] Call TestTable with argument type : userdata
+[2013-5-7 19:53:48,453][Threadid:7] FileLogger: [Notice] enter main of CoolClient.
+[2013-5-7 19:53:49,468][Threadid:7] FileLogger: [Warning] Cannot connect to tracker, address : 127.0.0.1, port : 9977.
+[2013-5-7 19:53:49,484][Threadid:7] FileLogger: [Warning] Cannot connect tracker, ret : [ERRFMT], addr : 127.0.0.1, port : 9977.
+[2013-5-7 19:53:49,500][Threadid:7] FileLogger: [Debug] run application with args count :0
+[2013-5-7 19:53:50,281][Threadid:0] FileLogger: [Notice] Call TestTable with argument type : userdata
+[2013-5-7 19:57:42,421][Threadid:7] FileLogger: [Notice] enter main of CoolClient.
+[2013-5-7 19:57:43,437][Threadid:7] FileLogger: [Warning] Cannot connect to tracker, address : 127.0.0.1, port : 9977.
+[2013-5-7 19:57:43,453][Threadid:7] FileLogger: [Warning] Cannot connect tracker, ret : [ERRFMT], addr : 127.0.0.1, port : 9977.
+[2013-5-7 19:57:43,468][Threadid:7] FileLogger: [Debug] run application with args count :0
+[2013-5-7 19:57:44,281][Threadid:0] FileLogger: [Notice] lua state index 0 is nil
+[2013-5-7 19:57:44,328][Threadid:0] FileLogger: [Notice] lua state index 1 is userdata
+[2013-5-7 19:57:44,406][Threadid:0] FileLogger: [Notice] lua state index 2 is function
+[2013-5-7 20:13:52,078][Threadid:7] FileLogger: [Notice] enter main of CoolClient.
+[2013-5-7 20:13:53,171][Threadid:7] FileLogger: [Warning] Cannot connect to tracker, address : 127.0.0.1, port : 9977.
+[2013-5-7 20:13:53,203][Threadid:7] FileLogger: [Warning] Cannot connect tracker, ret : [ERRFMT], addr : 127.0.0.1, port : 9977.
+[2013-5-7 20:13:53,468][Threadid:0] FileLogger: [Notice] lua state index 0 is nil
+[2013-5-7 20:13:53,609][Threadid:0] FileLogger: [Notice] lua state index 1 is userdata
+[2013-5-7 20:13:53,625][Threadid:0] FileLogger: [Notice] lua state index 2 is function
+[2013-5-7 20:13:54,187][Threadid:7] FileLogger: [Warning] Cannot connect to Resource server, addr : 115.156.229.166, port :¡¡9978
+[2013-5-7 20:13:54,218][Threadid:7] FileLogger: [Debug] run application with args count :0
+[2013-5-7 20:16:22,140][Threadid:7] FileLogger: [Notice] enter main of CoolClient.
+[2013-5-7 20:16:23,156][Threadid:7] FileLogger: [Warning] Cannot connect to tracker, address : 127.0.0.1, port : 9977.
+[2013-5-7 20:16:23,187][Threadid:7] FileLogger: [Warning] Cannot connect tracker, ret : [ERRFMT], addr : 127.0.0.1, port : 9977.
+[2013-5-7 20:16:24,156][Threadid:7] FileLogger: [Warning] Cannot connect to Resource server, addr : 115.156.229.166, port :¡¡9978
+[2013-5-7 20:16:24,203][Threadid:7] FileLogger: [Debug] run application with args count :0
+[2013-5-7 20:16:42,031][Threadid:0] FileLogger: [Notice] lua state index 0 is nil
+[2013-5-7 20:16:42,062][Threadid:0] FileLogger: [Notice] lua state index 1 is userdata
+[2013-5-7 20:16:42,109][Threadid:0] FileLogger: [Notice] lua state index 2 is function
+[2013-5-7 20:17:35,750][Threadid:7] FileLogger: [Notice] enter main of CoolClient.
+[2013-5-7 20:17:36,875][Threadid:7] FileLogger: [Warning] Cannot connect to tracker, address : 127.0.0.1, port : 9977.
+[2013-5-7 20:17:36,906][Threadid:7] FileLogger: [Warning] Cannot connect tracker, ret : [ERRFMT], addr : 127.0.0.1, port : 9977.
+[2013-5-7 20:17:38,093][Threadid:7] FileLogger: [Warning] Cannot connect to Resource server, addr : 115.156.229.166, port :¡¡9978
+[2013-5-7 20:17:38,125][Threadid:7] FileLogger: [Debug] run application with args count :0
+[2013-5-7 20:18:09,484][Threadid:0] FileLogger: [Notice] lua state index 0 is nil
+[2013-5-7 20:18:09,515][Threadid:0] FileLogger: [Notice] lua state index 1 is userdata
+[2013-5-7 20:18:09,546][Threadid:0] FileLogger: [Notice] lua state index 2 is function

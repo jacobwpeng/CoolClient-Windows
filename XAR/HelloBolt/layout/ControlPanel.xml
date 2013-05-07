@@ -11,6 +11,7 @@
 		</method_def>
 		<event_def>
 			<OnStatusChanged/>
+			<OnDeleteTaskConfirm/>
 		</event_def>
 		<objtemplate>
 			<children>
@@ -99,6 +100,9 @@
 					</children>
 				</obj>
 			</children>
+			<eventlist>
+				<event name="OnDeleteTaskConfirm" file="ControlPanel.xml.lua" func="OnDeleteTaskConfirm" />
+			</eventlist>
 		</objtemplate>
 	</control>
 	<control class="Thunder.ControlPanel.Btn">

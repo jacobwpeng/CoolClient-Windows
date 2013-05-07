@@ -42,6 +42,20 @@ namespace CoolDown{
             return ERROR_OK;
         }
 
+		retcode_t LocalSockManager::connect_resource_server(const string& resource_server_address, int port /* = 9978 */){
+
+			SockPtr resource_server_sock = this->make_connection(resource_server_address, port);
+			if( resource_server_sock.isNull() ){
+				poco_warning_f2(logger_, "Cannot connect to Resource server, addr : %s, port :¡¡%d", resource_server_address, 
+					port);
+				return ERROR_NET_CONNECT;
+			}
+
+			resource_server_sock_ = resource_server_sock_;
+			return ERROR_OK;
+		}
+			
+
         retcode_t LocalSockManager::connect_client(const string& clientid, const string& ip, int port){
             FastMutex::ScopedLock lock(client_sock_map_mutex_);
 
@@ -189,6 +203,10 @@ namespace CoolDown{
                 return iter->second;
             }
         }
+
+		SockPtr LocalSockManager::get_resource_server_sock(){
+			return this->resource_server_sock_;
+		}
 
     }
 }

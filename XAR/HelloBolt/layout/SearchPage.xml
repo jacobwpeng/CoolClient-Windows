@@ -28,67 +28,67 @@
 								<image>bitmap.searchpage.logo</image>
 							</attr>
 						</obj>
-						<obj id="inputArea" class="TextureObject">
+						<obj id="inputarea" class="Thunder.InputArea">
 							<attr>
 								<left>(father.width - 350 - 65)/2</left>
-								<top>60 + 70 + 40</top>
+								<top>170</top>
 								<width>350</width>
 								<height>32</height>
-								<texture>texture.edit.bkg</texture>
 							</attr>
-							<children>
-								<obj id="edit" class="EditObject">
-									<attr>
-										<left>3</left>
-										<top>5</top>
-										<width>father.width-6</width>
-										<height>father.height-10</height>
-										<valign>center</valign>
-										<font>search.font</font>
-										<multiline>0</multiline>
-										<focus>1</focus>
-									</attr>
-									<eventlist>
-										<event name="OnFocusChange" file="SearchPage.xml.lua" func="OnFocusChange" />
-									</eventlist>
-								</obj>
-								<obj id="btn" class="Thunder.ImageButton.Ctrl">
-									<attr>
-										<left>5 + 350</left>
-										<top></top>
-										<width>100</width>
-										<height>32</height>
-										<NormalBkg>bitmap.searchpage.btn.normal</NormalBkg>
-										<HoverBkg>bitmap.searchpage.btn.hover</HoverBkg>
-										<DownBkg>bitmap.searchpage.btn.down</DownBkg>
-									</attr>
-									<eventlist>
-										<event name="OnClick" file="SearchPage.xml.lua" func="OnSearchBtnClick" />
-									</eventlist>
-								</obj>
-								<obj id="checkbox.movie" class="Thunder.CheckBox">
-									<attr>
-										<left></left>
-										<top>45</top>
-										<width>80</width>
-										<height>24</height>
-										<taborder>5</taborder>
-										<Text>电影</Text>
-									</attr>
-								</obj>
-								<obj id="checkbox.music" class="Thunder.CheckBox">
-									<attr>
-										<left>80</left>
-										<top>45</top>
-										<width>80</width>
-										<height>24</height>
-										<taborder>5</taborder>
-										<Text>音乐</Text>
-									</attr>
-								</obj>
-							</children>
+						</obj>
+						<obj id="btn" class="Thunder.ImageButton.Ctrl">
+							<attr>
+								<left>(father.width + 350)/2</left>
+								<top>170</top>
+								<width>100</width>
+								<height>32</height>
+								<NormalBkg>bitmap.searchpage.btn.normal</NormalBkg>
+								<HoverBkg>bitmap.searchpage.btn.hover</HoverBkg>
+								<DownBkg>bitmap.searchpage.btn.down</DownBkg>
+							</attr>
 							<eventlist>
+								<event name="OnClick" file="SearchPage.xml.lua" func="OnSearchBtnClick" />
 							</eventlist>
+						</obj>
+						<obj id="checkbox.movie" class="Thunder.CheckBox">
+							<attr>
+								<left>father.width/2 - 200</left>
+								<top>170 + 32</top>
+								<width>80</width>
+								<height>24</height>
+								<taborder>5</taborder>
+								<Text>电影</Text>
+							</attr>
+						</obj>
+						<obj id="checkbox.music" class="Thunder.CheckBox">
+							<attr>
+								<left>father.width/2 - 200 + 80</left>
+								<top>170 + 32</top>
+								<width>80</width>
+								<height>24</height>
+								<taborder>5</taborder>
+								<Text>音乐</Text>
+							</attr>
+						</obj>
+						<obj id="checkbox.game" class="Thunder.CheckBox">
+							<attr>
+								<left>father.width/2 - 200 + 80*2</left>
+								<top>170 + 32</top>
+								<width>80</width>
+								<height>24</height>
+								<taborder>5</taborder>
+								<Text>游戏</Text>
+							</attr>
+						</obj>
+						<obj id="checkbox.book" class="Thunder.CheckBox">
+							<attr>
+								<left>father.width/2 - 200 + 80*3</left>
+								<top>170 + 32</top>
+								<width>80</width>
+								<height>24</height>
+								<taborder>5</taborder>
+								<Text>图书</Text>
+							</attr>
 						</obj>
 					</children>
 				</obj>
@@ -141,30 +141,15 @@
 								<event name="OnLButtonDown" file="SearchPage.xml.lua" func="OnLogoDown" />
 							</eventlist>
 						</obj>
-
-						<obj id="inputArea" class="TextureObject">
+						<obj id="inputarea" class="Thunder.InputArea">
 							<attr>
 								<left>113</left>
 								<top>3</top>
 								<width>350</width>
 								<height>32</height>
-								<texture>texture.edit.bkg</texture>
+								<HasBtn>true</HasBtn>
 							</attr>
 							<children>
-								<obj id="edit" class="EditObject">
-									<attr>
-										<left>3</left>
-										<top>5</top>
-										<width>father.width-6-24</width>
-										<height>father.height-10</height>
-										<valign>center</valign>
-										<font>search.font</font>
-										<multiline>0</multiline>
-									</attr>
-									<eventlist>
-										<event name="OnFocusChange" file="SearchPage.xml.lua" func="OnFocusChange" />
-									</eventlist>
-								</obj>
 								<obj id="btn" class="Thunder.ImageButton.Ctrl">
 									<attr>
 										<left>350-27</left>
@@ -179,36 +164,63 @@
 										<event name="OnLButtonDown" file="SearchPage.xml.lua" func="OnSearchBtnClick" />
 									</eventlist>
 								</obj>
-								<obj id="checkbox.movie" class="Thunder.CheckBox">
-									<attr>
-										<left>350 + 10</left>
-										<top>3</top>
-										<width>50</width>
-										<height>24</height>
-										<taborder>5</taborder>
-										<Text>电影</Text>
-									</attr>
-								</obj>
-								<obj id="checkbox.music" class="Thunder.CheckBox">
-									<attr>
-										<left>350 + 10 + 50</left>
-										<top>3</top>
-										<width>50</width>
-										<height>24</height>
-										<taborder>5</taborder>
-										<Text>音乐</Text>
-									</attr>
-								</obj>
 							</children>
-							<eventlist>
-							</eventlist>
 						</obj>
-						<obj id="statusbar" class="Thunder.TasklistStatusBar">
+						<obj id="checkbox.movie" class="Thunder.CheckBox">
+							<attr>
+								<left>113 + 350 + 10</left>
+								<top>5</top>
+								<width>50</width>
+								<height>24</height>
+								<taborder>5</taborder>
+								<Text>电影</Text>
+							</attr>
+						</obj>
+						<obj id="checkbox.music" class="Thunder.CheckBox">
+							<attr>
+								<left>113 + 350 + 10 + 50</left>
+								<top>5</top>
+								<width>50</width>
+								<height>24</height>
+								<taborder>5</taborder>
+								<Text>音乐</Text>
+							</attr>
+						</obj>
+						<obj id="checkbox.game" class="Thunder.CheckBox">
+							<attr>
+								<left>113 + 350 + 10 + 50*2</left>
+								<top>5</top>
+								<width>50</width>
+								<height>24</height>
+								<taborder>5</taborder>
+								<Text>游戏</Text>
+							</attr>
+						</obj>
+						<obj id="checkbox.book" class="Thunder.CheckBox">
+							<attr>
+								<left>113 + 350 + 10 + 50*3</left>
+								<top>5</top>
+								<width>50</width>
+								<height>24</height>
+								<taborder>5</taborder>
+								<Text>图书</Text>
+							</attr>
+						</obj>
+						<obj id="statusbar" class="Thunder.SearchResStatusBar">
 							<attr>
 								<left></left>
 								<top>38</top>
 								<width>father.width</width>
 								<height>24</height>
+							</attr>
+						</obj>
+						<obj id="listbox" class="BaseUI.ListBox">
+							<attr>
+								<left></left>
+								<ItemType>BaseUI.ListBox.ResItem</ItemType>
+								<top>38 + 24</top>
+								<width>father.width</width>
+								<height>father.height - 38 - 24 - 25</height>
 							</attr>
 						</obj>
 					</children>

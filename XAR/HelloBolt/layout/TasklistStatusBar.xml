@@ -128,7 +128,7 @@
 			</children>
 		</objtemplate>
 	</control>
-	<control class="Thunder.TasklistStatusBar.Item">
+	<control class="Thunder.SearchResStatusBar">
 		<attr_def>
 			
 		</attr_def>
@@ -140,13 +140,93 @@
 		</event_def>
 		<objtemplate>
 			<children>
-				<obj id="Item" class="BaseUI.TextureButton">
+				<obj id="ctrl" class="TextureObject">
 					<attr>
 						<left></left>
 						<top></top>
-						<width></width>
-						<height></height>
+						<width>father.width</width>
+						<height>24</height>
 					</attr>
+					<children>
+						<obj id="reslist.header.size" class="BaseUI.TextureButton">
+							<attr>
+								<left>0</left>
+								<top></top>
+								<width>50</width>
+								<height>father.height</height>
+								<NormalBkg>texture.tasklist.header.normal</NormalBkg>
+								<HoverBkg>texture.tasklist.header.hover</HoverBkg>
+								<DownBkg>texture.tasklist.header.down</DownBkg>
+								<Text>类型</Text>
+								<TextColor>system.gray</TextColor>
+							</attr>
+						</obj>
+						<obj id="reslist.header.size" class="BaseUI.TextureButton">
+							<attr>
+								<left>50</left>
+								<top></top>
+								<width>450</width>
+								<height>father.height</height>
+								<NormalBkg>texture.tasklist.header.normal</NormalBkg>
+								<HoverBkg>texture.tasklist.header.hover</HoverBkg>
+								<DownBkg>texture.tasklist.header.down</DownBkg>
+								<Text>文件名</Text>
+								<TextColor>system.gray</TextColor>
+							</attr>
+						</obj>
+						<obj id="reslist.header.time" class="BaseUI.TextureButton">
+							<attr>
+								<left>500</left>
+								<top></top>
+								<width>120</width>
+								<height>father.height</height>
+								<NormalBkg>texture.tasklist.header.normal</NormalBkg>
+								<HoverBkg>texture.tasklist.header.hover</HoverBkg>
+								<DownBkg>texture.tasklist.header.down</DownBkg>
+								<Text>发布时间</Text>
+								<TextColor>system.gray</TextColor>
+							</attr>
+						</obj>
+						<obj id="reslist.header.size" class="BaseUI.TextureButton">
+							<attr>
+								<left>620</left>
+								<top></top>
+								<width>80</width>
+								<height>father.height</height>
+								<NormalBkg>texture.tasklist.header.normal</NormalBkg>
+								<HoverBkg>texture.tasklist.header.hover</HoverBkg>
+								<DownBkg>texture.tasklist.header.down</DownBkg>
+								<Text>大小</Text>
+								<TextColor>system.gray</TextColor>
+							</attr>
+						</obj>
+						<obj id="reslist.header.size" class="BaseUI.TextureButton">
+							<attr>
+								<left>700</left>
+								<top></top>
+								<width>80</width>
+								<height>father.height</height>
+								<NormalBkg>texture.tasklist.header.normal</NormalBkg>
+								<HoverBkg>texture.tasklist.header.hover</HoverBkg>
+								<DownBkg>texture.tasklist.header.down</DownBkg>
+								<Text>上传</Text>
+								<TextColor>system.gray</TextColor>
+							</attr>
+						</obj>
+						<obj id="reslist.header.size" class="BaseUI.TextureButton">
+							<attr>
+								<left>780</left>
+								<top></top>
+								<width>80</width>
+								<height>father.height</height>
+								<NormalBkg>texture.tasklist.header.normal</NormalBkg>
+								<HoverBkg>texture.tasklist.header.hover</HoverBkg>
+								<DownBkg>texture.tasklist.header.down</DownBkg>
+								<Text>下载</Text>
+								<TextColor>system.gray</TextColor>
+							</attr>
+						</obj>
+					</children>
 				</obj>
 			</children>
 		</objtemplate>

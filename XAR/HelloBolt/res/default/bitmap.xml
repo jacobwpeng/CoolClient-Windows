@@ -49,5 +49,6 @@
 	
 	<texture id="texture.edit.bkg" imagelist="imagelist.newtask.edit" index="11" type="NineInOne" />
 	<texture id="texture.edit.light.bkg" imagelist="imagelist.newtask.edit" index="12" type="NineInOne" />
+	<texture id="texture.theme.default.bkg" image="messagebox\bkg.png" type="NineInOne"/>
 </resource>
 </XLUE>

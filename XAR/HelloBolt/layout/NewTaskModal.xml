@@ -31,6 +31,16 @@
 							<height>father.height</height>
 						</attr>
 						<children>
+							<obj id="theme.bkg" class="TextureObject">
+								<attr>
+									<left>0</left>
+									<top>0</top>
+									<width>father.width</width>
+									<height>father.height</height>
+									<texture>texture.theme.default.bkg</texture>
+									<alpha>150</alpha>
+								</attr>
+							</obj>
 							<obj id="caption" class="CaptionObject">
 								<attr>
 									<width>father.width</width>
@@ -79,7 +89,7 @@
 							<obj id="" class="TextObject">
 								<attr>
 									<left>20</left>
-									<top>110</top>
+									<top>96</top>
 									<width>60</width>
 									<height>24</height>
 									<text>存储路径:</text>
@@ -89,9 +99,10 @@
 							<obj id="savepath" class="Thunder.InputArea">
 								<attr>
 									<left>40</left>
-									<top>110 + 20</top>
-									<width>410</width>
+									<top>96 + 20</top>
+									<width>father.width - 80</width>
 									<height>30</height>
+									<HasBtn>true</HasBtn>
 								</attr>
 								<children>
 									<obj id="choosepath" class="BaseUI.TextureButton">
@@ -113,7 +124,7 @@
 													<height>father.height</height>
 													<valign>center</valign>
 													<halign>center</halign>
-													<image>bitmap.configpage.folder</image>
+													<image>bitmap.newtaskmodal.folder.normal</image>
 												</attr>
 											</obj>
 										</children>
@@ -123,9 +134,9 @@
 							<obj id="list.border" class="TextureObject">
 								<attr>
 									<left>(father.width - 420)/2</left>
-									<top>165</top>
+									<top>150</top>
 									<width>420</width>
-									<height>290</height>
+									<height>305</height>
 									<texture>texture.newtaskmodal.list.border</texture>
 								</attr>
 								<children>
@@ -251,7 +262,7 @@
 							<obj id="ok" class="BaseUI.TextureButton">
 								<attr>
 									<left>father.width - 75*2 - 10-16</left>
-									<top>father.height - 30</top>
+									<top>father.height - 35</top>
 									<width>75</width>
 									<height>24</height>
 									<Text>确定</Text>
@@ -263,7 +274,7 @@
 							<obj id="cancel" class="BaseUI.TextureButton">
 								<attr>
 									<left>father.width - 75 - 16</left>
-									<top>father.height - 30</top>
+									<top>father.height - 35</top>
 									<width>75</width>
 									<height>24</height>
 									<Text>取消</Text>

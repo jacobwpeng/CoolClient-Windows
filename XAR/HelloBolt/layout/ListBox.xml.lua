@@ -25,21 +25,23 @@ local function ListBox_UpdateRes(self, newState)
 	attr.NowState = newState
 end
 
-local function InsertItemDataTable(self, index, str)
+
+local function InsertItemDataTable(self, index, data)--Item数据表的维护
+	--XLMessageBox(data.Name)
     local attr = self:GetAttribute()
 	if attr.ItemDataTable == nil then
 	    attr.ItemDataTable = {}
 	end
-	if str == nil then
-	    str = ""
+	if data == nil then
+	    data = {}
 	end
 	
 	if index == -1 then
-	    table.insert(attr.ItemDataTable, str)
+	    table.insert(attr.ItemDataTable, data)
+		--XLMessageBox(attr.ItemDataTable[#attr.ItemDataTable].Name)
 	else
-	    table.insert(attr.ItemDataTable, index, str)
+	    table.insert(attr.ItemDataTable, index, data)
 	end
-	
 end
 
 local function DeleteItemDataTable(self, index)
@@ -119,7 +121,7 @@ local function ListBox_DestroyInstanceItem(self)--销毁创建的listbox_item
 	end
 end
 
-local function ListBox_CreateInstanceItem(self)--创建最多三页的listbox_item
+local function ListBox_CreateInstanceItem(self)--添加item实例，不同type就在这里做处理
     local intIndex = 0
 	local attr = self:GetAttribute()
 	local xarManager = XLGetObject("Xunlei.UIEngine.XARManager")
@@ -135,13 +137,19 @@ local function ListBox_CreateInstanceItem(self)--创建最多三页的listbox_it
 	
 	attr.ItemTextWidth = 0
 	attr.HScrollBarShow = false
-	for i=attr.BeginItem, #attr.ItemDataTable do
+	for i = attr.BeginItem, #attr.ItemDataTable do
 		if i > (attr.BeginItem + attr.ItemCountInOnePage * 3+3) then
 			break
 		end
-		local newListBoxItem = xarFactory:CreateUIObject("listbox"..i,"BaseUI.ListBox.TaskItem")
+
+		local newListBoxItem = xarFactory:CreateUIObject("listbox"..i, attr.ItemType)		
+		if attr.ItemType == "BaseUI.ListBox.TaskItem" then
+			elseif attr.ItemType == "BaseUI.ListBox.ResItem" then
+			elseif attr.ItemType == "BaseUI.ListBox.NewTaskItem" then
+		end
+		--XLMessageBox(attr.ItemDataTable[i].Name.."i:"..i)
 		local newListBoxItemAttr = newListBoxItem:GetAttribute()
-		newListBoxItemAttr.Text = attr.ItemDataTable[i]
+		newListBoxItemAttr.FileName = attr.ItemDataTable[i].Name
 		newListBoxItemAttr.Index = intIndex			
 					
 		local ctrlLeft, ctrlTop, cltrRight, ctrlBottom = bkgWndobj:GetObjPos()
@@ -343,7 +351,7 @@ function DeleteString(self, index)
 	if index <= -1 or index == nil then
 	    return
 	end
-	local bRet = DeleteItemDataTable(self, index+1)
+	local bRet = DeleteItemDataTable(self, index + 1)
 	local CurPos = scrollbarvobj:GetScrollPos()
 	
 	CurPos = CurPos - attr.ItemHeight
@@ -377,6 +385,45 @@ function DeleteString(self, index)
 	
 end
 
+function DeleteItem(self, index)
+    local attr = self:GetAttribute()
+	local scrollbarvobj = self:GetControlObject("scrollbar.v")
+	if index <= -1 or index == nil then
+	    return
+	end
+	local bRet = DeleteItemDataTable(self, index+1)
+	local CurPos = scrollbarvobj:GetScrollPos()
+	
+	CurPos = CurPos - attr.ItemHeight
+	if CurPos < 0 then
+	    CurPos = 0
+	end
+	--设置scroll的边界值
+	local minRange, maxRange = scrollbarvobj:GetScrollRange()
+	maxRange = maxRange - attr.ItemHeight
+	scrollbarvobj:SetScrollPos(CurPos)
+	scrollbarvobj:SetScrollRange(0, maxRange)
+	--设置wnd的位置
+	local bkgWndobj = self:GetControlObject("bkgWnd")
+	local bkgWndleft, bkgWndtop, bkgWndright, bkgWndbottom = bkgWndobj:GetObjPos()
+	local scrollBegin, scrollEnd = scrollbarvobj:GetScrollRange()
+	if scrollEnd == CurPos then
+	    CurPos = bkgWndbottom - (#attr.ItemDataTable) * attr.ItemHeight
+		bkgWndobj:SetObjPos(bkgWndleft, CurPos, bkgWndright, bkgWndbottom)
+	else
+	    bkgWndtop = 0 - CurPos
+		bkgWndobj:SetObjPos(bkgWndleft, bkgWndtop, bkgWndright, bkgWndbottom)
+	end
+	--修改cursel的值
+	if bRet == true and index == attr.CurSel  then
+	    attr.CurSel = -1
+	elseif index < attr.CurSel then
+	    attr.CurSel = attr.CurSel - 1
+	else
+	    attr.CurSel = attr.CurSel + 1
+	end
+end
+
 function ResetContent(self)
     local attr = self:GetAttribute()
 	if attr.ItemDataTable == nil then
@@ -396,10 +443,34 @@ function ResetContent(self)
 	bkgWndobj:SetObjPos(bkgWndleft, 0, bkgWndright, bkgWndbottom)
 end
 
+--table copy
+local function deepcopy(object)
+    local lookup_table = {}
+    local function _copy(object)
+        if type(object) ~= "table" then
+            return object
+        elseif lookup_table[object] then
+            return lookup_table[object]
+        end  -- if
+        local new_table = {}
+        lookup_table[object] = new_table
+        for index, value in pairs(object) do
+            new_table[_copy(index)] = _copy(value)
+        end  -- for
+        return setmetatable(new_table, getmetatable(object))
+    end  -- function _copy
+    return _copy(object)
+end  -- function deepcopy
+
 function AddString(self, str)
 	InsertItemDataTable(self, -1, str)
 end
-
+function AddItem(self, data)
+	local tmpData = deepcopy(data)
+	local attr = self:GetAttribute()
+	--XLMessageBox(data.Name)
+	InsertItemDataTable(self, -1, tmpData)
+end
 function GetCurSel(self)
     local attr = self:GetAttribute()
 	if attr.CurSel == nil then
@@ -723,10 +794,10 @@ end
 
 function ListBoxItem_OnInitControl(self)
     local attr = self:GetAttribute()
-	local textobj = self:GetControlObject("text")
+	local nameobj = self:GetControlObject("name")
 	local ctrlObj = self:GetControlObject("ctrl")
-	if attr.Text ~= "" and textobj then
-	    textobj:SetText(attr.Text)
+	if attr.FileName ~= "" and nameobj then
+	    nameobj:SetText(attr.FileName)
 	end
 	
 	if not self:GetVisible() then
@@ -775,8 +846,8 @@ end
 
 function ListBoxItem_OnPosChange(self)
     local left, top, right, bottom = self:GetObjPos()
-	local textobj = self:GetControlObject("text")
-	local textwidth, textheight = textobj:GetTextExtent()
+	local nameobj = self:GetControlObject("name")
+	local textwidth, textheight = nameobj:GetTextExtent()
 	if textwidth > (right - left) then
 	    self:FireExtEvent("OnWidthExtend", textwidth)
 	end

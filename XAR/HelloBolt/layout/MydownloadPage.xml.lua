@@ -3,26 +3,16 @@ function OnPageInit(self)
 	--然后还要载入保存的任务列表
 	
 	local list = self:GetControlObject("listbox")
-	
-	for i = 0,100 do
-		list:AddString("string"..i)
-	end
+	local data = {}
+	data.Name = "音乐"
+	list:AddItem(data)
+	data.Name = "电影"
+	list:AddItem(data)
+	data.Name = "游戏"
+	list:AddItem(data)
+	data.Name = "图书"
+	list:AddItem(data)
 	list:UpdateUI()
-
-	local coolClientLuaWrapperFactory = XLGetObject("CoolDown.CoolClient.Factory")
-
-	if not coolClientLuaWrapperFactory then
-		XLMessageBox('coolClientLuaWrapperFactory is nil')
-		return
-	end
-
-	local coolClient = coolClientLuaWrapperFactory:CreateInstance()
-	if not coolClient then
-		XLMessageBox('coolClient is nil')
-		return
-	end
-	local loadStatus = coolClient:RunClientAsync()
-	XLMessageBox('RunClientAsync returns ' .. loadStatus)
 end
 
 function OnCronClick(self)

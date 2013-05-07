@@ -64,7 +64,7 @@
 				AdditionalDependencies="libprotobuf.lib XLFSIO.lib XLGraphic.lib XLLuaRuntime.lib XLUE.lib Shlwapi.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -191,7 +191,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\coolclient_luawrapper.cpp"
+				RelativePath=".\src\coolclientproxy.cpp"
 				>
 			</File>
 			<File
@@ -309,7 +309,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\coolclient_luawrapper.h"
+				RelativePath=".\include\coolclientproxy.h"
 				>
 			</File>
 			<File

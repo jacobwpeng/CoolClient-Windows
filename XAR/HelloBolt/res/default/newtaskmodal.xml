@@ -1,5 +1,8 @@
 <xlue>
 	<resource>
+		<imagelist id="imagelist.newtaskmodal.folder" vertical="0" splitter="1" varyblock="1" image="newtaskmodal\newtask.opendir.btn.png"/>
+		<bitmap id="bitmap.newtaskmodal.folder.normal" imagelist="imagelist.newtaskmodal.folder" index="1"/>
+		<bitmap id="bitmap.newtaskmodal.folder.down" imagelist="imagelist.newtaskmodal.folder" index="2"/>
 		<bitmap id="bitmap.newtaskmodal.griper" image="newtaskmodal\bitmap.griper.png"/>
 		<texture id="texture.newtaskmodal.list.border" image="newtaskmodal\bkg.border.png" type="NineInOne"/>
 		<texture id="texture.newtaskmodal.listtop" image="newtaskmodal\upside.png" type="ThreeInOneH"/>

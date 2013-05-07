@@ -1,0 +1,6 @@
+<xlue>
+	<resource>
+		<imagelist id="imagelist.messagebox.msg" vertical="0" splitter="1" varyblock="1" image="messagebox\msgbox_icon.png"/>
+		<bitmap id="bitmap.confirmmodal.warning" imagelist="imagelist.messagebox.msg" index="2"/>
+	</resource>
+</xlue>

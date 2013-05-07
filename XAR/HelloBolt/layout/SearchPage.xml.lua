@@ -22,13 +22,18 @@ function OnLogoDown(self)
 		return false
 	end
 	--将各子控件状态设置为初试
-	owner:GetControlObject("edit"):SetText("")
+	owner:GetControlObject("inputarea"):SetText("")
 end
 
 function OnSearchBtnClick(self)
-	local owner = self:GetOwnerControl():GetParent()
+	local owner = self:GetOwnerControl():GetOwnerControl()
 	local resultPage = owner:GetControlObject("ResultPage")
-	local edit = self:GetOwnerControl():GetControlObject("edit")
+	local control = self:GetOwnerControl()
+	local movie = control:GetControlObject("checkbox.movie")
+	local music = control:GetControlObject("checkbox.music")
+	local game = control:GetControlObject("checkbox.game")
+	local book = control:GetControlObject("checkbox.book")
+
 	
 	if resultPage then
 		--更新搜索结果
@@ -39,4 +44,16 @@ function OnSearchBtnClick(self)
 		searchPage:GetControlObject("ctrl"):SetObjPos2(1920,1080,"father.width","father.height")
 		searchPage:AddChild(resultPage)
 	end
+	
+	
+	
+	local listbox = resultPage:GetControl("listbox")
+	local edit = self:GetOwnerControl():GetControlObject("inputarea")
+	local keywords = edit:GetText()
+	local restype = 15
+
+	local coolClientProxy = XLGetObject('CoolDown.CoolClientProxy.Class')
+	coolClientProxy:SearchResource(keywords, restype, function(t) listbox:AddItem(t) end)
+
+
 end

@@ -130,7 +130,7 @@ function OnLButtonUp(self, x, y)
 end
 
 --用来定义各按钮的处理函数
-local function OnBtnNewTaskClick(self)
+local function OnBtnNewTaskClick(self)--新建任务
 	local templateManager = XLGetObject("Xunlei.UIEngine.TemplateManager")
 	local hostWndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
 	local mainWnd = hostWndManager:GetHostWnd("MainFrame")
@@ -147,7 +147,37 @@ local function OnBtnNewTaskClick(self)
 	objtreeManager:DestroyTree("Thunder.NewTaskModal.Instance")
 	hostWndManager:RemoveHostWnd("Thunder.NewTaskModal.Instance")
 end
-local function OnBtnConfigClick(self)
+
+local function OnBtnDeleteClick(self, index)--删除任务
+
+	local templateManager = XLGetObject("Xunlei.UIEngine.TemplateManager")
+	local hostWndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
+	local mainWnd = hostWndManager:GetHostWnd("MainFrame")
+	local modalHostWndTemplate = templateManager:GetTemplate("Thunder.MessageBox","HostWndTemplate")
+	local modalHostWnd = modalHostWndTemplate:CreateInstance("Thunder.MessageBox.Instance")
+	local objectTreeTemplate = templateManager:GetTemplate("Thunder.MessageBox","ObjectTreeTemplate")
+	local uiObjectTree = objectTreeTemplate:CreateInstance("Thunder.MessageBox.Instance")
+	modalHostWnd:BindUIObjectTree(uiObjectTree)
+	
+	local userData = {Title = "删除", Icon="bitmap.confirmmodal.warning", Content="删除提示:确定要删除这个任务么？", Object = self:GetOwnerControl(), EventName = "OnDeleteTask"}
+	modalHostWnd:SetUserData(userData)
+	modalHostWnd:DoModal(mainWnd:GetWndHandle())
+	
+	local objtreeManager = XLGetObject("Xunlei.UIEngine.TreeManager")	
+	objtreeManager:DestroyTree("Thunder.MessageBox.Instance")
+	hostWndManager:RemoveHostWnd("Thunder.MessageBox.Instance")
+	
+
+	--XLMessageBox(#attr.ItemDataTable.." cursel:"..listbox:GetCurSel())
+end
+function OnDeleteTaskConfirm(self)
+	local listbox = self:GetOwnerControl():GetControlObject("listbox")
+	local attr = listbox:GetAttribute()
+	listbox:DeleteString(listbox:GetCurSel())
+	listbox:UpdateUI()
+end
+
+local function OnBtnConfigClick(self)--进入设置
 	local header = self:GetOwner():GetUIObject("tabHeader")
 	local tabbkg = self:GetOwner():GetUIObject("tabbkg")
 	local hostwndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
@@ -168,6 +198,8 @@ function OnBtnClick(self)
 		OnBtnConfigClick(self)
 	elseif id == "btn.newtask" then
 		OnBtnNewTaskClick(self)
+	elseif id== "btn.delete" then
+		OnBtnDeleteClick(self)
 	end
 end
 

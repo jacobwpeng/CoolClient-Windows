@@ -60,7 +60,7 @@ void CoolClientLuaWrapper::RegisterClass(XL_LRT_ENV_HANDLE hEnv){
 int CoolClientLuaWrapperFactory::CreateInstance(lua_State* luaState){
 
 	CoolClient* pCoolClient = new CoolClient();
-	int nLongRes = XLLRT_PushXLObject(luaState,COOLCLIENT_LUA_CLASS, pCoolClient);
+	int nLongRes = XLLRT_PushXLObject(luaState, COOLCLIENT_LUA_CLASS, pCoolClient);
 	return 0;
 }
 

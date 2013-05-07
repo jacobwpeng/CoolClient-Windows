@@ -2,6 +2,7 @@
 	<control class="Thunder.InputArea">
 		<attr_def>
 			<attr name="Number" type="bool"><default>false</default></attr>
+			<attr name="HasBtn" type="bool"><default>false</default></attr>
 		</attr_def>
 		<method_def>
 			<SetText file="EditArea.xml.lua" func="SetText"/>
@@ -41,4 +42,5 @@
 			</eventlist>
 		</objtemplate>
 	</control>
+
 </xlue>
