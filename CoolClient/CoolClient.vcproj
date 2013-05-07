@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libprotobuf.lib"
+				AdditionalDependencies="libprotobuf.lib XLFSIO.lib XLGraphic.lib XLLuaRuntime.lib XLUE.lib Shlwapi.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"

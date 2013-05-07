@@ -10,6 +10,7 @@ function OnPageInit(self)
 	list:UpdateUI()
 
 	local coolClientLuaWrapperFactory = XLGetObject("CoolDown.CoolClient.Factory")
+
 	if not coolClientLuaWrapperFactory then
 		XLMessageBox('coolClientLuaWrapperFactory is nil')
 		return
