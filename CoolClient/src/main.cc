@@ -129,15 +129,18 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		return 1;
 	}
 
+	XL_LRT_ENV_HANDLE hEnv = XLLRT_GetEnv(NULL);
+	CoolClientLuaWrapper::RegisterClass(hEnv);
+	CoolClientLuaWrapperFactory::RegisterObj(hEnv);
+
+
 	if(!LoadMainXAR())
 	{
 		MessageBoxW(NULL,L"Load XARÊ§°Ü!",L"´íÎó",MB_OK);
 		return 1;
 	}
 
-	XL_LRT_ENV_HANDLE hEnv = XLLRT_GetEnv(NULL);
-	CoolClientLuaWrapper::RegisterClass(hEnv);
-	CoolClientLuaWrapperFactory::RegisterObj(hEnv);
+
 
 	MSG msg;
 
