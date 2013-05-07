@@ -65,6 +65,18 @@ namespace CoolDown{
                 }
             }
 
+			ClientThread::ClientThread(CoolClient* pCoolClient)
+				:pCoolClient_(pCoolClient){
+			}
+
+			void ClientThread::run(){
+				int argc = 1;
+				char* argv[] = {
+					"CoolClient.exe"
+				};
+				pCoolClient_->run(argc, argv);
+			}
+
             CoolClient::CoolClient()
             :jobThreads_("JobThread"),
             uploadManager_(logger()){

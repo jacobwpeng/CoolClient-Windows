@@ -1,0 +1,44 @@
+<xlue>
+	<control class="Thunder.InputArea">
+		<attr_def>
+			<attr name="Number" type="bool"><default>false</default></attr>
+		</attr_def>
+		<method_def>
+			<SetText file="EditArea.xml.lua" func="SetText"/>
+			<GetText file="EditArea.xml.lua" func="GetText"/>
+		</method_def>
+		<event_def>
+			
+		</event_def>
+		<objtemplate>
+			<children>
+				<obj id="input.bkg" class="TextureObject">
+					<attr>
+						<left></left>
+						<top></top>
+						<width>father.width</width>
+						<height>father.height</height>		
+						<texture>texture.configpage.edit.normal</texture>
+					</attr>
+					<children>
+						<obj id="input.edit" class="EditObject">
+							<attr>
+								<left>3</left>
+								<top>5</top>
+								<width>father.width - 6</width>
+								<height>father.height - 10</height>
+								<multiline>0</multiline>
+							</attr>
+							<eventlist>
+								<event name="OnFocusChange" file="EditArea.xml.lua" func="OnFocusChange" />
+							</eventlist>
+						</obj>
+					</children>
+				</obj>
+			</children>
+			<eventlist>
+				<event name="OnInitControl" file="EditArea.xml.lua" func="OnEditAreaInit" />
+			</eventlist>
+		</objtemplate>
+	</control>
+</xlue>

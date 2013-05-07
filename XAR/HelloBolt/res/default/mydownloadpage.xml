@@ -1,0 +1,8 @@
+<xlue>
+	<resource>
+		<imagelist id="imagelist.mydownloadpage.cron" vertical="0" splitter="1" varyblock="1" image="bitmap\mainwnd.status_bar.button_bkg.png"/>
+		
+		<texture id="texture.cron.hover" imagelist="imagelist.mydownloadpage.cron" index="1" type="ThreeInOneH"/>
+		<texture id="texture.cron.down" imagelist="imagelist.mydownloadpage.cron" index="2" type="ThreeInOneH"/>
+	</resource>
+</xlue>

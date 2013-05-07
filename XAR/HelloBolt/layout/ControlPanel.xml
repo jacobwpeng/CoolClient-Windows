@@ -1,0 +1,151 @@
+<xlue>
+	<control class="Thunder.ControlPanel">
+		<attr_def>
+			<attr name="BtnNum" type="int"><default>0</default></attr>
+			<attr name="Status" type="string"><default>download</default></attr>
+		</attr_def>
+		<method_def>
+			<AddBtn/>
+			<DeleteBtn/>
+			<UpdateUI/>
+		</method_def>
+		<event_def>
+			<OnStatusChanged/>
+		</event_def>
+		<objtemplate>
+			<children>
+				<obj id="ctrl" class="FillObject">
+					<attr>
+						<left></left>
+						<top></top>
+						<width>father.width</width>
+						<height>father.height</height>
+					</attr>
+					<children>
+						<obj id="btn.newtask" class="Thunder.ControlPanel.Btn">
+							<attr>
+								<left>6</left>
+								<top></top>
+								<width>38</width>
+								<height>42</height>
+								<BtnName>NewTaskBtn</BtnName>
+								<NormalResID>button.newtask.normal</NormalResID>
+								<DisabledResID>button.newtask.disabled</DisabledResID>
+								<AniImagelistID>imageseq.newtask.ani</AniImagelistID>
+								<BtnStatus>normal</BtnStatus>
+							</attr>
+						</obj>
+						<obj id="btn.start" class="Thunder.ControlPanel.Btn">
+							<attr>
+								<left>6 + 38*1</left>
+								<top></top>
+								<width>38</width>
+								<height>42</height>
+								<BtnName>StartBtn</BtnName>
+								<NormalResID>button.start.normal</NormalResID>
+								<DisabledResID>button.start.disabled</DisabledResID>
+								<AniImagelistID>imageseq.start.ani</AniImagelistID>
+							</attr>
+						</obj>
+						<obj id="btn.pause" class="Thunder.ControlPanel.Btn">
+							<attr>
+								<left>6 + 38*2</left>
+								<top></top>
+								<width>38</width>
+								<height>42</height>
+								<BtnName>PauseBtn</BtnName>
+								<NormalResID>button.pause.normal</NormalResID>
+								<DisabledResID>button.pause.disabled</DisabledResID>
+								<AniImagelistID>imageseq.pause.ani</AniImagelistID>
+							</attr>
+						</obj>
+						<obj id="btn.delete" class="Thunder.ControlPanel.Btn">
+							<attr>
+								<left>6 + 38*3</left>
+								<top></top>
+								<width>38</width>
+								<height>42</height>
+								<BtnName>DeleteBtn</BtnName>
+								<NormalResID>button.delete.normal</NormalResID>
+								<DisabledResID>button.delete.disabled</DisabledResID>
+								<AniImagelistID>imageseq.delete.ani</AniImagelistID>
+							</attr>
+						</obj>
+						<obj id="btn.openfolder" class="Thunder.ControlPanel.Btn">
+							<attr>
+								<left>26 + 38*4</left>
+								<top></top>
+								<width>38</width>
+								<height>42</height>
+								<BtnName>OpenFolderBtn</BtnName>
+								<NormalResID>button.openfolder.normal</NormalResID>
+								<DisabledResID>button.openfolder.disabled</DisabledResID>
+								<AniImagelistID>imageseq.openfolder.ani</AniImagelistID>
+							</attr>
+						</obj>
+						<obj id="btn.config" class="Thunder.ControlPanel.Btn">
+							<attr>
+								<left>96 + 38*5</left>
+								<top></top>
+								<width>38</width>
+								<height>42</height>
+								<BtnName>ConfigBtn</BtnName>
+								<NormalResID>button.config.normal</NormalResID>
+								<DisabledResID>button.config.disabled</DisabledResID>
+								<AniImagelistID>imageseq.config.ani</AniImagelistID>
+								<BtnStatus>normal</BtnStatus>
+							</attr>
+						</obj>
+					</children>
+				</obj>
+			</children>
+		</objtemplate>
+	</control>
+	<control class="Thunder.ControlPanel.Btn">
+		<attr_def>
+			<attr name="BtnName" type="string" />
+			<attr name="NormalResID" type="string" />
+			<attr name="DisabledResID" type="string" />
+			<attr name="BtnStatus" type="string"><default>disabled</default></attr>
+			<attr name="AniImagelistID" type="string" />
+		</attr_def>
+		<method_def>
+			<ChangeStatus file="ControlPanel.xml.lua" func="ChangeStatus" />
+			<UpdateUI file="ControlPanel.xml.lua" func="UpdateUI" />
+		</method_def>
+		<event_def>
+			<OnClick/>
+		</event_def>
+		<objtemplate>
+			<children>
+				<obj id="ctrl" class="TextureObject">
+					<attr>
+						<left></left>
+						<top></top>
+						<width>father.width</width>
+						<height>father.height</height>			
+					</attr>
+					<children>
+						<obj id="btn.img" class="ImageObject">
+							<attr>
+								<width>father.width</width>
+								<height>father.height</height>
+							</attr>						
+						</obj>
+					</children>
+					<eventlist>
+						<event name="OnMouseEnter" file="ControlPanel.xml.lua" func="OnMouseEnter" />
+						<event name="OnMouseLeave" file="ControlPanel.xml.lua" func="OnMouseLeave" />
+						<event name="OnLButtonDown" file="ControlPanel.xml.lua" func="OnLButtonDown" />
+						<event name="OnLButtonUp" file="ControlPanel.xml.lua" func="OnLButtonUp" />
+					</eventlist>
+				</obj>
+			</children>
+			<eventlist>
+				<event name="OnInitControl" file="ControlPanel.xml.lua" func="OnBtnInit" />	
+				<event name="OnClick" file="ControlPanel.xml.lua" func="OnBtnClick" />
+				<event name="OnEnableChange" file="ControlPanel.xml.lua" func="OnBtnEnableChange" />
+			</eventlist>
+		</objtemplate>
+	</control>
+</xlue>

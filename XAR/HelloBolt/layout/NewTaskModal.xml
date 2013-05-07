@@ -1,0 +1,299 @@
+<xlue>
+	<objtreetemplate id="Thunder.NewTaskModal">
+		<attr>
+			<left>-200</left>
+			<top>-200</top>
+			<width>2000</width>
+			<height>2000</height>
+		</attr>
+		<obj id="root" class="LayoutObject">
+			<attr>
+				<left></left>
+				<top></top>
+				<width>452</width>
+				<height>500</height>
+			</attr>
+			<children>
+			<obj id="bkg" class="TextureObject">
+				<attr>
+					<left></left>
+					<top></top>
+					<width>father.width</width>
+					<height>father.height</height>
+					<texture>texture.common.wndbkg</texture>
+				</attr>
+				<children>
+					<obj id="body" class="LayoutObject">
+						<attr>
+							<left></left>
+							<top></top>
+							<width>father.width</width>
+							<height>father.height</height>
+						</attr>
+						<children>
+							<obj id="caption" class="CaptionObject">
+								<attr>
+									<width>father.width</width>
+									<height>32</height>
+									<zorder>-1000</zorder>
+								</attr>
+							</obj>
+							<obj id="type" class="ImageObject">
+								<attr>
+									<left>20</left>
+									<top>40</top>
+									<width>50</width>
+									<height>50</height>
+									<image>bitmap.listbox.taskitem.type.game</image>
+								</attr>
+							</obj>
+							<obj id="foldername" class="Thunder.InputArea">
+								<attr>
+									<left>80</left>
+									<top>40</top>
+									<width>320</width>
+									<height>30</height>
+								</attr>
+							</obj>
+							<obj id="taskspace.title" class="TextObject">
+								<attr>
+									<left>100</left>
+									<top>40 + 30</top>
+									<width>60</width>
+									<height>24</height>
+									<valign>center</valign>
+									<text>所需空间:</text>
+								</attr>
+								<children>
+									<obj id="taskspace.content" class="TextObject">
+										<attr>
+											<left>60</left>
+											<top></top>
+											<width>60</width>
+											<height>24</height>
+											<valign>center</valign>
+										</attr>
+									</obj>
+								</children>
+							</obj>
+							<obj id="" class="TextObject">
+								<attr>
+									<left>20</left>
+									<top>110</top>
+									<width>60</width>
+									<height>24</height>
+									<text>存储路径:</text>
+									<valign>center</valign>
+								</attr>
+							</obj>
+							<obj id="savepath" class="Thunder.InputArea">
+								<attr>
+									<left>40</left>
+									<top>110 + 20</top>
+									<width>410</width>
+									<height>30</height>
+								</attr>
+								<children>
+									<obj id="choosepath" class="BaseUI.TextureButton">
+										<attr>
+											<left>father.width - 24 - 2</left>
+											<top>3</top>
+											<width>24</width>
+											<height>24</height>
+											<NormalBkg>texture.general.button.righthalf.normal</NormalBkg>
+											<HoverBkg>texture.general.button.righthalf.hover</HoverBkg>
+											<DownBkg>texture.general.button.righthalf.down</DownBkg>
+										</attr>
+										<children>
+											<obj id="icon" class="ImageObject">
+												<attr>
+													<left></left>
+													<top></top>
+													<width>father.width</width>
+													<height>father.height</height>
+													<valign>center</valign>
+													<halign>center</halign>
+													<image>bitmap.configpage.folder</image>
+												</attr>
+											</obj>
+										</children>
+									</obj>
+								</children>
+							</obj>
+							<obj id="list.border" class="TextureObject">
+								<attr>
+									<left>(father.width - 420)/2</left>
+									<top>165</top>
+									<width>420</width>
+									<height>290</height>
+									<texture>texture.newtaskmodal.list.border</texture>
+								</attr>
+								<children>
+									<obj id="list.top.left" class="TextureObject">
+										<attr>
+											<left>1</left>
+											<top>1</top>
+											<width>340 - 1</width>
+											<height>22</height>
+											<texture>texture.newtaskmodal.listtop</texture>
+										</attr>
+										<children>
+											<obj id="" class="TextObject">
+												<attr>
+													<left>18</left>
+													<top></top>
+													<width>100</width>
+													<height>father.height</height>
+													<text>文件名</text>
+													<valign>center</valign>
+												</attr>
+											</obj>
+										</children>
+									</obj>
+									<obj id="list.top.right" class="TextureObject">
+										<attr>
+											<left>340</left>
+											<top>1</top>
+											<width>80 - 1</width>
+											<height>22</height>
+											<texture>texture.newtaskmodal.listtop</texture>
+										</attr>
+										<children>
+											<obj id="" class="TextObject">
+												<attr>
+													<left>18</left>
+													<top></top>
+													<width>60</width>
+													<height>father.height</height>
+													<text>大小</text>
+													<valign>center</valign>
+												</attr>
+											</obj>
+										</children>
+									</obj>
+									<obj id="list.box" class="BaseUI.ListBox">
+										<attr>
+											<left>1</left>
+											<top>22 + 1</top>
+											<width>father.width - 2</width>
+											<height>father.height - 22 - 1 - 32 - 1</height>
+										</attr>
+									</obj>
+									<obj id="list.bottom.bkg" class="TextureObject">
+										<attr>
+											<left>1</left>
+											<top>father.height - 32 - 1</top>
+											<width>father.width - 2</width>
+											<height>32</height>
+											<texture>texture.newtaskmodal.listbottom</texture>
+										</attr>
+										<children>
+											<obj id="list.bottom.text" class="TextObject">
+												<attr>
+													<left>9</left>
+													<top></top>
+													<width>35</width>
+													<height>father.height</height>
+													<text>选择:</text>
+													<valign>center</valign>
+												</attr>
+											</obj>
+											<obj id="list.bottom.text" class="TextObject">
+												<attr>
+													<left>45</left>
+													<top></top>
+													<width>30</width>
+													<height>father.height</height>
+													<text>全选</text>
+													<valign>center</valign>
+													<textcolor>color.newtaskmodal.select</textcolor>
+												</attr>
+											</obj>
+											<obj id="list.bottom.text" class="TextObject">
+												<attr>
+													<left>90</left>
+													<top></top>
+													<width>30</width>
+													<height>father.height</height>
+													<text>反选</text>
+													<valign>center</valign>
+													<textcolor>color.newtaskmodal.select</textcolor>
+												</attr>
+											</obj>
+										</children>
+									</obj>
+								</children>
+							</obj>
+							<obj id="" class="ImageObject">
+								<attr>
+									<left>father.width - 14</left>
+									<top>father.height - 14</top>
+									<width>12</width>
+									<height>12</height>
+									<image>bitmap.newtaskmodal.griper</image>
+								</attr>
+							</obj>
+							
+							<obj id="system.button.close" class="Thunder.ImageButton.Ctrl">
+								<attr>
+									<left>father.width - 41</left>
+									<top>0</top>
+									<width>41</width>
+									<height>19</height>
+									<NormalBkg>system.button.close.normal</NormalBkg>
+									<HoverBkg>system.button.close.move</HoverBkg>
+									<DownBkg>system.button.close.lbuttondown</DownBkg>
+								</attr>
+								<eventlist>	
+									<event name="OnLButtonUp" file="NewTaskModal.xml.lua" func="OnCancelClick" />
+								</eventlist>
+							</obj>
+							<obj id="ok" class="BaseUI.TextureButton">
+								<attr>
+									<left>father.width - 75*2 - 10-16</left>
+									<top>father.height - 30</top>
+									<width>75</width>
+									<height>24</height>
+									<Text>确定</Text>
+								</attr>
+								<eventlist>
+									<event name="OnClick" file="NewTaskModal.xml.lua" func="OnOKClick" />
+								</eventlist>
+							</obj>
+							<obj id="cancel" class="BaseUI.TextureButton">
+								<attr>
+									<left>father.width - 75 - 16</left>
+									<top>father.height - 30</top>
+									<width>75</width>
+									<height>24</height>
+									<Text>取消</Text>
+								</attr>
+								<eventlist>
+									<event name="OnClick" file="NewTaskModal.xml.lua" func="OnCancelClick" />
+								</eventlist>
+							</obj>
+						</children>
+					</obj>
+				</children>
+			</obj>
+			</children>
+			<eventlist>
+			</eventlist>
+		</obj>
+	</objtreetemplate>
+	<hostwndtemplate id="Thunder.NewTaskModal" class="ModalHostWnd" >
+		<attr> 
+			<layered>1</layered>
+			<left>0</left> 
+			<top>0</top>
+			<width>452</width>
+			<height>500</height>
+			<visible>1</visible>
+			<enable>1</enable>
+			<appwindow>0</appwindow>
+		</attr>
+		<eventlist>
+			<event name="OnCreate" file="NewTaskModal.xml.lua" func="OnCreate" />
+		</eventlist>		
+	</hostwndtemplate>	
+</xlue>

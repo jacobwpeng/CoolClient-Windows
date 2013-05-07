@@ -1,0 +1,265 @@
+<!--XML最好存储为UTF-8编码-->
+<xlue>
+	<objtreetemplate id="Thunder.Tree" class="ObjectTreeTemplate">
+		<attr>
+				<left>-200</left>
+				<top>-200</top>
+				<width>2000</width>
+				<height>2000</height>
+		</attr>
+		<obj id="mainwnd.root" class="LayoutObject">
+			<attr>
+				<left></left>
+				<top></top>
+				<width>861</width>
+				<height>464</height>
+			</attr>
+			<children>
+				<obj id="mainwnd.bkg" class="TextureObject">
+					<attr>
+						<left></left>
+						<top></top>
+						<width>father.width</width>
+						<height>father.height</height>
+						<texture>texture.mainwnd.border</texture>
+					</attr>
+					<children>
+						<obj id="mainwnd.body" class="LayoutObject">
+							<attr>
+								<left></left>
+								<top></top>
+								<width>father.width</width>
+								<height>father.height</height>
+							</attr>
+							<children>
+								<obj id="mainwnd.resize.right" class="ResizeObject">
+									<attr>
+										<top>0</top>
+										<left>father.width-4</left>
+										<width>4</width>
+										<height>father.height</height>
+										<type>right</type>
+										<zorder>10000</zorder>
+									</attr>
+								</obj>
+								<obj id="mainwnd.resize.bottom" class="ResizeObject">
+									<attr>
+										<top>father.height-4</top>
+										<width>father.width</width>
+										<height>4</height>
+										<type>bottom</type>
+										<zorder>10000</zorder>
+									</attr>
+								</obj>
+								<obj id="mainwnd.resize.top" class="ResizeObject">
+									<attr>
+										<top>-2</top>
+										<width>father.width</width>
+										<height>4</height>
+										<type>top</type>
+										<zorder>10000</zorder>
+									</attr>
+								</obj>
+								<obj id="mainwnd.resize.left" class="ResizeObject">
+									<attr>
+										<left>-2</left>
+										<width>4</width>
+										<height>father.height</height>
+										<type>left</type>
+										<zorder>10000</zorder>
+									</attr>
+								</obj>
+								<obj id="mainwnd.resize.topleft" class="ResizeObject">
+									<attr>
+										<left>0</left>
+										<top>0</top>
+										<width>4</width>
+										<height>4</height>
+										<type>topleft</type>
+										<zorder>1000000</zorder>
+									</attr>
+								</obj>
+								<obj id="mainwnd.resize.bottomleft" class="ResizeObject">
+									<attr>
+										<left>0</left>
+										<top>father.height-4</top>
+										<width>4</width>
+										<height>4</height>
+										<type>bottomleft</type>
+										<zorder>1000000</zorder>
+									</attr>
+								</obj>
+								<obj id="mainwnd.resize.topright" class="ResizeObject">
+									<attr>
+										<left>father.width-4</left>
+										<top>0</top>
+										<width>4</width>
+										<height>4</height>
+										<type>topright</type>
+										<zorder>1000000</zorder>
+									</attr>
+								</obj>
+								<obj id="mainwnd.resize.bottomright" class="ResizeObject">
+									<attr>
+										<left>father.width-4</left>
+										<top>father.height-4</top>
+										<width>4</width>
+										<height>4</height>
+										<type>bottomright</type>
+										<zorder>1000000</zorder>
+									</attr>
+								</obj>						
+								<obj id="mainwnd.caption" class="CaptionObject">
+									<attr>
+										<left>0</left>
+										<top>0</top>
+										<width>father.width</width>
+										<height>32</height>
+									</attr>
+								</obj>
+								<obj id="mainwnd.topbkg" class="TextureObject">
+									<attr>
+										<left>0</left>
+										<top>0</top>
+										<width>father.width</width>
+										<height>58</height>
+										<texture>texture.system.topbkg</texture>
+									</attr>
+									<children>
+										<obj id="system.button.close" class="Thunder.ImageButton.Ctrl">
+											<attr>
+												<left>father.width-41</left>
+												<top>0</top>
+												<width>41</width>
+												<height>19</height>
+												<NormalBkg>system.button.close.normal</NormalBkg>
+												<HoverBkg>system.button.close.move</HoverBkg>
+												<DownBkg>system.button.close.lbuttondown</DownBkg>
+											</attr>
+											<eventlist>	
+												<event name="OnLButtonUp" file="MainWnd.xml.lua" func="OnSystemCloseButtonLButtonUp" />
+											</eventlist>
+										</obj>
+										<obj id="system.button.maximum" class="Thunder.ImageButton.Ctrl">
+											<attr>
+												<left>father.width-41-27</left>
+												<top>0</top>
+												<width>27</width>
+												<height>19</height>
+												<NormalBkg>system.button.maximum.normal</NormalBkg>
+												<HoverBkg>system.button.maximum.move</HoverBkg>
+												<DownBkg>system.button.maximum.lbuttondown</DownBkg>				
+											</attr>
+											<eventlist>	
+												<event name="OnLButtonUp" file="MainWnd.xml.lua" func="OnSystemMaximumButtonLButtonUp" />
+											</eventlist>
+										</obj>
+										<obj id="system.button.minimum" class="Thunder.ImageButton.Ctrl">
+											<attr>
+												<left>father.width-41-27-27</left>
+												<top>0</top>
+												<width>27</width>
+												<height>19</height>
+												<NormalBkg>system.button.minimum.normal</NormalBkg>
+												<HoverBkg>system.button.minimum.move</HoverBkg>
+												<DownBkg>system.button.minimum.lbuttondown</DownBkg>		
+											</attr>
+											<eventlist>	
+												<event name="OnLButtonUp" file="MainWnd.xml.lua" func="OnSystemMinimumButtonLButtonUp" />
+											</eventlist>
+										</obj>
+										<obj id="system.button.config" class="Thunder.ImageButton.Ctrl">
+											<attr>
+												<left>father.width-41-27-27-27</left>
+												<top></top>
+												<width>27</width>
+												<height>19</height>
+												<NormalBkg>system.button.config.normal</NormalBkg>
+												<HoverBkg>system.button.config.move</HoverBkg>
+												<DownBkg>system.button.config.lbuttondown</DownBkg>
+											</attr>
+											<eventlist>
+												<event name="OnClick" file="MainWnd.xml.lua" func="OnSystemConfigButtonClick" />
+											</eventlist>
+										</obj>
+									</children>
+								</obj>
+								<obj id="tabctrl" class="LayoutObject">
+									<attr>
+										<left>58</left>
+										<top>20</top>
+										<width>father.width-108</width>
+										<height>father.height-20</height>
+									</attr>
+									<children>
+										<obj id="tabHeader" class="Thunder.TabCtrl">
+											<attr>
+												<left>0</left>
+												<top>0</top>
+												<width>father.width</width>
+												<height>38</height>
+												<ButtonWidth>145</ButtonWidth>
+												<ButtonHeight>38</ButtonHeight>
+												<ButtonInternalSpace>4</ButtonInternalSpace>     
+												<IconLeftPos>4</IconLeftPos>
+												<IconSize>16</IconSize>
+											</attr>
+											<eventlist>
+												<event name="OnInitControl" file="MainWnd.xml.lua" func="OnInitTabHeader" />
+												<event name="OnActiveTabChanged" file="MainWnd.xml.lua" func="OnActiveTabChanged" />
+											</eventlist>
+										</obj>
+										<obj id="tabbkg" class="Thunder.TabCtrlBkg">
+											<attr>
+												<zorder>-1</zorder>
+												<left>-58</left>
+												<top>38</top>
+												<width>father.father.width</width>
+												<height>father.height - 38</height>
+											</attr>
+										</obj>
+									</children>
+								</obj>
+							</children>
+						</obj>
+					</children>
+				</obj>
+			</children>
+		</obj>
+	</objtreetemplate>
+	
+	<hostwndtemplate id="Thunder.Wnd" class="FrameHostWnd">
+		<attr> 
+			<mainwnd>1</mainwnd>
+			<title>Bolt</title>
+			<layered>1</layered>
+			<left>200</left> 
+			<top>100</top>
+			<width>861</width>
+			<height>464</height>
+			<cacheleft>0</cacheleft> 
+			<cachetop>0</cachetop>
+			<cachewidth>1000</cachewidth>
+			<cacheheight>720</cacheheight>
+			<center>1</center>
+			<topmost>0</topmost>
+			<visible>1</visible>
+			<enable>1</enable>
+			<active>1</active>
+			<maxbox>1</maxbox>
+			<minbox>1</minbox>
+			<sysmenu>1</sysmenu>
+			<minwidth>861</minwidth>
+			<minheight>464</minheight>
+			<maxwidth>1024</maxwidth>
+			<maxheight>768</maxheight>
+			<appwindow>1</appwindow>
+			<fps>30</fps>
+		</attr>
+		<eventlist>
+			<event name="OnSize" file="MainWnd.xml.lua" func="OnMainWndSize" />
+			<event name="OnCreate" file="MainWnd.xml.lua" func="OnMainWndCreate" />
+			<event name="OnShowWindow" file="MainWnd.xml.lua" func="OnMainWndShow" />
+		</eventlist>
+	</hostwndtemplate>
+</xlue>

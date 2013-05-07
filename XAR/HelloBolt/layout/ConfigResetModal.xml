@@ -1,0 +1,101 @@
+<xlue>
+	<objtreetemplate id="Thunder.ConfigResetModal">
+		<attr>
+			<left>-200</left>
+			<top>-200</top>
+			<width>2000</width>
+			<height>2000</height>
+		</attr>
+		<obj id="root" class="LayoutObject">
+			<attr>
+				<left></left>
+				<top></top>
+				<width>380</width>
+				<height>150</height>
+			</attr>
+			<children>
+			<obj id="bkg" class="TextureObject">
+				<attr>
+					<left></left>
+					<top></top>
+					<width>father.width</width>
+					<height>father.height</height>
+					<texture>texture.common.wndbkg</texture>
+				</attr>
+				<children>
+					<obj id="body" class="LayoutObject">
+						<attr>
+							<left></left>
+							<top></top>
+							<width>father.width</width>
+							<height>father.height</height>
+						</attr>
+						<children>
+							<obj id="caption" class="CaptionObject">
+								<attr>
+									<width>father.width</width>
+									<height>32</height>
+									<zorder>-1000</zorder>
+								</attr>
+							</obj>
+							<obj id="title" class="TextObject">
+								<attr>
+									<left>1</left>
+									<top>1</top>
+									<width>50</width>
+									<height>12</height>
+									<text>配置中心</text>
+								</attr>
+							</obj>
+							<obj id="ok" class="BaseUI.TextureButton">
+								<attr>
+									<left>father.width - 75*2 - 10*2</left>
+									<top>father.height - 27</top>
+									<width>75</width>
+									<height>24</height>
+									<Text>确定</Text>
+								</attr>
+								<eventlist>
+									<event name="OnClick" file="ConfigResetModal.xml.lua" func="OnOKClick" />
+								</eventlist>
+							</obj>
+							<obj id="cancel" class="BaseUI.TextureButton">
+								<attr>
+									<left>father.width - 75 - 10</left>
+									<top>father.height - 27</top>
+									<width>75</width>
+									<height>24</height>
+									<Text>取消</Text>
+								</attr>
+								<eventlist>
+									<event name="OnClick" file="ConfigResetModal.xml.lua" func="OnCancelClick" />
+								</eventlist>
+							</obj>
+						</children>
+						<eventlist>
+							
+						</eventlist>
+					</obj>
+				</children>
+			</obj>
+			</children>
+			<eventlist>
+			</eventlist>
+		</obj>
+	</objtreetemplate>
+	<hostwndtemplate id="Thunder.ConfigResetModal" class="ModalHostWnd" >
+		<attr> 
+			<layered>1</layered>
+			<left>0</left> 
+			<top>0</top>
+			<width>380</width>
+			<height>150</height>
+			<visible>1</visible>
+			<enable>1</enable>
+			<appwindow>0</appwindow>
+		</attr>
+		<eventlist>
+			<event name="OnCreate" file="NewTaskModal.xml.lua" func="OnCreate" />
+		</eventlist>		
+	</hostwndtemplate>	
+</xlue>

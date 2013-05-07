@@ -1,0 +1,457 @@
+<xlue>
+	<control class="ConfigPage">
+		<attr_def>
+			
+		</attr_def>
+		<method_def>
+			<ConfigReset file="ConfigPage.xml.lua" func="ConfigReset"/>
+			<GetCurrentConfig file="ConfigPage.xml.lua" func="GetCurrentConfig"/>
+			<GetNewConfig file="ConfigPage.xml.lua" func="GetNewConfig"/>
+			<SaveConfig file="ConfigPage.xml.lua" func="SaveConfig"/>
+			<ConfigChangeAni file="ConfigPage.xml.lua" func="ConfigChangeAni"/>
+		</method_def>
+		<event_def>
+			
+		</event_def>
+		<objtemplate>
+			<children>
+				<obj id="ctrl" class="LayoutObject">
+					<attr>
+						<left></left>
+						<top></top>
+						<width>father.width</width>
+						<height>father.height</height>
+					</attr>
+					<children>
+						<obj id="top" class="LayoutObject">
+							<attr>
+								<left></left>
+								<top></top>
+								<width>father.width</width>
+								<height>50</height>
+							</attr>
+							<children>
+								<obj id="top.icon" class="ImageObject">
+									<attr>
+										<left>21</left>
+										<top></top>
+										<width>21</width>
+										<height>father.height</height>
+										<valign>center</valign>
+										<image>bitmap.configpage.title</image>
+									</attr>
+								</obj>
+								<obj id="top.text" class="TextObject">
+									<attr>
+										<left>58</left>
+										<top></top>
+										<width>80</width>
+										<height>father.height</height>
+										<text>配置中心</text>
+										<valign>center</valign>
+										<font>font.configpage.title</font>
+										<textcolor>color.configpage.title</textcolor>
+									</attr>
+								</obj>
+								<obj id="reset" class="BaseUI.TextureButton">
+									<attr>
+										<left>father.width - 75*3 - 10*3</left>
+										<top>13</top>
+										<width>75</width>
+										<height>24</height>
+										<Text>默认设置</Text>
+									</attr>
+									<eventlist>
+										<event name="OnClick" file="ConfigPage.xml.lua" func="OnResetButtonClick" />
+									</eventlist>
+								</obj>
+								<obj id="confirm" class="BaseUI.TextureButton">
+									<attr>
+										<left>father.width - 75*2 - 10*2</left>
+										<top>13</top>
+										<width>75</width>
+										<height>24</height>
+										<Text>应用</Text>
+									</attr>
+									<eventlist>
+										<event name="OnClick" file="ConfigPage.xml.lua" func="OnAppplyClick" />
+									</eventlist>
+								</obj>
+								<obj id="cancel" class="BaseUI.TextureButton">
+									<attr>
+										<left>father.width - 75 - 10</left>
+										<top>13</top>
+										<width>75</width>
+										<height>24</height>
+										<Text>关闭</Text>
+									</attr>
+									<eventlist>
+										<event name="OnClick" file="ConfigPage.xml.lua" func="OnCloseClick" />
+									</eventlist>
+								</obj>
+								<obj id="" class="TextureObject">
+									<attr>
+										<left>30</left>
+										<top>father.height - 1</top>
+										<width>father.width - 60</width>
+										<height>1</height>
+										<texture>texture.configpage.splitter</texture>
+									</attr>
+								</obj>
+							</children>
+						</obj>
+						<obj id="comconfig" class="LayoutObject">
+							<attr>
+								<left></left>
+								<top>50</top>
+								<width>father.width</width>
+								<height>110</height>
+							</attr>
+							<children>
+								<obj id="comconfig.title" class="TextObject">
+									<attr>
+										<left>58</left>
+										<top></top>
+										<width>60</width>
+										<height>24</height>
+										<text>常规设置</text>
+										<font>font.configpage.subtitle</font>
+										<valign>center</valign>
+									</attr>
+								</obj>
+								<obj id="runwithos" class="Thunder.CheckBox">
+									<attr>
+										<left>130</left>
+										<top>0</top>
+										<width>120</width>
+										<height>24</height>
+										<taborder>5</taborder>
+										<Text>开机自动启动</Text>
+										<TextColor>color.configpage.normal</TextColor>
+									</attr>
+								</obj>
+								<obj id="startasadd" class="Thunder.CheckBox">
+									<attr>
+										<left>130</left>
+										<top>27</top>
+										<width>120</width>
+										<height>24</height>
+										<taborder>5</taborder>
+										<Text>添加后立即下载</Text>
+										<TextColor>color.configpage.normal</TextColor>
+									</attr>
+								</obj>
+								<obj id="torrentfolder" class="LayoutObject">
+									<attr>
+										<left>130</left>
+										<top>27*2</top>
+										<width>father.width - 130</width>
+										<height>54</height>
+									</attr>
+									<children>
+										<obj id="torrentfolder.title" class="TextObject">
+											<attr>
+												<top>10</top>
+												<width>80</width>
+												<height>14</height>
+												<text>种子路径:</text>
+											</attr>
+										</obj>
+										<obj id="torrentfolder.input" class="Thunder.InputArea">
+											<attr>
+												<left>20</left>
+												<top>24</top>
+												<width>300</width>
+												<height>30</height>
+											</attr>
+											<children>
+												<obj id="choosepath" class="BaseUI.TextureButton">
+													<attr>
+														<left>father.width - 24 - 2</left>
+														<top>3</top>
+														<width>24</width>
+														<height>24</height>
+														<NormalBkg>texture.general.button.righthalf.normal</NormalBkg>
+														<HoverBkg>texture.general.button.righthalf.hover</HoverBkg>
+														<DownBkg>texture.general.button.righthalf.down</DownBkg>
+													</attr>
+													<children>
+														<obj id="icon" class="ImageObject">
+															<attr>
+																<left></left>
+																<top></top>
+																<width>father.width</width>
+																<height>father.height</height>
+																<valign>center</valign>
+																<halign>center</halign>
+																<image>bitmap.configpage.folder</image>
+															</attr>
+														</obj>
+													</children>
+												</obj>
+											</children>
+										</obj>
+									</children>
+								</obj>
+								<obj id="" class="TextureObject">
+									<attr>
+										<left>30</left>
+										<top>father.height - 1</top>
+										<width>father.width - 60</width>
+										<height>1</height>
+										<texture>texture.configpage.splitter</texture>
+									</attr>
+								</obj>
+							</children>
+						</obj>
+						<obj id="downloadconfig" class="LayoutObject">
+							<attr>
+								<left></left>
+								<top>160</top>
+								<width>father.width</width>
+								<height>140</height>
+							</attr>
+							<children>
+								<obj id="downloadconfig.title" class="TextObject">
+									<attr>
+										<left>58</left>
+										<top></top>
+										<width>60</width>
+										<height>24</height>
+										<text>下载设置</text>
+										<font>font.configpage.subtitle</font>
+										<valign>center</valign>
+									</attr>
+								</obj>
+								<obj id="maxdownloadtask" class="TextObject">
+									<attr>
+										<left>130</left>
+										<top></top>
+										<width>80</width>
+										<height>24</height>
+										<text>最大同时下载</text>
+										<textcolor>color.configpage.normal</textcolor>
+										<valign>center</valign>
+									</attr>
+									<children>
+										<obj id="maxdownloadtask.input" class="Thunder.InputArea">
+											<attr>
+												<left>90</left>
+												<top></top>
+												<width>80</width>
+												<height>father.height</height>
+												<Number>true</Number>
+											</attr>
+											<eventlist>
+												
+											</eventlist>
+										</obj>
+										<obj id="maxdownloadtask.des" class="TextObject">
+											<attr>
+												<left>175</left>
+												<top></top>
+												<width>120</width>
+												<height>father.height</height>
+												<text>个(1-20)</text>
+												<textcolor>color.configpage.normal</textcolor>
+												<valign>center</valign>
+											</attr>
+										</obj>
+									</children>
+								</obj>
+								<obj id="maxdownloadspeed" class="TextObject">
+									<attr>
+										<left>130</left>
+										<top>27</top>
+										<width>80</width>
+										<height>24</height>
+										<text>最大下载速度</text>
+										<textcolor>color.configpage.normal</textcolor>
+										<valign>center</valign>
+									</attr>
+									<children>
+										<obj id="maxdownloadspeed.input" class="Thunder.InputArea">
+											<attr>
+												<left>90</left>
+												<top></top>
+												<width>80</width>
+												<height>father.height</height>
+												<Number>true</Number>
+											</attr>
+											<eventlist>
+												
+											</eventlist>
+										</obj>
+										<obj id="maxdownloadspeed.des" class="TextObject">
+											<attr>
+												<left>175</left>
+												<top></top>
+												<width>120</width>
+												<height>father.height</height>
+												<text>KB/s(0表示无限制)</text>
+												<textcolor>color.configpage.normal</textcolor>
+												<valign>center</valign>
+											</attr>
+										</obj>
+									</children>
+									<eventlist>
+										
+									</eventlist>
+								</obj>
+								<obj id="maxuploadspeed" class="TextObject">
+									<attr>
+										<left>130</left>
+										<top>27*2</top>
+										<width>80</width>
+										<height>24</height>
+										<text>最大下载速度</text>
+										<textcolor>color.configpage.normal</textcolor>
+										<valign>center</valign>
+									</attr>
+									<children>
+										<obj id="maxuploadspeed.input" class="Thunder.InputArea">
+											<attr>
+												<left>90</left>
+												<top></top>
+												<width>80</width>
+												<height>father.height</height>
+												<Number>true</Number>
+											</attr>
+											<eventlist>
+												
+											</eventlist>
+										</obj>
+										<obj id="maxuploadspeed.des" class="TextObject">
+											<attr>
+												<left>175</left>
+												<top></top>
+												<width>120</width>
+												<height>father.height</height>
+												<text>KB/s</text>
+												<textcolor>color.configpage.normal</textcolor>
+												<valign>center</valign>
+											</attr>
+										</obj>
+									</children>
+									<eventlist>
+										
+									</eventlist>
+								</obj>
+								<obj id="savefolder" class="LayoutObject">
+									<attr>
+										<left>130</left>
+										<top>27*3</top>
+										<width>father.width - 130</width>
+										<height>54</height>
+									</attr>
+									<children>
+										<obj id="savefolder.title" class="TextObject">
+											<attr>
+												<top>10</top>
+												<width>80</width>
+												<height>14</height>
+												<text>默认路径:</text>
+											</attr>
+										</obj>
+										<obj id="savefolder.input" class="Thunder.InputArea">
+											<attr>
+												<left>20</left>
+												<top>24</top>
+												<width>300</width>
+												<height>30</height>
+											</attr>
+											<children>
+												<obj id="choosepath" class="BaseUI.TextureButton">
+													<attr>
+														<left>father.width - 24 - 2</left>
+														<top>3</top>
+														<width>24</width>
+														<height>24</height>
+														<NormalBkg>texture.general.button.righthalf.normal</NormalBkg>
+														<HoverBkg>texture.general.button.righthalf.hover</HoverBkg>
+														<DownBkg>texture.general.button.righthalf.down</DownBkg>
+													</attr>
+													<children>
+														<obj id="icon" class="ImageObject">
+															<attr>
+																<left></left>
+																<top></top>
+																<width>father.width</width>
+																<height>father.height</height>
+																<valign>center</valign>
+																<halign>center</halign>
+																<image>bitmap.configpage.folder</image>
+															</attr>
+														</obj>
+													</children>
+												</obj>
+											</children>
+										</obj>
+									</children>
+								</obj>
+								<obj id="" class="TextureObject">
+									<attr>
+										<left>30</left>
+										<top>father.height - 1</top>
+										<width>father.width - 60</width>
+										<height>1</height>
+										<texture>texture.configpage.splitter</texture>
+									</attr>
+								</obj>
+							</children>
+							<eventlist>
+								
+							</eventlist>
+						</obj>
+						<obj id="otherconfig" class="LayoutObject">
+							<attr>
+								<left></left>
+								<top>300</top>
+								<width>father.width</width>
+								<height>father.height - 300</height>
+							</attr>
+							<children>
+								<obj id="otherconfig.title" class="TextObject">
+									<attr>
+										<left>58</left>
+										<top></top>
+										<width>60</width>
+										<height>24</height>
+										<text>其他设置</text>
+										<font>font.configpage.subtitle</font>
+										<valign>center</valign>
+									</attr>
+								</obj>
+								<obj id="beepasfinished" class="Thunder.CheckBox">
+									<attr>
+										<left>130</left>
+										<top>0</top>
+										<width>150</width>
+										<height>24</height>
+										<taborder>5</taborder>
+										<Text>下载完成提示声音</Text>
+										<TextColor>color.configpage.normal</TextColor>
+									</attr>
+								</obj>
+								<obj id="alertasfinished" class="Thunder.CheckBox">
+									<attr>
+										<left>130</left>
+										<top>27</top>
+										<width>150</width>
+										<height>24</height>
+										<taborder>5</taborder>
+										<Text>下载完成后提示窗口</Text>
+										<TextColor>color.configpage.normal</TextColor>
+									</attr>
+								</obj>
+							</children>
+						</obj>
+					</children>
+				</obj>
+			</children>
+			<eventlist>
+				<event name="OnInitControl" file="ConfigPage.xml.lua" func="OnPageInit" />
+			</eventlist>
+		</objtemplate>
+	</control>
+</xlue>

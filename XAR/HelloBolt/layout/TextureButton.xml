@@ -1,0 +1,49 @@
+<xlue>
+	<control class="BaseUI.TextureButton">
+		<attr_def>
+			<attr name="Style" type="string"><default>normal</default></attr>
+			<attr name="NormalBkg" type="string"><default>texture.general.button.normal</default></attr>
+			<attr name="HoverBkg" type="string" ><default>texture.general.button.hover</default></attr>
+			<attr name="DownBkg" type="string" ><default>texture.general.button.down</default></attr>
+			<attr name="Text" type="string" />
+			<attr name="isResizable " type="bool"><default>false</default></attr>
+			<attr name="TextColor" type="string" ><default>system.black</default></attr>
+		</attr_def>
+		<method_def>
+			<SetText file="TextureButton.xml.lua" func="SetText" />
+		</method_def>
+		<event_def>
+			<OnClick />
+		</event_def>
+		<objtemplate>
+			<children>
+				<obj id="texturebtn.bkg" class="TextureObject">
+					<attr>
+						<left></left>
+						<top></top>
+						<width>father.width</width>
+						<height>father.height</height>
+					</attr>
+					<children>
+						<obj id="texturebtn.text" class="TextObject">
+							<attr>
+								<width>father.width</width>
+								<height>father.height</height>
+								<halign>center</halign>
+								<valign>center</valign>
+							</attr>
+						</obj>
+					</children>
+				</obj>
+			</children>
+			<eventlist>
+				<event name="OnInitControl" file="TextureButton.xml.lua" func="OnInitControl" />
+				<event name="OnMouseEnter" file="TextureButton.xml.lua" func="OnMouseEnter" />
+				<event name="OnMouseLeave" file="TextureButton.xml.lua" func="OnMouseLeave" />
+				<event name="OnLButtonUp" file="TextureButton.xml.lua" func="OnLButtonUp" />
+				<event name="OnLButtonDown" file="TextureButton.xml.lua" func="OnLButtonDown" />
+				<event name="OnPosChange" file="TextureButton.xml.lua" func="OnPosChange" />
+			</eventlist>
+		</objtemplate>
+	</control>
+</xlue>

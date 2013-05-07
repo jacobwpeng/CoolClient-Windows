@@ -1,0 +1,53 @@
+<XLUE>
+<resource>
+	<!--普通的位图资源-->
+	<bitmap id="app.topbkg" path="bitmap\topbkg.png" />
+	<imagelist id="imagelist.system.button" vertical="0" splitter="1" varyblock="1" image="bitmap\imagelist.system.button.png" />
+	<imagelist id="imagelist.menu.icon" vertical="0" splitter="1" varyblock="1" image="bitmap\imagelist.menu.icon.png" />
+	<imagelist id="imagelist.newtask.edit" vertical="0" splitter="1" varyblock="1" image="bitmap\imagelist.newtask.edit.png" />
+	<imagelist id="imagelist.tab.texture" vertical="0" splitter="1" varyblock="1" image="bitmap\bitmap.tab.png" />
+	<imagelist id="imagelist.tab.close" vertical="0" splitter="1" varyblock="1" image="bitmap\tab.item.close.png"/>
+	<imagelist id="imagelist.general.button" vertical="0" splitter="1" varyblock="1" image="bitmap\general.button.bkg.png"/>
+	<!--主窗口Tab的纹理-->
+	<texture id="texture.tab.active" imagelist="imagelist.tab.texture" index="3" type="ThreeInOneH"/>
+	<texture id="texture.tab.hover" imagelist="imagelist.tab.texture" index="2" type="ThreeInOneH"/>
+	<texture id="texture.tab.normal" imagelist="imagelist.tab.texture" index="1" type="ThreeInOneH"/>
+	<!--主窗口Tab的各种图标-->
+	<bitmap id="bitmap.tab.close.normal" imagelist="imagelist.tab.close" index ="1"/>
+	<bitmap id="bitmap.tab.close.hover" imagelist="imagelist.tab.close" index ="2"/>
+	<bitmap id="bitmap.tab.close.lbuttondown" imagelist="imagelist.tab.close" index ="3"/>
+	<bitmap id="bitmap.tab.mydownload" image="bitmap\tab.icon.mydownload.png"/>
+	<bitmap id="bitmap.tab.search" image="bitmap\tab.icon.search.png"/>
+	<bitmap id="bitmap.tab.config" image="bitmap\tab.icon.config.png"/>
+	
+	<bitmap id="bitmap.menu.icon.exit" imagelist="imagelist.menu.icon" index="7" />
+	<bitmap id="system.button.close.normal" imagelist="imagelist.system.button" index="30" />
+	<bitmap id="system.button.close.move" imagelist="imagelist.system.button" index="28" />
+	<bitmap id="system.button.close.lbuttondown" imagelist="imagelist.system.button" index="29" />
+	<bitmap id="system.button.maximum.normal" imagelist="imagelist.system.button" index="22" />
+	<bitmap id="system.button.maximum.move" imagelist="imagelist.system.button" index="20" />
+	<bitmap id="system.button.maximum.lbuttondown" imagelist="imagelist.system.button" index="21" />
+	<bitmap id="system.button.minimum.normal" imagelist="imagelist.system.button" index="18" />
+	<bitmap id="system.button.minimum.move" imagelist="imagelist.system.button" index="16" />
+	<bitmap id="system.button.minimum.lbuttondown" imagelist="imagelist.system.button" index="17" />
+	<bitmap id="system.button.config.normal" imagelist="imagelist.system.button" index="14" />
+	<bitmap id="system.button.config.move" imagelist="imagelist.system.button" index="12" />
+	<bitmap id="system.button.config.lbuttondown" imagelist="imagelist.system.button" index="13" />
+	
+	<texture id="texture.toolbar.tips" image="bitmap\texture.tips.png" type="ThreeInOneH" />
+	<texture id="texture.system.topbkg" image="bitmap\topbkg.png" type="ThreeInOneH" />
+	<texture id="texture.common.wndbkg" image="bitmap\config.panel.bkg.png" type="NineInOne" />
+	
+	<texture id="texture.general.button.normal" imagelist="imagelist.general.button" index="1" type="ThreeInOneH" />
+	<texture id="texture.general.button.hover" imagelist="imagelist.general.button" index="2" type="ThreeInOneH" />
+	<texture id="texture.general.button.down" imagelist="imagelist.general.button" index="3" type="ThreeInOneH" />
+	<texture id="texture.general.button.disabled" imagelist="imagelist.general.button" index="4" type="ThreeInOneH"/>
+	<texture id="texture.general.button.righthalf.normal" imagelist="imagelist.general.button" index="9" type="ThreeInOneH"/>
+	<texture id="texture.general.button.righthalf.hover" imagelist="imagelist.general.button" index="10" type="ThreeInOneH"/>
+	<texture id="texture.general.button.righthalf.down" imagelist="imagelist.general.button" index="11" type="ThreeInOneH"/>
+	<texture id="texture.general.button.righthalf.disabled" imagelist="imagelist.general.button" index="12" type="ThreeInOneH"/>
+	
+	<texture id="texture.edit.bkg" imagelist="imagelist.newtask.edit" index="11" type="NineInOne" />
+	<texture id="texture.edit.light.bkg" imagelist="imagelist.newtask.edit" index="12" type="NineInOne" />
+</resource>
+</XLUE>

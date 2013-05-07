@@ -1,0 +1,81 @@
+<xlue>	
+	<control class="Thunder.TabCtrl">
+		<attr_def>
+			<attr name="BkgTextureID" type="string"><default></default></attr>
+
+			<attr name="BtnBkgNormal" type="string"><default>texture.tab.normal</default></attr>
+			<attr name="BtnBkgHover" type="string"><default>texture.tab.hover</default></attr>
+			<attr name="BtnBkgDown" type="string"><default>texture.tab.select</default></attr>
+			<attr name="BtnBkgDisable" type="string"><default>texture.tab.normal</default></attr>
+
+			<attr name="ActiveBtnBkgNormal" type="string"><default>texture.tab.select</default></attr>
+			<attr name="ActiveBtnBkgHover" type="string"><default>texture.tab.select</default></attr>
+			<attr name="ActiveBtnBkgDown" type="string"><default>texture.tab.select</default></attr>
+			<attr name="ActiveBtnBkgDisable" type="string"><default>texture.tab.select</default></attr>
+			
+			<attr name="IconLeftPos" type="int"><default>0</default></attr>
+			<attr name="IconTopPos" type="int"><default>0</default></attr>
+			<attr name="TextLeftPos" type="int"><default>0</default></attr>
+			<attr name="TextTopPos" type="int"><default>0</default></attr>
+			<attr name="IconSize" type="int"><default>0</default></attr>
+			
+			<attr name="TextFontID" type="string"><default></default></attr>
+			<attr name="TextColorID" type="string"><default></default></attr>
+
+			<attr name="ButtonWidth" type="int"><default>0</default></attr>
+			<attr name="ButtonHeight" type="int"><default>0</default></attr>
+			<attr name="ButtonInternalSpace" type="int"><default>0</default></attr>		<!--	按钮间距 -->
+		</attr_def>
+		<method_def>
+			<AddTabItem file="TabCtrl.xml.lua" func="AddTabItem" />
+			<RemoveTabItem file="TabCtrl.xml.lua" func="RemoveTabItem" />
+			<SetActiveTab file="TabCtrl.xml.lua" func="SetActiveTab" />
+			<SetText file="TabCtrl.xml.lua" func="SetText"/>
+		</method_def>
+		<event_def>
+			<OnActiveTabChanged>
+				<param>
+					<string/>		<!--		激活的item id		-->
+					<string/>		<!--		上一个激活的item id -->
+				</param>
+			</OnActiveTabChanged>
+		</event_def>
+		<objtemplate>
+			<children>
+				<obj id="bkg" class="TextureObject">
+					<attr>
+						<left>0</left>
+						<top>0</top>
+						<width>father.width</width>
+						<height>father.height</height>
+					</attr>
+				</obj>
+			</children>
+		</objtemplate>
+	</control>
+	
+	<control class="Thunder.TabCtrlBkg">
+		<attr_def>
+			<attr name="BorderTexture" type="string"><default>texture.tabbody.border</default></attr>
+		</attr_def>
+		<method_def>
+			<AddPage file="TabCtrl.xml.lua" func="AddPage" />
+			<ActivePage file="TabCtrl.xml.lua" func="ActivePage" />
+		</method_def>
+		<objtemplate>
+			<children>
+				<obj id="bkg" class="TextureObject">
+					<attr>
+						<left>0</left>
+						<top>0</top>
+						<width>father.width</width>
+						<height>father.height</height>
+					</attr>
+				</obj>
+			</children>
+			<eventlist>
+				<event name="OnInitControl" file="TabCtrl.xml.lua" func="OnInitTabCtrlBkg" />
+			</eventlist>
+		</objtemplate>
+	</control>
+</xlue>	

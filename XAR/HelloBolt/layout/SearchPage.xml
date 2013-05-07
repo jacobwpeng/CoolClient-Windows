@@ -1,0 +1,222 @@
+<xlue>
+	<control class="SearchPage">
+		<attr_def>
+			
+		</attr_def>
+		<method_def>
+			
+		</method_def>
+		<event_def>
+			
+		</event_def>
+		<objtemplate>
+			<children>
+				<obj id="ctrl" class="LayoutObject">
+					<attr>
+						<left></left>
+						<top></top>
+						<width>father.width</width>
+						<height>father.height</height>
+					</attr>
+					<children>
+						<obj id="logo" class="ImageObject">
+							<attr>
+								<left>(father.width - 208)/2</left>
+								<top>60</top>
+								<width>208</width>
+								<height>70</height>
+								<image>bitmap.searchpage.logo</image>
+							</attr>
+						</obj>
+						<obj id="inputArea" class="TextureObject">
+							<attr>
+								<left>(father.width - 350 - 65)/2</left>
+								<top>60 + 70 + 40</top>
+								<width>350</width>
+								<height>32</height>
+								<texture>texture.edit.bkg</texture>
+							</attr>
+							<children>
+								<obj id="edit" class="EditObject">
+									<attr>
+										<left>3</left>
+										<top>5</top>
+										<width>father.width-6</width>
+										<height>father.height-10</height>
+										<valign>center</valign>
+										<font>search.font</font>
+										<multiline>0</multiline>
+										<focus>1</focus>
+									</attr>
+									<eventlist>
+										<event name="OnFocusChange" file="SearchPage.xml.lua" func="OnFocusChange" />
+									</eventlist>
+								</obj>
+								<obj id="btn" class="Thunder.ImageButton.Ctrl">
+									<attr>
+										<left>5 + 350</left>
+										<top></top>
+										<width>100</width>
+										<height>32</height>
+										<NormalBkg>bitmap.searchpage.btn.normal</NormalBkg>
+										<HoverBkg>bitmap.searchpage.btn.hover</HoverBkg>
+										<DownBkg>bitmap.searchpage.btn.down</DownBkg>
+									</attr>
+									<eventlist>
+										<event name="OnClick" file="SearchPage.xml.lua" func="OnSearchBtnClick" />
+									</eventlist>
+								</obj>
+								<obj id="checkbox.movie" class="Thunder.CheckBox">
+									<attr>
+										<left></left>
+										<top>45</top>
+										<width>80</width>
+										<height>24</height>
+										<taborder>5</taborder>
+										<Text>电影</Text>
+									</attr>
+								</obj>
+								<obj id="checkbox.music" class="Thunder.CheckBox">
+									<attr>
+										<left>80</left>
+										<top>45</top>
+										<width>80</width>
+										<height>24</height>
+										<taborder>5</taborder>
+										<Text>音乐</Text>
+									</attr>
+								</obj>
+							</children>
+							<eventlist>
+							</eventlist>
+						</obj>
+					</children>
+				</obj>
+			</children>					
+			<eventlist>
+				<event name="OnInitControl" file="SearchPage.xml.lua" func="OnInitControl" />
+			</eventlist>
+		</objtemplate>
+	</control>
+	
+	<control class="ResultPage">
+		<attr_def>
+			
+		</attr_def>
+		<method_def>
+			
+		</method_def>
+		<event_def>
+			
+		</event_def>
+		<objtemplate>
+			<children>
+				<obj id="body" class="LayoutObject">
+					<attr>
+						<left></left>
+						<top></top>
+						<width>father.width</width>
+						<height>father.height</height>
+					</attr>
+					<children>
+						<obj id="logo.layout" class="LayoutObject">
+							<attr>
+								<left></left>
+								<top></top>
+								<width>113</width>
+								<height>38</height>
+							</attr>
+							<children>
+								<obj id="logo" class="ImageObject">
+									<attr>
+										<left></left>
+										<top></top>
+										<width>father.width</width>
+										<height>father.height</height>
+										<image>bitmap.searchpage.logo.small</image>
+									</attr>
+								</obj>
+							</children>
+							<eventlist>
+								<event name="OnLButtonDown" file="SearchPage.xml.lua" func="OnLogoDown" />
+							</eventlist>
+						</obj>
+
+						<obj id="inputArea" class="TextureObject">
+							<attr>
+								<left>113</left>
+								<top>3</top>
+								<width>350</width>
+								<height>32</height>
+								<texture>texture.edit.bkg</texture>
+							</attr>
+							<children>
+								<obj id="edit" class="EditObject">
+									<attr>
+										<left>3</left>
+										<top>5</top>
+										<width>father.width-6-24</width>
+										<height>father.height-10</height>
+										<valign>center</valign>
+										<font>search.font</font>
+										<multiline>0</multiline>
+									</attr>
+									<eventlist>
+										<event name="OnFocusChange" file="SearchPage.xml.lua" func="OnFocusChange" />
+									</eventlist>
+								</obj>
+								<obj id="btn" class="Thunder.ImageButton.Ctrl">
+									<attr>
+										<left>350-27</left>
+										<top>5</top>
+										<width>24</width>
+										<height>24</height>
+										<NormalBkg>bitmap.searchpage.magnifier.normal</NormalBkg>
+										<HoverBkg>bitmap.searchpage.magnifier.hover</HoverBkg>
+										<DownBkg>bitmap.searchpage.magnifier.down</DownBkg>
+									</attr>
+									<eventlist>
+										<event name="OnLButtonDown" file="SearchPage.xml.lua" func="OnSearchBtnClick" />
+									</eventlist>
+								</obj>
+								<obj id="checkbox.movie" class="Thunder.CheckBox">
+									<attr>
+										<left>350 + 10</left>
+										<top>3</top>
+										<width>50</width>
+										<height>24</height>
+										<taborder>5</taborder>
+										<Text>电影</Text>
+									</attr>
+								</obj>
+								<obj id="checkbox.music" class="Thunder.CheckBox">
+									<attr>
+										<left>350 + 10 + 50</left>
+										<top>3</top>
+										<width>50</width>
+										<height>24</height>
+										<taborder>5</taborder>
+										<Text>音乐</Text>
+									</attr>
+								</obj>
+							</children>
+							<eventlist>
+							</eventlist>
+						</obj>
+						<obj id="statusbar" class="Thunder.TasklistStatusBar">
+							<attr>
+								<left></left>
+								<top>38</top>
+								<width>father.width</width>
+								<height>24</height>
+							</attr>
+						</obj>
+					</children>
+					<eventlist>
+						
+					</eventlist>
+				</obj>
+			</children>
+		</objtemplate>
+	</control>
+</xlue>

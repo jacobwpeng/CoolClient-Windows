@@ -1,0 +1,6 @@
+字体：9号宋体
+listitem height 24
+white.png : 255.255.255
+grey.png : 236.238.241
+blue.png : 206.227.255
+全选 反选 30.130.230

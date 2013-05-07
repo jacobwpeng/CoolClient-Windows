@@ -135,10 +135,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libprotobuf.lib"
+				AdditionalDependencies="libprotobuf.lib XLFSIO.lib XLGraphic.lib XLLuaRuntime.lib XLUE.lib Shlwapi.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="false"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -188,6 +188,10 @@
 			</File>
 			<File
 				RelativePath=".\src\client_connection_handler.cc"
+				>
+			</File>
+			<File
+				RelativePath=".\src\coolclient_luawrapper.cpp"
 				>
 			</File>
 			<File
@@ -302,6 +306,10 @@
 			</File>
 			<File
 				RelativePath=".\include\client_connection_handler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\coolclient_luawrapper.h"
 				>
 			</File>
 			<File

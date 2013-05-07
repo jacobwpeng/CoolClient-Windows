@@ -1,0 +1,51 @@
+<xlue>
+	<objtemplate id="Thunder.Tips" class="LayoutObject">
+		<attr>
+			<top>0</top>
+			<left>0</left>
+			<width>100</width>
+			<height>21</height>
+		</attr>
+		<children>
+			<obj id="toolbar.tips" class="TextureObject">
+				<attr>
+					<left></left>
+					<top></top>
+					<width>father.width</width>
+					<height>father.height</height>
+					<texture>texture.toolbar.tips</texture>
+				</attr>
+				<children>
+					<obj id="tips.text" class="TextObject">
+						<attr>
+							<top>father.height/2-14/2</top>
+							<left>father.width/2-84/2</left>
+							<width>father.width</width>
+							<height>father.height</height>
+							<text>新建下载任务</text>
+						</attr>
+						<children>
+						</children>
+					</obj>
+				</children>
+			</obj>
+		</children>
+		<templateeventlist>
+			<event name="OnPreCreateInstance" file="Tips.xml.lua" func="OnPreCreateInstance"/>
+			<event name="OnPostCreateInstance" file="Tips.xml.lua" func="OnPostCreateInstance"/>
+		</templateeventlist>
+	</objtemplate>
+	
+	<hostwndtemplate id="Thunder.Tips" class="TipsHostWnd" >
+		<attr> 
+			<layered>1</layered>
+			<width>100</width>
+			<height>21</height>
+			<topmost>1</topmost>
+			<visible>1</visible>
+			<template>Thunder.Tips</template>
+		</attr>
+		<eventlist>
+		</eventlist>
+	</hostwndtemplate>
+</xlue>

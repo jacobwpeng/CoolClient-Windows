@@ -1,0 +1,156 @@
+<xlue>
+	<control class="Thunder.TaskExplorer">
+		<attr_def>
+			<attr name="CurrentChosen" type="string"><default>item.download</default></attr>
+		</attr_def>
+		<method_def>
+			<SetActiveBtn/>
+		</method_def>
+		<event_def>
+		</event_def>
+		<objtemplate>
+			<children>
+				<obj id="ctrl" class="LayoutObject">
+					<attr>
+						<left>0</left>
+						<top>0</top>
+						<width>father.width</width>
+						<height>father.height</height>
+					</attr>
+					<children>
+						<obj id="body" class="TextureObject">
+							<attr>
+								<left></left>
+								<top></top>
+								<width>father.width</width>
+								<height>father.height</height>
+							</attr>
+							<children>
+								<obj id="item.search" class="TaskExplorer.Item">
+									<attr>
+										<left></left>
+										<top>0</top>
+										<width>father.width</width>
+										<height>26</height>
+										<IconNormal>bitmap.mainwnd.taskexplorer.icon.search.normal</IconNormal>
+										<IconActive>bitmap.mainwnd.taskexplorer.icon.search.active</IconActive>
+										<Text>搜索</Text>
+									</attr>
+								</obj>
+								<obj id="item.download" class="TaskExplorer.Item">
+									<attr>
+										<left></left>
+										<top>6 + 27*1</top>
+										<width>father.width</width>
+										<height>26</height>
+										<IconNormal>bitmap.mainwnd.taskexplorer.icon.downloading.normal</IconNormal>
+										<IconActive>bitmap.mainwnd.taskexplorer.icon.downloading.active</IconActive>
+										<Text>下载</Text>
+									</attr>
+								</obj>
+								<obj id="item.finished" class="TaskExplorer.Item">
+									<attr>
+										<left></left>
+										<top>6 + 27*2</top>
+										<width>father.width</width>
+										<height>26</height>
+										<IconNormal>bitmap.mainwnd.taskexplorer.icon.finished.normal</IconNormal>
+										<IconActive>bitmap.mainwnd.taskexplorer.icon.finished.active</IconActive>
+										<Text>已完成</Text>
+									</attr>
+								</obj>
+								<obj id="item.activetask" class="TaskExplorer.Item">
+									<attr>
+										<left></left>
+										<top>6 + 27*3</top>
+										<width>father.width</width>
+										<height>26</height>
+										<IconNormal>bitmap.mainwnd.taskexplorer.icon.activetask.normal</IconNormal>
+										<IconActive>bitmap.mainwnd.taskexplorer.icon.activetask.active</IconActive>
+										<Text>活动任务</Text>
+									</attr>
+								</obj>
+								<obj id="item.stoppedtask" class="TaskExplorer.Item">
+									<attr>
+										<left></left>
+										<top>6 + 27*4</top>
+										<width>father.width</width>
+										<height>26</height>
+										<IconNormal>bitmap.mainwnd.taskexplorer.icon.stoppedtask.normal</IconNormal>
+										<IconActive>bitmap.mainwnd.taskexplorer.icon.stoppedtask.active</IconActive>
+										<Text>停止任务</Text>
+									</attr>
+								</obj>
+								<obj id="item.trash" class="TaskExplorer.Item">
+									<attr>
+										<left></left>
+										<top>6 + 27*5</top>
+										<width>father.width</width>
+										<height>26</height>
+										<IconNormal>bitmap.mainwnd.taskexplorer.icon.trash.normal</IconNormal>
+										<IconActive>bitmap.mainwnd.taskexplorer.icon.trash.active</IconActive>
+										<Text>垃圾箱</Text>
+									</attr>
+								</obj>
+							</children>
+						</obj>
+					</children>
+				</obj>
+			</children>
+		</objtemplate>
+	</control>
+	<control class="TaskExplorer.Item">
+		<attr_def>
+			<attr name="IconNormal" type="string" />
+			<attr name="IconActive" type="string" />
+			<attr name="Text" type="string" />
+			<attr name="Status" type="string" />
+		</attr_def>
+		<method_def>
+		</method_def>
+		<event_def>
+			<OnSelect/>
+		</event_def>
+		<objtemplate>
+			<children>
+				<obj id="bkg" class="ImageObject">
+					<attr>
+						<left></left>
+						<top></top>
+						<width>father.width</width>
+						<height>father.height</height>
+					</attr>
+					<children>
+						<obj id="icon" class="ImageObject">
+							<attr>
+								<left>25</left>
+								<top></top>
+								<width>16</width>
+								<height>father.height</height>
+								<valign>center</valign>
+							</attr>
+						</obj>
+						<obj id="text" class="TextObject">
+							<attr>
+								<left>50</left>
+								<top></top>
+								<width>father.width - 40</width>
+								<height>father.height</height>
+								<valign>center</valign>
+							</attr>
+						</obj>
+					</children>
+					<eventlist>
+					</eventlist>
+				</obj>
+			</children>
+			<eventlist>
+				<event name="OnInitControl" file="TaskExplorer.xml.lua" func="OnItemInit" />
+				<event name="OnMouseEnter" file="TaskExplorer.xml.lua" func="OnMouseEnter" />
+				<event name="OnMouseLeave" file="TaskExplorer.xml.lua" func="OnMouseLeave" />
+				<event name="OnLButtonDown" file="TaskExplorer.xml.lua" func="OnLButtonDown" />
+				<event name="OnSelect" file="TaskExplorer.xml.lua" func="OnSelectChange" />
+			</eventlist>
+		</objtemplate>
+	</control>
+</xlue>

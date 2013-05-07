@@ -1,0 +1,69 @@
+<xlue>
+	<objtreetemplate id="Thunder.ModalDlg">
+		<attr>
+			<left>-200</left>
+			<top>-200</top>
+			<width>2000</width>
+			<height>2000</height>
+		</attr>
+		<obj id="root" class="LayoutObject">
+			<attr>
+				<left></left>
+				<top></top>
+				<width>450</width>
+				<height>200</height>
+			</attr>
+			<children>
+			<obj id="bkg" class="TextureObject">
+				<attr>
+					<left></left>
+					<top></top>
+					<width>father.width</width>
+					<height>father.height</height>
+					<texture>texture.common.wndbkg</texture>
+				</attr>
+				<children>
+					<obj id="body" class="LayoutObject">
+						<attr>
+							<left></left>
+							<top></top>
+							<width>father.width</width>
+							<height>father.height</height>
+						</attr>
+						<children>
+							<obj id="caption" class="CaptionObject">
+								<attr>
+									<width>father.width</width>
+									<height>32</height>
+									<zorder>-1000</zorder>
+								</attr>
+							</obj>
+						</children>
+						<eventlist>
+							
+						</eventlist>
+					</obj>
+				</children>
+			</obj>
+			</children>
+			<eventlist>
+			</eventlist>
+		</obj>
+	</objtreetemplate>
+	
+	<hostwndtemplate id="Thunder.ModalDlg" class="ModalHostWnd" >
+		<attr> 
+			<layered>1</layered>
+			<left>0</left> 
+			<top>0</top>
+			<width>1000</width>
+			<height>1000</height>
+			<visible>1</visible>
+			<enable>1</enable>
+			<appwindow>0</appwindow>
+		</attr>
+		<eventlist>
+			<event name="OnCreate" file="ModalWnd.xml.lua" func="OnCreate" />
+		</eventlist>		
+	</hostwndtemplate>	
+</xlue>

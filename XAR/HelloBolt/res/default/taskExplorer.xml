@@ -1,0 +1,26 @@
+<xlue>
+	<resource>
+		<imagelist id="imagelist.pluginitem.bkg" vertical="0" splitter="1" varyblock="1" image="bitmap\imagelist.pluginitem.bkg.png" />
+		<imagelist id="imagelist.mainwnd.taskexplorer.icon" vertical="0" splitter="1" varyblock="1" image="bitmap\imagelist.taskexplorer.icon.png"/>
+		
+		<bitmap id="bitmap.mainwnd.taskexplorer.icon.search.normal" imagelist="imagelist.mainwnd.taskexplorer.icon" index="1"/>
+		<bitmap id="bitmap.mainwnd.taskexplorer.icon.search.active" imagelist="imagelist.mainwnd.taskexplorer.icon" index="2"/>
+		<bitmap id="bitmap.mainwnd.taskexplorer.icon.alltask.normal" imagelist="imagelist.mainwnd.taskexplorer.icon" index="3"/>
+		<bitmap id="bitmap.mainwnd.taskexplorer.icon.alltask.active" imagelist="imagelist.mainwnd.taskexplorer.icon" index="4"/>
+		<bitmap id="bitmap.mainwnd.taskexplorer.icon.downloading.normal" imagelist="imagelist.mainwnd.taskexplorer.icon" index="5"/>
+		<bitmap id="bitmap.mainwnd.taskexplorer.icon.downloading.active" imagelist="imagelist.mainwnd.taskexplorer.icon" index="6"/>
+		<bitmap id="bitmap.mainwnd.taskexplorer.icon.finished.normal" imagelist="imagelist.mainwnd.taskexplorer.icon" index="7"/>
+		<bitmap id="bitmap.mainwnd.taskexplorer.icon.finished.active" imagelist="imagelist.mainwnd.taskexplorer.icon" index="8"/>
+		<bitmap id="bitmap.mainwnd.taskexplorer.icon.activetask.normal" imagelist="imagelist.mainwnd.taskexplorer.icon" index="9"/>
+		<bitmap id="bitmap.mainwnd.taskexplorer.icon.activetask.active" imagelist="imagelist.mainwnd.taskexplorer.icon" index="10"/>
+		<bitmap id="bitmap.mainwnd.taskexplorer.icon.stoppedtask.normal" imagelist="imagelist.mainwnd.taskexplorer.icon" index="11"/>
+		<bitmap id="bitmap.mainwnd.taskexplorer.icon.stoppedtask.active" imagelist="imagelist.mainwnd.taskexplorer.icon" index="12"/>
+		<bitmap id="bitmap.mainwnd.taskexplorer.icon.trash.normal" imagelist="imagelist.mainwnd.taskexplorer.icon" index="13"/>
+		<bitmap id="bitmap.mainwnd.taskexplorer.icon.trash.active" imagelist="imagelist.mainwnd.taskexplorer.icon" index="14"/>
+		<bitmap id="bitmap.pluginitem.active" imagelist="imagelist.pluginitem.bkg" index="1" />
+		<bitmap id="bitmap.pluginitem.hover" imagelist="imagelist.pluginitem.bkg" index="2" />
+		
+		<texture id="texture.taskexplorer.shadow" image="bitmap\leftbkgshadow.png" type="ThreeInOneV" />
+		
+	</resource>
+</xlue>

@@ -1,0 +1,204 @@
+<xlue>
+<objtreetemplate id="ControlDemo.MainWnd.Tree" class="ObjectTreeTemplate">
+	<attr>
+			<left>-200</left>
+			<top>-200</top>
+			<width>2000</width>
+			<height>2000</height>
+	</attr>
+	<obj id="root" class="LayoutObject">
+		<attr>
+			<left>0</left>
+			<top>0</top>
+			<width>600</width>
+			<height>500</height>
+		</attr>
+		<children>
+			<obj id="bkg" class="TextureObject">
+				<attr>
+					<left>0</left>
+					<top>0</top>
+					<width>father.width</width>
+					<height>father.height</height>
+					<texture>texture.mainwnd.bkg</texture>
+				</attr>
+				<children>
+					<obj id="body" class="LayoutObject">
+						<attr>
+							<left>0</left>
+							<top>0</top>
+							<width>father.width</width>
+							<height>father.height</height>
+						</attr>
+						<children>
+							<obj id="mainwnd.resize.right" class="ResizeObject">
+								<attr>
+									<top>0</top>
+									<left>father.width-4</left>
+									<width>4</width>
+									<height>father.height</height>
+									<type>right</type>
+									<zorder>10000</zorder>
+								</attr>
+							</obj>
+							
+							<obj id="mainwnd.resize.bottom" class="ResizeObject">
+								<attr>
+									<top>father.height-4</top>
+									<width>father.width</width>
+									<height>4</height>
+									<type>bottom</type>
+									<zorder>10000</zorder>
+								</attr>
+							</obj>
+							
+							<obj id="mainwnd.resize.top" class="ResizeObject">
+								<attr>
+									<top>-2</top>
+									<width>father.width</width>
+									<height>4</height>
+									<type>top</type>
+									<zorder>10000</zorder>
+								</attr>
+							</obj>
+							
+							<obj id="mainwnd.resize.left" class="ResizeObject">
+								<attr>
+									<left>-2</left>
+									<width>4</width>
+									<height>father.height</height>
+									<type>left</type>
+									<zorder>10000</zorder>
+								</attr>
+							</obj>
+							
+							<obj id="mainwnd.resize.topleft" class="ResizeObject">
+								<attr>
+									<left>0</left>
+									<top>0</top>
+									<width>4</width>
+									<height>4</height>
+									<type>topleft</type>
+									<zorder>1000000</zorder>
+								</attr>
+							</obj>
+							
+							<obj id="mainwnd.resize.bottomleft" class="ResizeObject">
+								<attr>
+									<left>0</left>
+									<top>father.height-4</top>
+									<width>4</width>
+									<height>4</height>
+									<type>bottomleft</type>
+									<zorder>1000000</zorder>
+								</attr>
+							</obj>
+							
+							<obj id="mainwnd.resize.topright" class="ResizeObject">
+								<attr>
+									<left>father.width-4</left>
+									<top>0</top>
+									<width>4</width>
+									<height>4</height>
+									<type>topright</type>
+									<zorder>1000000</zorder>
+								</attr>
+							</obj>
+							
+							<obj id="mainwnd.resize.bottomright" class="ResizeObject">
+								<attr>
+									<left>father.width-4</left>
+									<top>father.height-4</top>
+									<width>4</width>
+									<height>4</height>
+									<type>bottomright</type>
+									<zorder>1000000</zorder>
+								</attr>
+							</obj>						
+							<obj id="mainwnd.caption" class="CaptionObject">
+								<attr>
+									<left>0</left>
+									<top>0</top>
+									<width>father.width</width>
+									<height>32</height>
+								</attr>
+							</obj>
+							
+							<obj id="CloseBtn" class="Thunder.Button">
+								<attr>
+									<left>father.width-100</left>
+									<top>34</top>
+									<width>86</width>
+									<height>23</height>
+									<Text>关闭</Text>
+								</attr>
+								<eventlist>
+									<event name="OnClick" file="MainWnd.xml.lua" func="OnClickClose" />
+								</eventlist>
+							</obj>
+							
+							<obj id="about" class="Thunder.TextLink">
+								<attr>
+									<left>(father.width-240)/2</left>
+									<top>(father.height-30)</top>
+									<width>240</width>
+									<height>24</height>
+									<Text>Bolt控件示例Demo,控件代码资源请随意使用</Text>
+								</attr>
+								<eventlist>
+									<event name="OnClick" file="MainWnd.xml.lua" func="OnClickTextLink" />
+								</eventlist>
+							</obj>
+							
+							<obj id="progress" class="Thunder.Progress">
+								<attr>
+									<left>20</left>
+									<top>(father.height-50)</top>
+									<width>father.width-40</width>
+									<height>13</height>
+									<Progress>0</Progress>
+									<ShowText>true</ShowText>
+								</attr>
+								<eventlist>
+									<event name="OnInitControl" file="MainWnd.xml.lua" func="OnProgressInitControl" />
+								</eventlist>
+							</obj>
+						</children>
+					</obj>
+				</children>
+			</obj>
+		</children>
+	</obj>
+</objtreetemplate>	
+
+<hostwndtemplate id="Demo.Wnd" class="FrameHostWnd">
+	<attr> 
+		<mainwnd>1</mainwnd>
+		<title>ControlDemo</title>
+		<layered>1</layered>
+		<left>200</left> 
+		<top>100</top>
+		<width>600</width>
+		<height>500</height>
+		<cacheleft>0</cacheleft> 
+		<cachetop>0</cachetop>
+		<cachewidth>1200</cachewidth>
+		<cacheheight>1000</cacheheight>
+		<topmost>0</topmost>
+		<visible>1</visible>
+		<enable>1</enable>
+		<active>1</active>
+		<maxbox>0</maxbox>
+		<minbox>0</minbox>
+		<minwidth>300</minwidth>
+		<minheight>250</minheight>
+		<maxwidth>1200</maxwidth>
+		<maxheight>1000</maxheight>
+		<appwindow>1</appwindow>
+		<fps>30</fps>
+	</attr>
+	<eventlist>
+		<event name="OnSize" file="MainWnd.xml.lua" func="OnMainWndSize"/>
+	</eventlist>
+</hostwndtemplate>
+</xlue>

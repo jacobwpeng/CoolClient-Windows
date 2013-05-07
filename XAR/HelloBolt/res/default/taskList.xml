@@ -1,0 +1,9 @@
+<xlue>
+	<resource>
+		<imagelist id="imagelist.tasklist.header.bkg" vertical="0" splitter="1" varyblock="1" image="bitmap\imagelist.tasklist.header.bkg.png"/>
+		
+		<texture id="texture.tasklist.header.normal" imagelist="imagelist.tasklist.header.bkg" index="1" type="ThreeInOneH"/>
+		<texture id="texture.tasklist.header.hover" imagelist="imagelist.tasklist.header.bkg" index="2" type="ThreeInOneH"/>
+		<texture id="texture.tasklist.header.down" imagelist="imagelist.tasklist.header.bkg" index="3" type="ThreeInOneH"/>
+	</resource>
+</xlue>

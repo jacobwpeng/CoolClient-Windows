@@ -1,0 +1,196 @@
+<xlue>
+	<control class="MydownloadPage">
+		<attr_def>
+			
+		</attr_def>
+		<method_def>
+			
+		</method_def>
+		<event_def>
+			
+		</event_def>
+		<objtemplate>
+			<children>
+				<obj id="ctrl" class="TextureObject">
+					<attr>
+						<left></left>
+						<top></top>
+						<width>father.width</width>
+						<height>father.height</height>
+					</attr>
+					<children>								
+						<obj id="tasklist.explorer" class="Thunder.TaskExplorer">
+							<attr>
+								<top>0</top>
+								<width>166</width>
+								<height>father.height</height>
+							</attr>
+							<children>					
+								<obj id="shadow" class="TextureObject">
+									<attr>
+										<left>father.width - 6</left>
+										<width>6</width>
+										<height>father.height - 32</height>
+										<texture>texture.taskexplorer.shadow</texture>
+									</attr>
+								</obj>
+							</children>
+						</obj>
+						<obj id="controlPanel" class="Thunder.ControlPanel">
+							<attr>
+								<left>166</left>
+								<top></top>
+								<width>father.width - 166</width>
+								<height>42</height>
+							</attr>
+						</obj>
+						<obj id="taskList" class="LayoutObject">
+							<attr>
+								<left>166</left>
+								<top>42</top>
+								<width>father.width - 166</width>
+								<height>father.height - 45 - 32</height>
+							</attr>
+							<children>
+								<obj id="tasklist.header" class="Thunder.TasklistStatusBar">
+									<attr>
+										<left></left>
+										<top></top>
+										<width>father.width</width>
+										<height>24</height>
+									</attr>
+								</obj>
+								<obj id="listbox" class="BaseUI.ListBox">
+									<attr>
+										<left>3</left>
+										<top>24</top>
+										<width>father.width - 6</width>
+										<height>father.height - 24</height>
+									</attr>
+									<eventlist>
+										<event name="OnSelectChanged" file="MydownloadPage.xml.lua" func="OnListBoxSelectChanged" />
+									</eventlist>
+								</obj>
+							</children>
+						</obj>
+						<obj id="bottombkg" class="TextureObject">
+							<attr>
+								<left>1</left>
+								<top>father.height - 32</top>
+								<width>father.width - 2</width>
+								<height>32</height>
+								<texture>texture.mainwnd.bottom</texture>
+							</attr>
+							<children>
+								<obj id="cron" class="BaseUI.TextureButton">
+									<attr>
+										<left>30</left>
+										<top>2</top>
+										<width>90</width>
+										<height>father.height - 8</height>
+										<NormalBkg></NormalBkg>
+										<HoverBkg>texture.cron.hover</HoverBkg>
+										<DownBkg>texture.cron.down</DownBkg>
+										<Text>计划任务</Text>
+									</attr>
+									<eventlist>
+										<event name="OnClick" file="MydownloadPage.xml.lua" func="OnCronClick" />
+									</eventlist>
+								</obj>
+								<obj id="text.download" class="TextObject">
+									<attr>
+										<left>father.width - 340</left>
+										<width>25</width>
+										<height>father.height</height>
+										<text>下载</text>
+										<valign>center</valign>
+										<halign>center</halign>
+									</attr>
+								</obj>
+								<obj id="text.upload" class="TextObject">
+									<attr>
+										<left>father.width - 340 + 25 + 140</left>
+										<top></top>
+										<width>25</width>
+										<height>father.height</height>
+										<text>上传</text>
+										<valign>center</valign>
+										<halign>center</halign>
+									</attr>
+								</obj>
+							</children>
+						</obj>
+					</children>
+				</obj>
+			</children>
+			<eventlist>
+				<event name="OnInitControl" file="MydownloadPage.xml.lua" func="OnPageInit" />
+			</eventlist>
+		</objtemplate>
+	</control>
+	<objtreetemplate id="MydownloadPage.CronMenu">
+		<attr>
+			<left>-1000</left>
+			<top>-1000</top>
+			<width>150</width>
+			<height>6 + 20*3</height>
+		</attr>
+		<obj id="root" class="LayoutObject">
+			<attr>
+				<left></left>
+				<top></top>
+				<width>150</width>
+				<height>6 + 20*3</height>
+			</attr>
+			<children>
+				<obj id="bkg" class="TextureObject">
+					<attr>
+						<left></left>
+						<top></top>
+						<width>father.width</width>
+						<height>father.height</height>
+						<texture>texture.common.wndbkg</texture>
+					</attr>
+					<children>
+						<obj id="item.shutdown" class="Thunder.Menu.Item">
+							<attr>
+								<left>3</left>
+								<top>3</top>
+								<width>father.width-6</width>
+								<height>20</height>
+								<Text>完成后关机</Text>
+							</attr>
+							<eventlist>
+								<event name="OnMenuItemClick" file="MydownloadPage.xml.lua" func="OnCronMenuItemClick" />
+							</eventlist>
+						</obj>
+						<obj id="item.exit" class="Thunder.Menu.Item">
+							<attr>
+								<left>3</left>
+								<top>3 + 20*1</top>
+								<width>father.width-6</width>
+								<height>20</height>
+								<Text>完成后退出</Text>
+							</attr>
+							<eventlist>
+								<event name="OnMenuItemClick" file="MydownloadPage.xml.lua" func="OnCronMenuItemClick" />
+							</eventlist>
+						</obj>
+						<obj id="item.stopupload" class="Thunder.Menu.Item">
+							<attr>
+								<left>3</left>
+								<top>3 + 20*2</top>
+								<width>father.width-6</width>
+								<height>20</height>
+								<Text>完成后停止上传</Text>
+							</attr>
+							<eventlist>
+								<event name="OnMenuItemClick" file="MydownloadPage.xml.lua" func="OnCronMenuItemClick" />
+							</eventlist>
+						</obj>
+					</children>
+				</obj>
+			</children>
+		</obj>
+	</objtreetemplate>
+</xlue>

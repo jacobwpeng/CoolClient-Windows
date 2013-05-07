@@ -1,0 +1,45 @@
+<xlue>
+	<resource>
+		<bitmap id="toolbar.separate" path="bitmap\toolbar.separate.png" />
+		<imagelist id="toolbar.btn.bkg" vertical="0" splitter="1" varyblock="1" image="bitmap\toolbar_btn.png"/>
+		
+		<texture id="toolbar.btn.bkg.hover" imagelist="toolbar.btn.bkg" index="2" type="ThreeInOneH"/>
+		<texture id="toolbar.btn.bkg.down" imagelist="toolbar.btn.bkg" index="3" type="ThreeInOneH"/>
+		
+		<imagelist id="imagelist.newtask.ani" vertical="0" splitter="1" varyblock="0" blocksize="38" image="bitmap\imagelist.newtask.ani.png" />
+		<imagelist id="imagelist.button.newtask" vertical="0" splitter="1" varyblock="0" blocksize="38" image="bitmap\imagelist.toolbar.new.png" />
+		<bitmap id="button.newtask.normal" imagelist="imagelist.button.newtask" index="1" />
+		<bitmap id="button.newtask.disabled" imagelist="imagelist.button.newtask" index="2" />
+		<imageseq id="imageseq.newtask.ani"  imagelist="imagelist.newtask.ani" />
+		
+		<imagelist id="imagelist.start.ani" vertical="0" splitter="1" varyblock="0" blocksize="38" image="bitmap\imagelist.start.ani.png" />
+		<imagelist id="imagelist.button.start" vertical="0" splitter="1" varyblock="0" blocksize="38" image="bitmap\imagelist.toolbar.start.png" />
+		<bitmap id="button.start.normal" imagelist="imagelist.button.start" index="1" />
+		<bitmap id="button.start.disabled" imagelist="imagelist.button.start" index="2" />
+		<imageseq id="imageseq.start.ani"  imagelist="imagelist.start.ani" />
+		
+		<imagelist id="imagelist.pause.ani" vertical="0" splitter="1" varyblock="0" blocksize="38" image="bitmap\imagelist.pause.ani.png" />
+		<imagelist id="imagelist.button.pause" vertical="0" splitter="1" varyblock="0" blocksize="38" image="bitmap\imagelist.toolbar.pause.png" />
+		<bitmap id="button.pause.normal" imagelist="imagelist.button.pause" index="1" />
+		<bitmap id="button.pause.disabled" imagelist="imagelist.button.pause" index="2" />
+		<imageseq id="imageseq.pause.ani"  imagelist="imagelist.pause.ani" />
+		
+		<imagelist id="imagelist.delete.ani" vertical="0" splitter="1" varyblock="0" blocksize="38" image="bitmap\imagelist.delete.ani.png" />
+		<imagelist id="imagelist.button.delete" vertical="0" splitter="1" varyblock="0" blocksize="38" image="bitmap\imagelist.toolbar.delete.png" />
+		<bitmap id="button.delete.normal" imagelist="imagelist.button.delete" index="1" />
+		<bitmap id="button.delete.disabled" imagelist="imagelist.button.delete" index="2" />
+		<imageseq id="imageseq.delete.ani"  imagelist="imagelist.delete.ani" />
+		
+		<imagelist id="imagelist.openfolder.ani" vertical="0" splitter="1" varyblock="0" blocksize="38" image="bitmap\imagelist.open.folder.ani.png" />
+		<imagelist id="imagelist.button.openfolder" vertical="0" splitter="1" varyblock="0" blocksize="38" image="bitmap\imagelist.toolbar.openfolder.png" />
+		<bitmap id="button.openfolder.normal" imagelist="imagelist.button.openfolder" index="1" />
+		<bitmap id="button.openfolder.disabled" imagelist="imagelist.button.openfolder" index="2" />
+		<imageseq id="imageseq.openfolder.ani"  imagelist="imagelist.openfolder.ani" />
+		
+		<imagelist id="imagelist.config.ani" vertical="0" splitter="1" varyblock="0" blocksize="38" image="bitmap\imagelist.config.ani.png" />
+		<imagelist id="imagelist.button.config" vertical="0" splitter="1" varyblock="0" blocksize="38" image="bitmap\imagelist.toolbar.config.png" />
+		<bitmap id="button.config.normal" imagelist="imagelist.button.config" index="1" />
+		<bitmap id="button.config.disabled" imagelist="imagelist.button.config" index="2" />
+		<imageseq id="imageseq.config.ani"  imagelist="imagelist.config.ani" />
+	</resource>
+</xlue>

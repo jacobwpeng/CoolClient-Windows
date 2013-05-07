@@ -1,0 +1,6 @@
+<XLUE>
+	<resource>
+		<texture id="texture.mainwnd.border" image="bitmap\MainWnd.png" type="NineInOne" />
+		<texture id="texture.mainwnd.bottom" image="bitmap\mainwnd.statusbar.bkg.png" type="ThreeInOneH"/>
+	</resource>
+</XLUE>

@@ -57,8 +57,17 @@ namespace CoolDown{
     namespace Client{
 
             class Job;
+			class CoolClient;
 
             typedef LocalSockManager::SockPtr SockPtr; 
+
+			class ClientThread : Poco::Runnable{
+			public:
+				ClientThread(CoolClient* pCoolClient);
+				virtual void run();
+			private:
+				CoolClient* pCoolClient_;
+			};
 
 
             class CoolClient : public ServerApplication{
