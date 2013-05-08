@@ -51,7 +51,7 @@ namespace CoolDown{
 				return ERROR_NET_CONNECT;
 			}
 
-			resource_server_sock_ = resource_server_sock_;
+			this->resource_server_sock_ = resource_server_sock;
 			return ERROR_OK;
 		}
 			

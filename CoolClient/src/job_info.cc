@@ -88,6 +88,7 @@ namespace CoolDown{
             }catch(Exception& e){
                 Application::instance().logger().warning( Poco::format("Got exception while LocalFileInfo::add_file, fileid '%s'"
                             "relative_path '%s' filename '%s'", fileid, relative_path, filename));
+				//e.displayText();
                 return ERROR_UNKNOWN;
             }
             return ERROR_OK;
