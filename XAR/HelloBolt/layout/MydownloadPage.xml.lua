@@ -12,6 +12,9 @@ function OnPageInit(self)
 	list:AddItem(data)
 	data.Name = "图书"
 	list:AddItem(data)
+
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	coolClientProxy:RunClientAsync()
 	list:UpdateUI()
 end
 

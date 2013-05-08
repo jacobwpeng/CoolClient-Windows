@@ -127,12 +127,10 @@ function OnSearchPageSearchBtnClick(self)--搜索页面的按钮响应
 	resultPage:SetObjPos2(0,0,"father.width","father.height")
 	ctrl:AddChild(resultPage)
 	
-	local tab = {}
-	--[[这里填你的函数
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	coolClientProxy:SearchResource(attr.SearchParam.KeyWords, attr.SearchParam.Type, 0, 9, 
+		function(t) listbox:AddItem(t) end )
 	
-	tab.Name = "King of Fight"
-	]]
-	listbox:AddItem(tab)
 	listbox:UpdateUI()
 end
 
