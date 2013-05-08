@@ -47,7 +47,7 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 	static int last_request_type;
 	static int total_record_count = 0;
 	{
-		DumpLuaState(luaState);
+		//DumpLuaState(luaState);
 	}
 
 
@@ -64,11 +64,11 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 
 		if( type < 0 ){
 			poco_notice_f2(logger_, "Call CoolClientProxy::SearchResource with keywords : %s, invalid type : %d", keywords, type);
-			return -1;
+			return 0;
 		}
 		if( record_begin < 0 || record_end < 0 || record_begin >= record_end ){
 			poco_notice_f2(logger_, "Call CoolClientProxy::SearchResource with Invalid range ' %d - %d'", record_begin, record_end);
-			return -2;
+			return 0;
 		}
 
 		if( last_request_keywords != keywords || last_request_type != type ){
@@ -83,7 +83,7 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 				0, 999999, &tmpList);
 			if( ret != ERROR_OK ){
 				poco_warning_f1(logger_, "Cannot get total_record_count, pCoolClient->SearchResource returns %d", (int)ret);
-				return -3;
+				return 0;
 			}
 			total_record_count = tmpList.size();
 		}
@@ -95,7 +95,7 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 		if( ret != ERROR_OK ){
 			poco_warning_f1(logger_, "Call CoolClient::SearchResource returns %d", (int)ret);
 			lua_pushinteger(luaState, (int)ret);
-			return ret;
+			return 1;
 		}
 
 		size_t record_count = records.size();
@@ -153,6 +153,19 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 			lua_settop(luaState,nNowTop);
 		}
 	}
+	return 0;
+}
+
+int CoolClientProxy::GetResourceTorrentById(lua_State* luaState){
+	int torrent_id = lua_tointeger(luaState, 1);
+	string torrent_name = lua_tostring(luaState, 2);
+	poco_debug_f2(logger_, "Call CoolClientProxy::GetResourceTorrentById with torrent_id : %d, torrent_name : %s",
+		torrent_id, torrent_name);
+	retcode_t ret = pCoolClient->GetResourceTorrentById(torrent_id, UTF82GBK(torrent_name) );
+	if( ret != ERROR_OK ){
+		poco_warning_f1(logger_, "pCoolClient->GetResourceTorrentById returns %d", (int)ret);
+	}
+
 	return 0;
 }
 

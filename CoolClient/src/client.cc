@@ -18,7 +18,6 @@
 #include <fstream>
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
-#include <boost/lexical_cast.hpp>
 #include <Poco/Logger.h>
 #include <Poco/Exception.h>
 #include <Poco/Util/Application.h>
@@ -341,7 +340,7 @@ namespace CoolDown{
 				return ERROR_OK;
 			}
 
-			retcode_t CoolClient::GetResourceTorrentById(int torrent_id, string* local_torrent_path){
+			retcode_t CoolClient::GetResourceTorrentById(int torrent_id, const string& torrent_name, string* local_torrent_path){
 				SockPtr resource_server_sock = this->sockManager_->get_resource_server_sock();
 				if( resource_server_sock.isNull() ){
 					poco_warning(logger(), "Haven't connected to resource server yet.");
@@ -353,8 +352,7 @@ namespace CoolDown{
 					poco_warning_f1(logger(), "CoolDown::Client::download returns %d", ret);
 					return ERROR_UNKNOWN;
 				}
-				string torrent_path( format("%s%c%s", this->local_torrent_dir_path_, Path::separator(), 
-											boost::lexical_cast<string>(torrent_id)) );
+				string torrent_path( format("%s%c%s.cd", this->local_torrent_dir_path_, Path::separator(), torrent_name) );
 				ofstream ofs(torrent_path.c_str());
 				ofs << torrent_content;
 				ofs.close();
