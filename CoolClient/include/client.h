@@ -5,6 +5,7 @@
 #include "local_sock_manager.h"
 #include "net_task_manager.h"
 #include "job_info.h"
+#include "resource.pb.h"
 #include <vector>
 #include <set>
 #include <string>
@@ -60,6 +61,7 @@ namespace CoolDown{
 			class CoolClient;
 
             typedef LocalSockManager::SockPtr SockPtr; 
+			typedef vector<Info> InfoList;
 
 			class ClientThread : public Poco::Runnable{
 			public:
@@ -101,6 +103,10 @@ namespace CoolDown{
                     retcode_t RequestClients(const string& tracker_address, const string& fileid, int currentPercentage, 
                                           int needCount, const ClientIdCollection& clientids, FileOwnerInfoPtrList* pInfoList);
 
+					//conmunicate with resource server
+					retcode_t SearchResource(const string& keywords, int type, int record_start, int record_end, InfoList* pInfo);
+					retcode_t GetResourceTorrentById(int torrent_id, string* local_torrent_path);
+
                     //communicate with client
                     retcode_t shake_hand(const ClientProto::ShakeHand& self, ClientProto::ShakeHand& peer);
 
@@ -137,6 +143,7 @@ namespace CoolDown{
                     bool exiting() const{
                         return this->exiting_;
                     }
+					void StopClient();
 
 
 
@@ -176,6 +183,7 @@ namespace CoolDown{
                     bool init_error_;
                     string clientid_;
                     string history_file_path_;
+					string local_torrent_dir_path_;
                     LocalSockManagerPtr sockManager_;
                     Poco::Thread job_info_collector_thread_;
                     Poco::Thread report_progress_thread_;
@@ -205,6 +213,7 @@ namespace CoolDown{
 
                     Condition jobInfoCollectorTerminateCond_;
                     Condition reportProgressCond_;
+					Condition clientRunningCond_;
 
                     //NetTaskManager downloadManager_;
                     NetTaskManager uploadManager_;

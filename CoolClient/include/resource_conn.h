@@ -35,20 +35,29 @@ using Poco::SharedPtr;
 using Poco::Int64;
 using Poco::Int32;
 
-	//发送与接收消息
-	int connent(Ask request, StreamSocket* sock ,Reply* back);
+namespace CoolDown{
+	namespace Client{
+
+		typedef vector<Info> InfoList;
+
+		//发送与接收消息
+		int connent(Ask request, StreamSocket* sock ,Reply* back);
 
 
-	int search(StreamSocket* sock, string key, int type, int counta, int countb, vector<Info>* info);       //搜索请求设置
+		int search(StreamSocket* sock, string key, int type, int counta, int countb, InfoList* info);       //搜索请求设置
 
 
-	int check (StreamSocket* sock, int fileid, string* brief);       //查看资源介绍请求设置
+		int check (StreamSocket* sock, int fileid, string* brief);       //查看资源介绍请求设置
 
 
-	int download(StreamSocket* sock, int fileid, string* seed);       //下载请求设置
+		int download(StreamSocket* sock, int fileid, string* seed);       //下载请求设置
 
 
-	int upload(StreamSocket* sock, string seed, int type, string key, string brief, Int64 size);       //上传请求设置
+		int upload(StreamSocket* sock, string seed, int type, string key, string brief, Int64 size);       //上传请求设置
+	}
+}
+
+
 	
 
 

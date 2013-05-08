@@ -3,6 +3,8 @@
 #include <iostream>
 using namespace std;
 
+namespace CoolDown{
+	namespace Client{
 //*	//发送与接收消息
 	int connent(Ask request, StreamSocket* sock ,Reply* back)
 	{
@@ -162,6 +164,10 @@ using namespace std;
 		
 		return mark;
 	}
+
+
+	}
+}
 
 
 

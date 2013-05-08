@@ -18,6 +18,7 @@
 #include <fstream>
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
+#include <boost/lexical_cast.hpp>
 #include <Poco/Logger.h>
 #include <Poco/Exception.h>
 #include <Poco/Util/Application.h>
@@ -93,8 +94,12 @@ namespace CoolDown{
                 LOCAL_PORT = (unsigned short) config().getInt("client.message_port", 9025);
 				
                 this->clientid_ = Verification::get_verification_code( Poco::Environment::nodeId() );
-                string default_history_file_path = format("%s%c%s", Path::current(), Path::separator(), string("history") );
-                this->history_file_path_ = config().getString("client.history_path", default_history_file_path);
+                string default_history_file_path = format("%s%c%s", Path::current(), Path::separator(), string("coolclient.history") );
+                string default_local_torrent_dir_path = format("%s%c%s", Path::current(), Path::separator(),
+																string("Torrents"));
+
+				this->history_file_path_ = config().getString("client.history_path", default_history_file_path);
+				this->local_torrent_dir_path_ = config().getString("client.local_torrent_dir", default_local_torrent_dir_path);
                 this->exiting_ = false;
                 this->init_error_ = false;
                 string msg;
@@ -106,6 +111,11 @@ namespace CoolDown{
                         msg = "Cannot create LocalSockManager.";
                         throw Exception(msg);
                     }
+
+					File torrent_dir(local_torrent_dir_path_);
+					if( torrent_dir.exists() == false){
+						torrent_dir.createDirectories();
+					}
                 }
                 catch(Exception& e){
                     poco_error_f1(logger(), "Got exception in initialize : %s", msg);
@@ -151,8 +161,11 @@ namespace CoolDown{
 				string resource_server_ip("115.156.229.166");
 				string resource_server_address( format("%s:%d", resource_server_ip, (int)CoolClient::RESOURCE_SERVER_PORT));
 
-				this->LoginTracker(tracker_ip);
-				this->ConnectResourceServer(resource_server_ip);
+				retcode_t ret = this->LoginTracker(tracker_ip);
+				poco_debug_f1(logger(), "LoginTracker returns %d", (int)ret);
+
+				ret = this->ConnectResourceServer(resource_server_ip);
+				poco_debug_f1(logger(), "ConnectResourceServer returns %d", (int)ret);
 
 				poco_debug_f1(logger(), "run application with args count :%d", (int)args.size());
 				//init routine threads
@@ -171,6 +184,11 @@ namespace CoolDown{
 				Thread thread;
 				thread.start(reactor);
 
+				poco_trace(logger(), "Going to wait for the StopClient");
+				waitForTerminationRequest();
+				poco_trace(logger(), "Wake up by call StopClient");
+
+				reactor.stop();
 				thread.join();
 
 				//Resource Server tests
@@ -207,7 +225,7 @@ namespace CoolDown{
             retcode_t CoolClient::LoginTracker(const string& tracker_address, int port){
                 retcode_t ret = sockManager_->connect_tracker(tracker_address, port);
                 if( ret != ERROR_OK ){
-                    poco_warning_f3(logger(), "Cannot connect tracker, ret : %hd, addr : %s, port : %d.", ret, tracker_address, port);
+                    poco_warning_f3(logger(), "Cannot connect tracker, ret : %d, addr : %s, port : %d.", (int)ret, tracker_address, port);
                     return ret;
                 }
                 LocalSockManager::SockPtr sock( sockManager_->get_tracker_sock( format("%s:%d", tracker_address, port)) );
@@ -307,6 +325,42 @@ namespace CoolDown{
                 }
                 return ret;
             }
+
+			retcode_t CoolClient::SearchResource(const string& keywords, int type, 
+											int record_start, int record_end, InfoList* pInfo){
+				SockPtr resource_server_sock = this->sockManager_->get_resource_server_sock();
+				if( resource_server_sock.isNull() ){
+					poco_warning(logger(), "Haven't connected to resource server yet.");
+					return ERROR_NET_NOT_CONNECTED;
+				}
+				int ret = CoolDown::Client::search(resource_server_sock.get(), keywords, type, record_start, record_end, pInfo);
+				if(ret != 0){
+					poco_warning_f2(logger(), "CoolDown::Client::search returns %d, pInfo has %u elements", ret, pInfo->size());
+					return ERROR_UNKNOWN;
+				}
+				return ERROR_OK;
+			}
+
+			retcode_t CoolClient::GetResourceTorrentById(int torrent_id, string* local_torrent_path){
+				SockPtr resource_server_sock = this->sockManager_->get_resource_server_sock();
+				if( resource_server_sock.isNull() ){
+					poco_warning(logger(), "Haven't connected to resource server yet.");
+					return ERROR_NET_NOT_CONNECTED;
+				}
+				string torrent_content;
+				int ret = CoolDown::Client::download(resource_server_sock.get(), torrent_id, &torrent_content);
+				if( ret != 0 ){
+					poco_warning_f1(logger(), "CoolDown::Client::download returns %d", ret);
+					return ERROR_UNKNOWN;
+				}
+				string torrent_path( format("%s%c%s", this->local_torrent_dir_path_, Path::separator(), 
+											boost::lexical_cast<string>(torrent_id)) );
+				ofstream ofs(torrent_path.c_str());
+				ofs << torrent_content;
+				ofs.close();
+				local_torrent_path->swap(torrent_path);
+				return ERROR_OK;
+			}
 
             template<typename ReplyMessageType>
             retcode_t CoolClient::handle_reply_message(LocalSockManager::SockPtr& sock, 
@@ -827,6 +881,10 @@ namespace CoolDown{
                     }
                 }
             }
+
+			void CoolClient::StopClient(){
+				this->terminate();
+			}
 
             retcode_t CoolClient::ParseTorrent(const Path& torrent_file_path, Torrent::Torrent* pTorrent){
                 ifstream ifs(torrent_file_path.toString().c_str() );
