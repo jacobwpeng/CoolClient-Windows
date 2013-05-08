@@ -143,13 +143,25 @@ local function ListBox_CreateInstanceItem(self)--添加item实例，不同type�
 		end
 
 		local newListBoxItem = xarFactory:CreateUIObject("listbox"..i, attr.ItemType)		
+		local newListBoxItemAttr = newListBoxItem:GetAttribute()
 		if attr.ItemType == "BaseUI.ListBox.TaskItem" then
+				newListBoxItemAttr.Status = attr.ItemDataTable[i].Status
+				newListBoxItemAttr.Type = attr.ItemDataTable[i].Type
+				newListBoxItemAttr.Name = attr.ItemDataTable[i].Name
+				newListBoxItemAttr.Time = attr.ItemDataTable[i].Time
+				newListBoxItemAttr.Size = attr.ItemDataTable[i].Size
+				newListBoxItemAttr.Upload = attr.ItemDataTable[i].Upload
+				newListBoxItemAttr.Download = attr.ItemDataTable[i].Download	
 			elseif attr.ItemType == "BaseUI.ListBox.ResItem" then
+				newListBoxItemAttr.Type = attr.ItemDataTable[i].Type
+				newListBoxItemAttr.Name = attr.ItemDataTable[i].Name
+				newListBoxItemAttr.Time = attr.ItemDataTable[i].Time
+				newListBoxItemAttr.Size = attr.ItemDataTable[i].Size
+				newListBoxItemAttr.Upload = attr.ItemDataTable[i].Upload
+				newListBoxItemAttr.Download = attr.ItemDataTable[i].Download
 			elseif attr.ItemType == "BaseUI.ListBox.NewTaskItem" then
 		end
 		--XLMessageBox(attr.ItemDataTable[i].Name.."i:"..i)
-		local newListBoxItemAttr = newListBoxItem:GetAttribute()
-		newListBoxItemAttr.FileName = attr.ItemDataTable[i].Name
 		newListBoxItemAttr.Index = intIndex			
 					
 		local ctrlLeft, ctrlTop, cltrRight, ctrlBottom = bkgWndobj:GetObjPos()
@@ -794,12 +806,31 @@ end
 
 function ListBoxItem_OnInitControl(self)
     local attr = self:GetAttribute()
+	local statusobj = self:GetControlObject("status")
 	local nameobj = self:GetControlObject("name")
+	local timeobj = self:GetControlObject("time")
+	local sizeobj = self:GetControlObject("size")
+	local uploadobj = self:GetControlObject("upload")
+	local downloadobj = self:GetControlObject("download")
 	local ctrlObj = self:GetControlObject("ctrl")
-	if attr.FileName ~= "" and nameobj then
-	    nameobj:SetText(attr.FileName)
+	if attr.Status ~= "" and statusobj then
+	    
 	end
-	
+	if attr.Name ~= "" and nameobj then
+	    nameobj:SetText(attr.Name)
+	end
+	if attr.Time ~= "" and timeobj then
+	    timeobj:SetText(attr.Time)
+	end
+	if attr.Size ~= "" and sizeobj then
+	    sizeobj:SetText(attr.Size)
+	end
+	if attr.Upload ~= "" and uploadobj then
+	    uploadobj:SetText(attr.Upload)
+	end
+	if attr.Download ~= "" and downloadobj then
+	    downloadobj:SetText(attr.Download)
+	end
 	if not self:GetVisible() then
 		ctrlObj:SetVisible(false)
 		ctrlObj:SetChildrenVisible(false)
