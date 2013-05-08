@@ -64,7 +64,8 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 
 		if( type < 0 ){
 			poco_notice_f2(logger_, "Call CoolClientProxy::SearchResource with keywords : %s, invalid type : %d", keywords, type);
-			return 0;
+			//lua_pushstring(luaState, "")
+			return 1;
 		}
 		if( record_begin < 0 || record_end < 0 || record_begin >= record_end ){
 			poco_notice_f2(logger_, "Call CoolClientProxy::SearchResource with Invalid range ' %d - %d'", record_begin, record_end);
@@ -161,7 +162,8 @@ int CoolClientProxy::GetResourceTorrentById(lua_State* luaState){
 	string torrent_name = lua_tostring(luaState, 2);
 	poco_debug_f2(logger_, "Call CoolClientProxy::GetResourceTorrentById with torrent_id : %d, torrent_name : %s",
 		torrent_id, torrent_name);
-	retcode_t ret = pCoolClient->GetResourceTorrentById(torrent_id, UTF82GBK(torrent_name) );
+	string local_torrent_path;
+	retcode_t ret = pCoolClient->GetResourceTorrentById(torrent_id, UTF82GBK(torrent_name), &local_torrent_path);
 	if( ret != ERROR_OK ){
 		poco_warning_f1(logger_, "pCoolClient->GetResourceTorrentById returns %d", (int)ret);
 	}
