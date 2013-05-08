@@ -548,6 +548,8 @@
 										<height>father.height</height>
 										<valign>center</valign>
 									</attr>
+									<children>
+									</children>
 								</obj>
 								<obj id="size" class="TextObject">
 									<attr>
