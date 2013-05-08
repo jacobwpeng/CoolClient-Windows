@@ -29,3 +29,11 @@ function GetText(self)
 	local edit = self:GetControlObject("input.edit")
 	return edit:GetText()
 end
+
+function OnKeyDown(self)
+	local isFocus = self:GetFocus()
+	local ctrl = self:GetOwnerControl()
+	if isFocus then
+		ctrl:FireExtEvent("OnTextChanged")
+	end
+end

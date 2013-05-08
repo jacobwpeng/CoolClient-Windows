@@ -36,7 +36,7 @@
 								<height>32</height>
 							</attr>
 						</obj>
-						<obj id="btn" class="Thunder.ImageButton.Ctrl">
+						<obj id="searchbtn" class="Thunder.ImageButton.Ctrl">
 							<attr>
 								<left>(father.width + 350)/2</left>
 								<top>170</top>
@@ -47,7 +47,7 @@
 								<DownBkg>bitmap.searchpage.btn.down</DownBkg>
 							</attr>
 							<eventlist>
-								<event name="OnClick" file="SearchPage.xml.lua" func="OnSearchBtnClick" />
+								<event name="OnClick" file="SearchPage.xml.lua" func="OnSearchPageSearchBtnClick" />
 							</eventlist>
 						</obj>
 						<obj id="checkbox.movie" class="Thunder.CheckBox">
@@ -59,6 +59,9 @@
 								<taborder>5</taborder>
 								<Text>电影</Text>
 							</attr>
+							<eventlist>
+								<event name="OnCheck" file="SearchPage.xml.lua" func="OnSearchParamTypeChanged" />
+							</eventlist>
 						</obj>
 						<obj id="checkbox.music" class="Thunder.CheckBox">
 							<attr>
@@ -69,6 +72,9 @@
 								<taborder>5</taborder>
 								<Text>音乐</Text>
 							</attr>
+							<eventlist>
+								<event name="OnCheck" file="SearchPage.xml.lua" func="OnSearchParamTypeChanged" />
+							</eventlist>
 						</obj>
 						<obj id="checkbox.game" class="Thunder.CheckBox">
 							<attr>
@@ -79,6 +85,9 @@
 								<taborder>5</taborder>
 								<Text>游戏</Text>
 							</attr>
+							<eventlist>
+								<event name="OnCheck" file="SearchPage.xml.lua" func="OnSearchParamTypeChanged" />
+							</eventlist>
 						</obj>
 						<obj id="checkbox.book" class="Thunder.CheckBox">
 							<attr>
@@ -89,6 +98,9 @@
 								<taborder>5</taborder>
 								<Text>图书</Text>
 							</attr>
+							<eventlist>
+								<event name="OnCheck" file="SearchPage.xml.lua" func="OnSearchParamTypeChanged" />
+							</eventlist>
 						</obj>
 					</children>
 				</obj>
@@ -149,22 +161,20 @@
 								<height>32</height>
 								<HasBtn>true</HasBtn>
 							</attr>
-							<children>
-								<obj id="btn" class="Thunder.ImageButton.Ctrl">
-									<attr>
-										<left>350-27</left>
-										<top>5</top>
-										<width>24</width>
-										<height>24</height>
-										<NormalBkg>bitmap.searchpage.magnifier.normal</NormalBkg>
-										<HoverBkg>bitmap.searchpage.magnifier.hover</HoverBkg>
-										<DownBkg>bitmap.searchpage.magnifier.down</DownBkg>
-									</attr>
-									<eventlist>
-										<event name="OnLButtonDown" file="SearchPage.xml.lua" func="OnSearchBtnClick" />
-									</eventlist>
-								</obj>
-							</children>
+						</obj>								
+						<obj id="searchbtn" class="Thunder.ImageButton.Ctrl">
+							<attr>
+								<left>113 + 350-27</left>
+								<top>3 + 5</top>
+								<width>24</width>
+								<height>24</height>
+								<NormalBkg>bitmap.searchpage.magnifier.normal</NormalBkg>
+								<HoverBkg>bitmap.searchpage.magnifier.hover</HoverBkg>
+								<DownBkg>bitmap.searchpage.magnifier.down</DownBkg>
+							</attr>
+							<eventlist>
+								<event name="OnClick" file="SearchPage.xml.lua" func="OnResultPageSearchBtnClick" />
+							</eventlist>
 						</obj>
 						<obj id="checkbox.movie" class="Thunder.CheckBox">
 							<attr>
@@ -217,16 +227,94 @@
 						<obj id="listbox" class="BaseUI.ListBox">
 							<attr>
 								<left></left>
-								<ItemType>BaseUI.ListBox.ResItem</ItemType>
 								<top>38 + 24</top>
+								<ItemType>BaseUI.ListBox.ResItem</ItemType>
 								<width>father.width</width>
 								<height>father.height - 38 - 24 - 25</height>
 							</attr>
 						</obj>
+
+						<obj id="firstpage" class="BaseUI.TextureButton">
+							<attr>
+								<left>20</left>
+								<top>father.height - 24</top>
+								<width>40</width>
+								<height>24</height>
+								<Text>首页</Text>
+							</attr>
+							<eventlist>
+								<event name="OnClick" file="MessageBox.xml.lua" func="OnFirstPageClick" />
+							</eventlist>
+						</obj>	
+						<obj id="prepage" class="BaseUI.TextureButton">
+							<attr>
+								<left>70</left>
+								<top>father.height - 24</top>
+								<width>40</width>
+								<height>24</height>
+								<Text>上一页</Text>
+							</attr>
+							<eventlist>
+								<event name="OnClick" file="MessageBox.xml.lua" func="OnPrePageClick" />
+							</eventlist>
+						</obj>						
+						<obj id="nextpage" class="BaseUI.TextureButton">
+							<attr>
+								<left>120</left>
+								<top>father.height - 24</top>
+								<width>40</width>
+								<height>24</height>
+								<Text>下一页</Text>
+							</attr>
+							<eventlist>
+								<event name="OnClick" file="MessageBox.xml.lua" func="OnNextPageClick" />
+							</eventlist>
+						</obj>
+						<obj id="lastpage" class="BaseUI.TextureButton">
+							<attr>
+								<left>170</left>
+								<top>father.height - 24</top>
+								<width>40</width>
+								<height>24</height>
+								<Text>末页</Text>
+							</attr>
+							<eventlist>
+								<event name="OnClick" file="MessageBox.xml.lua" func="OnLastPageClick" />
+							</eventlist>
+						</obj>
+						<obj id="skippage.input" class="Thunder.InputArea">
+							<attr>
+								<left>220</left>
+								<top>father.height - 24</top>
+								<width>30</width>
+								<height>24</height>
+								<Number>true</Number>
+							</attr>
+						</obj>
+						<obj id="skippage.confirm" class="BaseUI.TextureButton">
+							<attr>
+								<left>255</left>
+								<top>father.height - 24</top>
+								<width>30</width>
+								<height>24</height>
+								<Text>确定</Text>
+							</attr>
+							<eventlist>
+								<event name="OnClick" file="SearchPage.xml.lua" func="OnSkipPageClick" />
+							</eventlist>
+						</obj>
+						<obj id="totalresnum" class="TextObject">
+							<attr>
+								<left>father.width - 160</left>
+								<top>father.height  - 24</top>
+								<width>150</width>
+								<height>24</height>
+								<valign>center</valign>
+								<halign>right</halign>
+								<text>当前/总数 1-10 / 23</text>
+							</attr>
+						</obj>
 					</children>
-					<eventlist>
-						
-					</eventlist>
 				</obj>
 			</children>
 		</objtemplate>

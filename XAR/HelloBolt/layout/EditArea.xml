@@ -9,7 +9,7 @@
 			<GetText file="EditArea.xml.lua" func="GetText"/>
 		</method_def>
 		<event_def>
-			
+			<OnTextChanged/>
 		</event_def>
 		<objtemplate>
 			<children>
@@ -32,6 +32,7 @@
 							</attr>
 							<eventlist>
 								<event name="OnFocusChange" file="EditArea.xml.lua" func="OnFocusChange" />
+								<event name="OnKeyDown" file="EditArea.xml.lua" func="OnKeyDown" />
 							</eventlist>
 						</obj>
 					</children>
