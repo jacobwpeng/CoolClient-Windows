@@ -79,6 +79,8 @@ function OnSystemCloseButtonLButtonUp(self, x, y, flags)
 	local attr = self:GetAttribute()
 	bkg:SetResID(attr.HoverBkg)
 	if x>=0 and x<=41 and y<=19 and y>=0 then
+		local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+		coolClientProxy:StopClient()
 		os.exit()
 	end
 end

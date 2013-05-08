@@ -37,3 +37,19 @@
 [2013-5-8 15:48:10,000][Threadid:0] FileLogger: [Notice] lua state index 5 is number
 [2013-5-8 15:48:10,031][Threadid:0] FileLogger: [Notice] lua state index 6 is function
 [2013-5-8 15:48:16,609][Threadid:7] FileLogger: [Trace] Wake up by call StopClient
+[2013-5-8 16:14:31,640][Threadid:7] FileLogger: [Notice] enter main of CoolClient.
+[2013-5-8 16:14:32,656][Threadid:7] FileLogger: [Warning] Cannot connect to tracker, address : 127.0.0.1, port : 9977.
+[2013-5-8 16:14:32,671][Threadid:7] FileLogger: [Warning] Cannot connect tracker, ret : 30004, addr : 127.0.0.1, port : 9977.
+[2013-5-8 16:14:32,718][Threadid:7] FileLogger: [Debug] LoginTracker returns 30004
+[2013-5-8 16:14:32,734][Threadid:7] FileLogger: [Debug] ConnectResourceServer returns 0
+[2013-5-8 16:14:32,765][Threadid:7] FileLogger: [Debug] run application with args count :0
+[2013-5-8 16:14:32,781][Threadid:7] FileLogger: [Trace] Going to wait for the StopClient
+[2013-5-8 16:14:36,984][Threadid:0] FileLogger: [Notice] ********************************************************************************
+[2013-5-8 16:14:37,000][Threadid:0] FileLogger: [Notice] lua state index 0 is table
+[2013-5-8 16:14:37,015][Threadid:0] FileLogger: [Notice] lua state index 1 is userdata
+[2013-5-8 16:14:37,046][Threadid:0] FileLogger: [Notice] lua state index 2 is string
+[2013-5-8 16:14:37,078][Threadid:0] FileLogger: [Notice] lua state index 3 is number
+[2013-5-8 16:14:37,093][Threadid:0] FileLogger: [Notice] lua state index 4 is number
+[2013-5-8 16:14:37,109][Threadid:0] FileLogger: [Notice] lua state index 5 is number
+[2013-5-8 16:14:37,140][Threadid:0] FileLogger: [Notice] lua state index 6 is function
+[2013-5-8 16:15:47,015][Threadid:7] FileLogger: [Trace] Wake up by call StopClient
