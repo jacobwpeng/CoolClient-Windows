@@ -90,12 +90,13 @@
 									<valign>center</valign>
 								</attr>
 							</obj>
-							<obj id="" class="Thunder.InputArea">
+							<obj id="tracker" class="Thunder.InputArea">
 								<attr>
 									<left>father.width - 350 - 46</left>
 									<top>145</top>
 									<width>350</width>
 									<height>60</height>
+									<Multiline>true</Multiline>
 								</attr>
 							</obj>
 							<obj id="" class="TextObject">
@@ -110,10 +111,10 @@
 							</obj>
 							<obj id="RadioGroup" class="Thunder.RadioButtonContainer">
 								<attr>
-									<top>230</top>
-									<left>110</left>
+									<top>233</top>
+									<left>55</left>
 									<width>father.width - 110</width>
-									<height>80</height>
+									<height>30</height>
 								</attr>
 								<eventlist>
 									<event name="OnInitControl" file="SeedModal.xml.lua" func="OnRadioButtonContainerInit" />
@@ -135,6 +136,7 @@
 									<top>320</top>
 									<width>350</width>
 									<height>140</height>
+									<Multiline>true</Multiline>
 								</attr>
 							</obj>
 							<obj id="system.button.close" class="Thunder.ImageButton.Ctrl">
@@ -148,7 +150,7 @@
 									<DownBkg>system.button.close.lbuttondown</DownBkg>
 								</attr>
 								<eventlist>	
-									<event name="OnLButtonUp" file="SeedModal.xml.lua" func="OnCancelClick" />
+									<event name="OnLButtonUp" file="MessageBox.xml.lua" func="OnCancelClick" />
 								</eventlist>
 							</obj>
 							<obj id="ok" class="BaseUI.TextureButton">
@@ -160,7 +162,7 @@
 									<Text>确定</Text>
 								</attr>
 								<eventlist>
-									<event name="OnClick" file="NewTaskModal.xml.lua" func="OnOKClick" />
+									<event name="OnClick" file="SeedModal.xml.lua" func="OnOKClick" />
 								</eventlist>
 							</obj>
 							<obj id="cancel" class="BaseUI.TextureButton">
@@ -172,7 +174,7 @@
 									<Text>取消</Text>
 								</attr>
 								<eventlist>
-									<event name="OnClick" file="NewTaskModal.xml.lua" func="OnCancelClick" />
+									<event name="OnClick" file="MessageBox.xml.lua" func="OnCancelClick" />
 								</eventlist>
 							</obj>
 						</children>

@@ -18,6 +18,11 @@ function OnEditAreaInit(self)
 	else
 		edit:SetObjPos2(3,5,"father.width - 6","father.height - 10")
 	end
+	if attr.Multiline then
+		edit:SetMultiline(true)
+	else
+		edit:SetMultiline(false)
+	end
 end
 
 function SetText(self, text)

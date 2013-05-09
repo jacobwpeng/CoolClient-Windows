@@ -49,20 +49,20 @@ function UpdateProgress(self)
     emptypart:SetObjPos(nFullWidth, 0, width, height)
     
     local fullbkn = self:GetControlObject("FullBkn")
+	local textleft = self:GetControlObject("ProgressTextLeft")
     fullbkn:SetObjPos(0, 0, width, height)
-                
+    textleft:SetObjPos2(0, 0, width, height)   
     local emptybkn = self:GetControlObject("EmptyBkn")
+	local textright = self:GetControlObject("ProgressTextRight")
     emptybkn:SetObjPos(-nFullWidth, 0, width - nFullWidth, height)
-    
-    --local textpart = self:GetControlObject("TextPart")
-    --textpart:SetObjPos(0, 0, width, height)
+    textright:SetObjPos2(-nFullWidth, 0, width, height)
     local text = self:GetControlObject("ProgressText")
     local progresstext = self:CalcProgressText()
 	if attr.ShowText then
-		text:SetText(progresstext)
+		textleft:SetText(progresstext)
+		textright:SetText(progresstext)
 	end
     local textwidth, textheight = text:GetTextExtent()
-    --text:SetObjPos((width - textwidth) / 2, 0, (width + textwidth) / 2, height)
     if nFullWidth >= (width + textwidth) / 2 then
         text:SetTextColorResID("system.white")
     else

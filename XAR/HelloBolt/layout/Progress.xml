@@ -71,28 +71,6 @@
 
 		<objtemplate>
 			<children>
-				<obj id="TextPart" class="LayoutObject">
-					<attr>
-						<left>0</left>
-						<top>0</top>
-						<width>father.width</width>
-						<height>father.height</height>
-						<zorder>200</zorder>
-					</attr>
-					<children>
-						<obj id="ProgressText" class="TextObject">
-							<attr>
-								<left>0</left>
-								<top>0</top>
-								<width>father.width</width>
-								<height>father.height</height>
-								<halign>center</halign>
-								<valign>center</valign>
-								<font>default.font</font>
-							</attr>
-						</obj>
-					</children>
-				</obj>
 				<obj id="LightBkg" class="LayoutObject">
 					<attr>
 						<left>0</left>
@@ -133,6 +111,18 @@
 								<height>father.height</height>
 							</attr>
 						</obj>
+						<obj id="ProgressTextLeft" class="TextObject">
+							<attr>
+								<left>0</left>
+								<top>0</top>
+								<width>father.width</width>
+								<height>father.height</height>
+								<halign>center</halign>
+								<valign>center</valign>
+								<font>default.font</font>
+								<textcolor>system.white</textcolor>
+							</attr>
+						</obj>
 					</children>
 				</obj>
 				<obj id="EmptyPart" class="LayoutObject">
@@ -150,6 +140,18 @@
 								<top>0</top>
 								<width>father.width</width>
 								<height>father.height</height>
+							</attr>
+						</obj>
+						<obj id="ProgressTextRight" class="TextObject">
+							<attr>
+								<left>0</left>
+								<top>0</top>
+								<width>father.width</width>
+								<height>father.height</height>
+								<halign>center</halign>
+								<valign>center</valign>
+								<font>default.font</font>
+								<textcolor>system.black</textcolor>
 							</attr>
 						</obj>
 					</children>

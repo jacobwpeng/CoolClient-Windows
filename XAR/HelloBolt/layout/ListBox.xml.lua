@@ -739,18 +739,9 @@ local function ListBoxItem_UpdateRes(self, newState)
 	end
 	
 	local bkgObj = self:GetControlObject("bkg")
-	local textObj = self:GetControlObject("text")
 	
 	if bkgTexture ~= "" and bkgObj then
 	    bkgObj:SetTextureID(bkgTexture)
-	end
-	
-	if TextColorID ~= "" and textObj then
-	    textObj:SetTextColorResID(TextColorID)    
-	end
-	
-	if TextFontID ~= "" and textObj then
-	    textObj:SetTextFontResID(TextFontID)
 	end
 	
 	attr.NowState = newState

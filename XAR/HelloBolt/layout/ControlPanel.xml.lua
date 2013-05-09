@@ -170,6 +170,30 @@ local function OnBtnDeleteClick(self, index)--删除任务
 
 	--XLMessageBox(#attr.ItemDataTable.." cursel:"..listbox:GetCurSel())
 end
+
+local function OnBtnSeedClick(self)--制作种子的对话框
+	local templateManager = XLGetObject("Xunlei.UIEngine.TemplateManager")
+	local hostWndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
+	local mainWnd = hostWndManager:GetHostWnd("MainFrame")
+	local modalHostWndTemplate = templateManager:GetTemplate("Thunder.SeedModal","HostWndTemplate")
+	local modalHostWnd = modalHostWndTemplate:CreateInstance("Thunder.SeedModal.Instance")
+	local objectTreeTemplate = templateManager:GetTemplate("Thunder.SeedModal","ObjectTreeTemplate")
+	local uiObjectTree = objectTreeTemplate:CreateInstance("Thunder.SeedModal.Instance")
+	modalHostWnd:BindUIObjectTree(uiObjectTree)
+	
+	local userData = { Object = self:GetOwnerControl(), EventName = "OnSeedConfrim"}
+	modalHostWnd:SetUserData(userData)
+	modalHostWnd:DoModal(mainWnd:GetWndHandle())
+	
+	local objtreeManager = XLGetObject("Xunlei.UIEngine.TreeManager")	
+	objtreeManager:DestroyTree("Thunder.SeedModal.Instance")
+	hostWndManager:RemoveHostWnd("Thunder.SeedModal.Instance")
+end
+function OnSeedConfrim(self,eventName, userData)
+
+	XLMessageBox(userData.test)
+end
+
 function OnDeleteTaskConfirm(self)
 	local listbox = self:GetOwnerControl():GetControlObject("listbox")
 	local attr = listbox:GetAttribute()
@@ -198,8 +222,10 @@ function OnBtnClick(self)
 		OnBtnConfigClick(self)
 	elseif id == "btn.newtask" then
 		OnBtnNewTaskClick(self)
-	elseif id== "btn.delete" then
+	elseif id == "btn.delete" then
 		OnBtnDeleteClick(self)
+	elseif id == "btn.seed" then
+		OnBtnSeedClick(self)
 	end
 end
 

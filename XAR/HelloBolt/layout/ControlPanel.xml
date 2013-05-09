@@ -12,6 +12,7 @@
 		<event_def>
 			<OnStatusChanged/>
 			<OnDeleteTaskConfirm/>
+			<OnSeedConfrim/>
 		</event_def>
 		<objtemplate>
 			<children>
@@ -115,6 +116,7 @@
 			</children>
 			<eventlist>
 				<event name="OnDeleteTaskConfirm" file="ControlPanel.xml.lua" func="OnDeleteTaskConfirm" />
+				<event name="OnSeedConfrim" file="ControlPanel.xml.lua" func="OnSeedConfrim" />
 			</eventlist>
 		</objtemplate>
 	</control>
