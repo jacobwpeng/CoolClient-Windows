@@ -106,6 +106,9 @@ namespace CoolDown{
 					//conmunicate with resource server
 					retcode_t SearchResource(const string& keywords, int type, int record_start, int record_end, InfoList* pInfo);
 					retcode_t GetResourceTorrentById(int torrent_id, const string& torrent_name, string* local_torrent_path);
+					//connect ResourceServer if not connected yet.
+					SockPtr GetResourceServerSock();
+
 
                     //communicate with client
                     retcode_t shake_hand(const ClientProto::ShakeHand& self, ClientProto::ShakeHand& peer);
@@ -176,7 +179,9 @@ namespace CoolDown{
                     retcode_t ResumeJobWithoutLock(int handle);
                     JobPtr GetJobWithoutLock(int handle);
 
+					//network setting
                     int LOCAL_PORT;
+					string resource_server_ip_;
 
                     bool exiting_;
 

@@ -27,6 +27,9 @@ namespace CoolDown{
 			n = 0;
 			while( n != m ){
 				n += sock->receiveBytes( (char*)buffer + n, m - n );       //接收消息大小
+				if(n <= 0){
+					return 3;
+				}
 			}
 
 
@@ -39,6 +42,9 @@ namespace CoolDown{
 			n = 0;
 			while( n != d){
 				n = sock->receiveBytes(buffer, d);              //接收消息
+				if( n <= 0 ){
+					return 3;
+				}
 				receive.append(buffer, n);
 				d = d - n ;
 				n = 0;
