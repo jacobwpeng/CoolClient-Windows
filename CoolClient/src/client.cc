@@ -29,6 +29,7 @@
 #include <Poco/Net/ServerSocket.h>
 #include <Poco/Net/SocketReactor.h>
 #include <Poco/Net/SocketAcceptor.h>
+#include <Poco/Net/NetException.h>
 #include <Poco/Thread.h>
 #include <Poco/RunnableAdapter.h>
 #include <Poco/UTF8Encoding.h>
@@ -126,6 +127,7 @@ namespace CoolDown{
             void CoolClient::uninitialize(){
                 exiting_ = true;
                 this->SaveJobHistory( history_file_path_ );
+				poco_trace(logger(), "Return from SaveJobHistory");
 				//crash when waiting two threads below.... so we just do not wait them....
 				/*
 				if( this->report_progress_thread_.isRunning() ){
@@ -164,6 +166,7 @@ namespace CoolDown{
 				poco_debug_f1(logger(), "LoginTracker returns %d", (int)ret);
 
 				ret = this->ConnectResourceServer(resource_server_ip);
+				this->resource_server_ip_ = resource_server_ip;
 				poco_debug_f1(logger(), "ConnectResourceServer returns %d", (int)ret);
 
 				poco_debug_f1(logger(), "run application with args count :%d", (int)args.size());
@@ -327,9 +330,9 @@ namespace CoolDown{
 
 			retcode_t CoolClient::SearchResource(const string& keywords, int type, 
 											int record_start, int record_end, InfoList* pInfo){
-				SockPtr resource_server_sock = this->sockManager_->get_resource_server_sock();
+				SockPtr resource_server_sock = this->GetResourceServerSock();
 				if( resource_server_sock.isNull() ){
-					poco_warning(logger(), "Haven't connected to resource server yet.");
+					poco_warning(logger(), "Cannot Connect to Resource Server now.");
 					return ERROR_NET_NOT_CONNECTED;
 				}
 				int ret = CoolDown::Client::search(resource_server_sock.get(), keywords, type, record_start, record_end, pInfo);
@@ -341,9 +344,9 @@ namespace CoolDown{
 			}
 
 			retcode_t CoolClient::GetResourceTorrentById(int torrent_id, const string& torrent_name, string* local_torrent_path){
-				SockPtr resource_server_sock = this->sockManager_->get_resource_server_sock();
+				SockPtr resource_server_sock = this->GetResourceServerSock();
 				if( resource_server_sock.isNull() ){
-					poco_warning(logger(), "Haven't connected to resource server yet.");
+					poco_warning(logger(), "Cannot Connect to Resource Server now.");
 					return ERROR_NET_NOT_CONNECTED;
 				}
 				string torrent_content;
@@ -358,6 +361,26 @@ namespace CoolDown{
 				ofs.close();
 				local_torrent_path->swap(torrent_path);
 				return ERROR_OK;
+			}
+
+			SockPtr CoolClient::GetResourceServerSock(){
+				SockPtr res = this->sockManager_->get_resource_server_sock();
+				if( res.isNull() ){
+					if( ERROR_OK != this->ConnectResourceServer(this->resource_server_ip_) ){
+						//cannot connect to resource server now
+					}else{
+						//test if sock has not been closed
+						try{
+							char buf[2];
+							int ret = res->receiveBytes(buf, 0);
+						}catch(Poco::Net::ConnectionResetException& e){
+							//if closed, reconnect
+							this->ConnectResourceServer(this->resource_server_ip_);
+						}
+						res = this->sockManager_->get_resource_server_sock();
+					}
+				}
+				return res;
 			}
 
             template<typename ReplyMessageType>
