@@ -20,6 +20,8 @@
 //}
 #include "coolclientproxy.h"
 #include <windows.h>
+#include <Commdlg.h>
+#include <Shlobj.h>
 
 // C 运行时头文件
 #include <stdlib.h>
@@ -114,6 +116,27 @@ bool LoadMainXAR()
 	return true;
 }
 
+void test_dialog(){
+	//TCHAR szDir[MAX_PATH];
+	//BROWSEINFO bInfo;
+	//bInfo.hwndOwner = NULL;
+	//bInfo.pidlRoot = NULL; 
+	//bInfo.pszDisplayName = szDir; // Address of a buffer to receive the display name of the folder selected by the user
+	//bInfo.lpszTitle = _T("Please, select a folder"); // Title of the dialog
+	//bInfo.ulFlags = 0 ;
+	//bInfo.lpfn = NULL;
+	//bInfo.lParam = 0;
+	//bInfo.iImage = -1;
+
+	//LPITEMIDLIST lpItem = SHBrowseForFolder( &bInfo);
+	//if( lpItem != NULL )
+	//{
+	//	SHGetPathFromIDList(lpItem, szDir );
+	//	MessageBox(NULL, szDir, _T("Dir selected"), MB_OK);
+	//}
+	// 打开文件打开对话框，如果选中文件，则NewGame
+}
+
 
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
@@ -123,6 +146,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 {
 	// TODO: 在此放置代码。
 
+	test_dialog();
 	if(!InitXLUE())
 	{
 		MessageBoxW(NULL,L"初始化XLUE 失败!",L"错误",MB_OK);

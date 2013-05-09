@@ -21,6 +21,7 @@ public:
 	static int TestTable(lua_State* luaState);
 	static int SearchResource(lua_State* luaState);
 	static int GetResourceTorrentById(lua_State* luaState);
+	static int ChoosePath(lua_State* luaState);
 	static int StopClient(lua_State* luaState);
 
 public:

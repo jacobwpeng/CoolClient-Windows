@@ -1,12 +1,71 @@
 #include "coolclientproxy.h"
 #include "utilities.h"
+#include <Commdlg.h>
+#include <Shlobj.h>
 #include <string>
 #include <Poco/Thread.h>
 #include <Poco/Logger.h>
 #include <Poco/Types.h>
+#include <Poco/Path.h>
 
 using std::string;
 using Poco::Int64;
+
+namespace{
+	string OpenFileSelectDialog(const string& init_path){
+		OPENFILENAMEA ofn;      // 公共对话框结构。
+		CHAR szFile[MAX_PATH]; // 保存获取文件名称的缓冲区。          
+
+		// 初始化选择文件对话框。
+		ZeroMemory(&ofn, sizeof(ofn));
+		ofn.lStructSize = sizeof(ofn);
+		ofn.hwndOwner = NULL;
+		ofn.lpstrFile = szFile;
+		//
+		//
+		ofn.lpstrFile[0] = L'\0';
+		ofn.nMaxFile = sizeof(szFile);
+		ofn.lpstrFilter = NULL;
+		ofn.nFilterIndex = 1;
+		ofn.lpstrFileTitle = NULL;
+		ofn.nMaxFileTitle = 0;
+		ofn.lpstrInitialDir = init_path.c_str();
+		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+		// 显示打开选择文件对话框。
+		if ( GetOpenFileNameA(&ofn) )
+		{
+			return string(szFile);
+			//显示选择的文件。
+			//MessageBox(NULL,szFile,_T("File Selected"),MB_OK);
+		}else{
+			return string();
+		}
+	}
+
+	string OpenDirSelectDialog(const string& init_path){
+		CHAR szDir[MAX_PATH];
+		BROWSEINFOA bInfo;
+		bInfo.hwndOwner = NULL;
+		bInfo.pidlRoot = NULL; 
+		bInfo.pszDisplayName = szDir; // Address of a buffer to receive the display name of the folder selected by the user
+		bInfo.lpszTitle = "请选择一个目录"; // Title of the dialog
+		bInfo.ulFlags = 0 ;
+		bInfo.lpfn = NULL;
+		bInfo.lParam = 0;
+		bInfo.iImage = -1;
+
+		LPITEMIDLIST lpItem = SHBrowseForFolderA( &bInfo);
+		if( lpItem != NULL )
+		{
+			SHGetPathFromIDListA(lpItem, szDir);
+			return string(szDir);
+			//MessageBoxA(NULL, szDir, "目录选择成功", MB_OK);
+		}else{
+			return string();
+		}
+	}
+}
 
 CoolClient* CoolClientProxy::pCoolClient = new CoolClient;
 Logger& CoolClientProxy::logger_ = CoolClientProxy::pCoolClient->logger();
@@ -21,15 +80,7 @@ CoolClientProxy* __stdcall CoolClientProxy::Instance(void*){
 	return pCoolClientProxy;
 }
 
-static XLLRTGlobalAPI CoolClientProxyMemberFunctions[] = {
 
-	//{"CreateInstance",CoolClientProxy::CreateInstance},
-	{"RunClientAsync", CoolClientProxy::RunClientAsync},
-	{"SearchResource", CoolClientProxy::SearchResource},
-	{"StopClient", CoolClientProxy::StopClient},
-	//{"TestTable", CoolClientProxy::TestTable},
-	{NULL,NULL}
-};
 
 int CoolClientProxy::RunClientAsync(lua_State* luaState){
 	ClientThread* backgroudClient = new ClientThread(CoolClientProxy::pCoolClient);
@@ -42,7 +93,7 @@ int CoolClientProxy::RunClientAsync(lua_State* luaState){
 int CoolClientProxy::SearchResource(lua_State* luaState){
 	using CoolDown::Client::InfoList;
 	
-	CoolClientProxy** ppCoolClientProxy = reinterpret_cast<CoolClientProxy**>(luaL_checkudata(luaState, 1, COOLCLIENT_PROXY_LUA_CLASS));
+	//CoolClientProxy** ppCoolClientProxy = reinterpret_cast<CoolClientProxy**>(luaL_checkudata(luaState, 1, COOLCLIENT_PROXY_LUA_CLASS));
 	static string last_request_keywords;
 	static int last_request_type;
 	static int total_record_count = 0;
@@ -158,14 +209,72 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 }
 
 int CoolClientProxy::GetResourceTorrentById(lua_State* luaState){
-	int torrent_id = lua_tointeger(luaState, 1);
-	string torrent_name = lua_tostring(luaState, 2);
-	poco_debug_f2(logger_, "Call CoolClientProxy::GetResourceTorrentById with torrent_id : %d, torrent_name : %s",
-		torrent_id, torrent_name);
-	string local_torrent_path;
-	retcode_t ret = pCoolClient->GetResourceTorrentById(torrent_id, UTF82GBK(torrent_name), &local_torrent_path);
-	if( ret != ERROR_OK ){
-		poco_warning_f1(logger_, "pCoolClient->GetResourceTorrentById returns %d", (int)ret);
+	if( lua_isnumber(luaState, 1) && lua_isstring(luaState, 2) ){
+		int torrent_id = lua_tointeger(luaState, 1);
+		string torrent_name = lua_tostring(luaState, 2);
+		poco_debug_f2(logger_, "Call CoolClientProxy::GetResourceTorrentById with torrent_id : %d, torrent_name : %s",
+			torrent_id, torrent_name);
+		string local_torrent_path;
+		retcode_t ret = pCoolClient->GetResourceTorrentById(torrent_id, UTF82GBK(torrent_name), &local_torrent_path);
+		if( ret != ERROR_OK ){
+			poco_warning_f1(logger_, "pCoolClient->GetResourceTorrentById returns %d", (int)ret);
+		}
+	}else{
+		poco_warning(logger_, "Invalid args of CoolClientProxy::GetResourceTorrentById.");
+		DumpLuaState(luaState);
+	}
+
+
+	return 0;
+}
+
+int CoolClientProxy::ChoosePath(lua_State* luaState){
+	if( lua_isnumber(luaState, 1) && lua_isstring(luaState, 2) && lua_isfunction(luaState, 3) ){
+		int path_type = lua_tointeger(luaState, 1);
+		string base_path = lua_tostring(luaState, 2);
+		long functionRef = luaL_ref(luaState,LUA_REGISTRYINDEX);
+
+		string init_path;
+		Poco::Path p(base_path);
+		
+		if( p.isDirectory() ){
+			 init_path = p.toString();
+		}else if( p.isFile() ){
+			init_path = p.parent().toString();
+		}else{
+			//leave init_path empty
+		}
+
+		string resource_path;
+		if( path_type == 1 ){
+			//选择文件
+			string filename = OpenFileSelectDialog(init_path);
+			if(filename.empty()){
+				return 0;
+			}else{
+				resource_path.swap(filename);
+			}
+		}else if(path_type == 2){
+			//选择目录
+			string dirname = OpenDirSelectDialog(init_path);
+			if( dirname.empty() ){
+				return 0;
+			}else{
+				resource_path.swap(dirname);
+			}
+		}else{
+			poco_warning_f1(logger_, "Invalid path_type : %d", path_type);
+			return 0;
+		}
+		int top = lua_gettop(luaState);
+		lua_rawgeti(luaState, LUA_REGISTRYINDEX, functionRef);
+		lua_pushstring(luaState, resource_path.c_str());
+		int nLuaResult = XLLRT_LuaCall(luaState,1,0, L"CoolClientProxy::MakeTorrent");
+		lua_settop(luaState, top);
+		return 0;
+	}else{
+		poco_warning(logger_, "Invalid args of CoolClientProxy::MakeTorrent.");
+		DumpLuaState(luaState);
 	}
 
 	return 0;
@@ -201,6 +310,17 @@ int CoolClientProxy::TestTable(lua_State* luaState){
 	return 0;
 
 }
+
+static XLLRTGlobalAPI CoolClientProxyMemberFunctions[] = {
+
+	//{"CreateInstance",CoolClientProxy::CreateInstance},
+	{"RunClientAsync", CoolClientProxy::RunClientAsync},
+	{"SearchResource", CoolClientProxy::SearchResource},
+	{"StopClient", CoolClientProxy::StopClient},
+	{"ChoosePath", CoolClientProxy::ChoosePath},
+	//{"TestTable", CoolClientProxy::TestTable},
+	{NULL,NULL}
+};
 
 void CoolClientProxy::RegisterObj(XL_LRT_ENV_HANDLE hEnv){
 	if(hEnv == NULL)
