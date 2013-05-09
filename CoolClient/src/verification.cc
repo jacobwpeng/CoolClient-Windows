@@ -1,11 +1,14 @@
 #include "verification.h"
+#include <cmath>
 #include <Poco/SharedMemory.h>
 #include <Poco/File.h>
 #include <Poco/Bugcheck.h>
+#include <Poco/Types.h>
 
 using Poco::DigestEngine;
 using Poco::SharedMemory;
 using Poco::File;
+using Poco::Int64;
 
 namespace CoolDown{
     namespace Client{
@@ -18,38 +21,60 @@ namespace CoolDown{
 
         FastMutex Verification::mutex_;
         SHA1Engine Verification::engine_;
+		SHA1Engine Verification::file_engine_;
 
-        string Verification::get_file_verification_code(const string& fullpath) {
-            FastMutex::ScopedLock lock(mutex_);
-            File f(fullpath);
-            SharedMemory sm(f, SharedMemory::AM_READ);
-            engine_.update(sm.begin(), f.getSize() );
-            /*
-            const static size_t CHUNK_SIZE = 1 << 28;
-            char* start = sm.begin();
-            while( start + CHUNK_SIZE < sm.end() ){
-                this->calc_piece_verification_code( start, start + CHUNK_SIZE );
-                start += CHUNK_SIZE;
-            }
+		int Verification::get_file_chunk_count(const File& file, int chunk_size){
+			Int64 file_size = file.getSize();
+			double piece_count = static_cast<double>(file_size) / chunk_size;
+			int chunk_count = static_cast<int>( ceil(piece_count) );
+			return chunk_count;
+		}
 
-            this->calc_piece_verification_code( start, sm.end() );
-            */
-            return DigestEngine::digestToHex(engine_.digest());
-        }
-        void Verification::get_file_checksum_list(const File& file, int chunk_size, ChecksumList* pList){
-            poco_assert( chunk_size > 0 );
-            poco_assert( pList != NULL );
-            poco_assert( file.exists() );
+		void Verification::get_file_and_chunk_checksum_list(const File& file, int chunk_size,
+							make_torrent_progress_callback_t callback, string* pFileChecksum, ChecksumList* pList){
+			poco_assert( chunk_size > 0 );
+			poco_assert( pFileChecksum != NULL );
+			poco_assert( pList != NULL );
+			poco_assert( file.exists() );
 
-            FastMutex::ScopedLock lock(mutex_);
-            SharedMemory sm(file, SharedMemory::AM_READ);
-            char* start = sm.begin();
-            while( start + chunk_size < sm.end() ){
-                pList->push_back( get_verification_code_without_lock(start, start + chunk_size ) );
-                start += chunk_size;
-            }
-            pList->push_back( get_verification_code_without_lock(start, sm.end()) );
-        }
+			FastMutex::ScopedLock lock(mutex_);
+			file_engine_.reset();
+			SharedMemory sm(file, SharedMemory::AM_READ);
+			char* start = sm.begin();
+			while( start + chunk_size < sm.end() ){
+				pList->push_back( get_verification_code_without_lock(start, start + chunk_size ) );
+				start += chunk_size;
+				file_engine_.update(start, chunk_size);
+				if( callback ){
+					callback();
+				}
+			}
+			pList->push_back( get_verification_code_without_lock(start, sm.end()) );
+			file_engine_.update(start, sm.end() - start );
+			pFileChecksum->assign(DigestEngine::digestToHex(file_engine_.digest()));
+		}
+
+        //string Verification::get_file_verification_code(const string& fullpath) {
+        //    FastMutex::ScopedLock lock(mutex_);
+        //    File f(fullpath);
+        //    SharedMemory sm(f, SharedMemory::AM_READ);
+        //    engine_.update(sm.begin(), f.getSize() );
+        //    return DigestEngine::digestToHex(engine_.digest());
+        //}
+        //void Verification::get_file_checksum_list(const File& file, int chunk_size, ChecksumList* pList){
+        //    poco_assert( chunk_size > 0 );
+        //    poco_assert( pList != NULL );
+        //    poco_assert( file.exists() );
+
+        //    FastMutex::ScopedLock lock(mutex_);
+        //    SharedMemory sm(file, SharedMemory::AM_READ);
+        //    char* start = sm.begin();
+        //    while( start + chunk_size < sm.end() ){
+        //        pList->push_back( get_verification_code_without_lock(start, start + chunk_size ) );
+        //        start += chunk_size;
+        //    }
+        //    pList->push_back( get_verification_code_without_lock(start, sm.end()) );
+        //}
 
         string Verification::get_verification_code(const char* begin, const char* end) {
             FastMutex::ScopedLock lock(mutex_);

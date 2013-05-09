@@ -2,7 +2,6 @@
 #include "job.h"
 #include "payload_type.h"
 #include "netpack.h"
-#include "verification.h"
 #include "client_connection_handler.h"
 #include "job_info_collector.h"
 #include "tracker.pb.h"
@@ -418,6 +417,7 @@ namespace CoolDown{
                     return ret;
                 
             }
+
             retcode_t CoolClient::MakeTorrent(const Path& path, const Path& torrent_file_path, 
                     Int32 chunk_size, Int32 type, const string& tracker_address){
 
@@ -448,6 +448,15 @@ namespace CoolDown{
                 }else{
                     list_dir_recursive(f, &files);
                 }
+				int total_chunk_count = 0; //used for progress bar
+				{
+					FileList::iterator iter = files.begin();
+					FileList::iterator end = files.end();
+					for(; iter != end; ++iter){
+						total_chunk_count += Verification::get_file_chunk_count(*iter, chunk_size);
+					}
+				}
+
                 FileList::iterator iter = files.begin();
                 FileList::iterator end = files.end();
 
@@ -456,11 +465,15 @@ namespace CoolDown{
                 while( iter != end ){
                     //Process one File
                     Path p(iter->path());
-                    string file_check_sum = Verification::get_file_verification_code( iter->path() );
+					string file_check_sum;
+					Verification::ChecksumList checksums;
+					Verification::get_file_and_chunk_checksum_list(*iter, chunk_size, 
+						this->make_torrent_progress_callback_, &file_check_sum, &checksums);
+                    //string file_check_sum = Verification::get_file_verification_code( iter->path() );
                     Int64 file_size = iter->getSize();
                     total_size += file_size;
-                    Verification::ChecksumList checksums;
-                    Verification::get_file_checksum_list(*iter, chunk_size, &checksums);
+                    
+                    //Verification::get_file_checksum_list(*iter, chunk_size, &checksums);
                     int last_chunk_size = file_size % chunk_size;
 
                     //file file info in Torrent

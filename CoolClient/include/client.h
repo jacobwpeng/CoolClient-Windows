@@ -6,10 +6,12 @@
 #include "net_task_manager.h"
 #include "job_info.h"
 #include "resource.pb.h"
+#include "verification.h"
 #include <vector>
 #include <set>
 #include <string>
 #include <boost/shared_ptr.hpp>
+
 #include <Poco/Util/Application.h>
 #include <Poco/Util/ServerApplication.h>
 #include <Poco/Path.h>
@@ -83,8 +85,9 @@ namespace CoolDown{
                     typedef vector<string> ClientIdCollection;
                     typedef vector<File> FileList;
                     typedef LocalSockManager::LocalSockManagerPtr LocalSockManagerPtr;
-                    typedef int make_torrent_progress_callback_t;
+                    //typedef int make_torrent_progress_callback_t;
                     typedef SharedPtr<Job> JobPtr;
+					typedef Verification::make_torrent_progress_callback_t make_torrent_progress_callback_t;
 
                     //Application operations
                     void initialize(Application& self);
