@@ -54,6 +54,7 @@
 									<top>35</top>
 									<width>350</width>
 									<height>30</height>
+									<Readonly>true</Readonly>
 								</attr>
 							</obj>
 							<obj id="ok" class="BaseUI.TextureButton">
@@ -97,6 +98,7 @@
 									<width>350</width>
 									<height>60</height>
 									<Multiline>true</Multiline>
+									<Text>115.156.229.172:9977</Text>
 								</attr>
 							</obj>
 							<obj id="" class="TextObject">
@@ -123,7 +125,7 @@
 							<obj id="" class="TextObject">
 								<attr>
 									<left>20</left>
-									<top>320</top>
+									<top>260</top>
 									<width>80</width>
 									<height>30</height>
 									<text>简介:</text>
@@ -133,7 +135,7 @@
 							<obj id="description" class="Thunder.InputArea">
 								<attr>
 									<left>father.width - 46 - 350</left>
-									<top>320</top>
+									<top>260</top>
 									<width>350</width>
 									<height>140</height>
 									<Multiline>true</Multiline>

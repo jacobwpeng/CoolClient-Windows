@@ -23,6 +23,12 @@ function OnEditAreaInit(self)
 	else
 		edit:SetMultiline(false)
 	end
+	if attr.Readonly then
+		edit:SetReadOnly(true)
+	else
+		edit:SetReadOnly(false)
+	end
+	edit:SetText(attr.Text)
 end
 
 function SetText(self, text)

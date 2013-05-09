@@ -10,15 +10,22 @@ function OnRadioButtonContainerInit(self)
 end
 function OnOKClick(self)
 	local owner = self:GetOwner()
+	local bkg = owner:GetUIObject("bkg")
 	local hostwnd = owner:GetBindHostWnd()
 	local userData = hostwnd:GetUserData()
 	local path = owner:GetUIObject("path")
 	local tracker = owner:GetUIObject("tracker")
 	local btnGroup = owner:GetUIObject("RadioGroup")
 	local des = owner:GetUIObject("description")
-	local data = {test = "Got it"}
-	userData.Object:FireExtEvent(userData.EventName, data)
-	hostwnd:EndDialog(0)
+	local data = {}
+	local xarManager = XLGetObject("Xunlei.UIEngine.XARManager")
+	local xarFactory = xarManager:GetXARFactory()
+	local seedMakeProgress = xarFactory:CreateUIObject("seedmakeprogress","Thunder.Progress")
+	seedMakeProgress:SetObjPos2(30,"father.height - 80", "father.width - 60", 13)
+	bkg:AddChild(seedMakeProgress)
+	--userData.Object:FireExtEvent(userData.EventName, data)
+	--XLMessageBox(tracker:GetText())
+	--hostwnd:EndDialog(0)
 end
 function OnAddFile(self)
 	local owner = self:GetOwner()
@@ -30,5 +37,6 @@ end
 function OnAddDirectory(self)
 	local owner = self:GetOwner()
 	local path = owner:GetUIObject("path")
-	
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	coolClientProxy:ChoosePath(2, path:GetText(), function(str) path:SetText(str) end )
 end

@@ -12,7 +12,7 @@
 		<event_def>
 			<OnStatusChanged/>
 			<OnDeleteTaskConfirm/>
-			<OnSeedConfrim/>
+			<OnSeedConfrim><param><table></table></param></OnSeedConfrim>
 		</event_def>
 		<objtemplate>
 			<children>

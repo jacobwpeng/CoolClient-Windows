@@ -191,7 +191,6 @@ local function OnBtnSeedClick(self)--制作种子的对话框
 end
 function OnSeedConfrim(self,eventName, userData)
 
-	XLMessageBox(userData.test)
 end
 
 function OnDeleteTaskConfirm(self)
