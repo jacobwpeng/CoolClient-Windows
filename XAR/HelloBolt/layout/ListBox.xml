@@ -418,6 +418,7 @@
 										<width>45</width>
 										<height>father.height</height>
 										<valign>center</valign>
+										<halign>center</halign>
 									</attr>
 								</obj>
 							</children>
@@ -540,15 +541,34 @@
 										<valign>center</valign>
 									</attr>
 								</obj>
-								<obj id="time" class="TextObject">
+								<obj id="datetime" class="LayoutObject">
 									<attr>
 										<left>500</left>
 										<top>0</top>
 										<width>120</width>
 										<height>father.height</height>
-										<valign>center</valign>
 									</attr>
 									<children>
+										<obj id="date" class="TextObject">
+											<attr>
+												<left></left>
+												<top>10</top>
+												<width>father.width</width>
+												<height>15</height>
+												<valign>center</valign>
+												<halign>center</halign>
+											</attr>
+										</obj>
+										<obj id="time" class="TextObject">
+											<attr>
+												<left></left>
+												<top>25</top>
+												<width>father.width</width>
+												<height>15</height>
+												<valign>center</valign>
+												<halign>center</halign>
+											</attr>
+										</obj>
 									</children>
 								</obj>
 								<obj id="size" class="TextObject">
@@ -558,6 +578,7 @@
 										<width>80</width>
 										<height>father.height</height>
 										<valign>center</valign>
+										<halign>center</halign>
 									</attr>
 								</obj>
 								<obj id="upload" class="TextObject">
@@ -567,6 +588,7 @@
 										<width>80</width>
 										<height>father.height</height>
 										<valign>center</valign>
+										<halign>center</halign>
 									</attr>
 								</obj>
 								<obj id="download" class="TextObject">
@@ -576,6 +598,7 @@
 										<width>80</width>
 										<height>father.height</height>
 										<valign>center</valign>
+										<halign>center</halign>
 									</attr>
 								</obj>
 							</children>

@@ -808,6 +808,7 @@ function ListBoxItem_OnInitControl(self)
     local attr = self:GetAttribute()
 	local statusobj = self:GetControlObject("status")
 	local nameobj = self:GetControlObject("name")
+	local dateobj = self:GetControlObject("date")
 	local timeobj = self:GetControlObject("time")
 	local sizeobj = self:GetControlObject("size")
 	local uploadobj = self:GetControlObject("upload")
@@ -816,19 +817,37 @@ function ListBoxItem_OnInitControl(self)
 	if attr.Status ~= "" and statusobj then
 	    
 	end
-	if attr.Name ~= "" and nameobj then
+	if attr.Name ~= nil and nameobj then
 	    nameobj:SetText(attr.Name)
 	end
-	if attr.Time ~= "" and timeobj then
-	    timeobj:SetText(attr.Time)
+	if attr.Time ~= nil and dateobj then
+		--通过模式匹配将时间分开
+		local i,j = string.find(attr.Time, ".*|")
+	    dateobj:SetText(string.sub(attr.Time, i, j-1))
+		i,j = string.find(attr.Time, "|.*")
+		timeobj:SetText(string.sub(attr.Time, i+1, j))
 	end
-	if attr.Size ~= "" and sizeobj then
-	    sizeobj:SetText(attr.Size)
+	if attr.Size ~= nil and sizeobj then
+		local b = attr.Size % 1024
+		local kb = attr.Size / 1024
+		local mb = kb / 1024
+		local gb = mb / 1024
+		local content
+		if gb ~=0 then
+			content = gb.."."..string.format("%02d",(mb%1024)/1024).."GB"
+		elseif mb ~= 0 then
+			content = mb.."."..string.format("%02d",(kb%1024)/1024).."MB"
+		elseif kb ~= 0 then
+			content = kb.."."..string.format("%02d", b/1024).."KB"
+		else
+			content = b.."B"
+		end
+	    sizeobj:SetText(content)
 	end
-	if attr.Upload ~= "" and uploadobj then
+	if attr.Upload ~= nil and uploadobj then
 	    uploadobj:SetText(attr.Upload)
 	end
-	if attr.Download ~= "" and downloadobj then
+	if attr.Download ~= nil and downloadobj then
 	    downloadobj:SetText(attr.Download)
 	end
 	if not self:GetVisible() then

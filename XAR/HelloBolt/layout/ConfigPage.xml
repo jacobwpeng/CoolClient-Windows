@@ -4,14 +4,13 @@
 			
 		</attr_def>
 		<method_def>
-			<ConfigReset file="ConfigPage.xml.lua" func="ConfigReset"/>
 			<GetCurrentConfig file="ConfigPage.xml.lua" func="GetCurrentConfig"/>
 			<GetNewConfig file="ConfigPage.xml.lua" func="GetNewConfig"/>
 			<SaveConfig file="ConfigPage.xml.lua" func="SaveConfig"/>
 			<ConfigChangeAni file="ConfigPage.xml.lua" func="ConfigChangeAni"/>
 		</method_def>
 		<event_def>
-			
+			<OnConfigResetConfirm/>
 		</event_def>
 		<objtemplate>
 			<children>
@@ -451,6 +450,7 @@
 			</children>
 			<eventlist>
 				<event name="OnInitControl" file="ConfigPage.xml.lua" func="OnPageInit" />
+				<event name="OnConfigResetConfirm" file="ConfigPage.xml.lua" func="ConfigReset" />
 			</eventlist>
 		</objtemplate>
 	</control>

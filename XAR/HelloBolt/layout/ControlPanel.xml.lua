@@ -159,14 +159,14 @@ local function OnBtnDeleteClick(self, index)--删除任务
 	local uiObjectTree = objectTreeTemplate:CreateInstance("Thunder.MessageBox.Instance")
 	modalHostWnd:BindUIObjectTree(uiObjectTree)
 	
-	local userData = {Title = "删除", Icon="bitmap.confirmmodal.warning", Content="删除提示:确定要删除这个任务么？", Object = self:GetOwnerControl(), EventName = "OnDeleteTask"}
+	local userData = {Title = "删除", Icon="bitmap.confirmmodal.warning", Content="删除提示:确定要删除这个任务么？", 
+		Object = self:GetOwnerControl(), EventName = "OnDeleteTaskConfirm"}
 	modalHostWnd:SetUserData(userData)
 	modalHostWnd:DoModal(mainWnd:GetWndHandle())
 	
 	local objtreeManager = XLGetObject("Xunlei.UIEngine.TreeManager")	
 	objtreeManager:DestroyTree("Thunder.MessageBox.Instance")
 	hostWndManager:RemoveHostWnd("Thunder.MessageBox.Instance")
-	
 
 	--XLMessageBox(#attr.ItemDataTable.." cursel:"..listbox:GetCurSel())
 end

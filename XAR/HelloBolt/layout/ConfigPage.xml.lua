@@ -7,18 +7,20 @@ function OnResetButtonClick(self)
 	local templateManager = XLGetObject("Xunlei.UIEngine.TemplateManager")
 	local hostWndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
 	local mainWnd = hostWndManager:GetHostWnd("MainFrame")
-	local modalHostWndTemplate = templateManager:GetTemplate("Thunder.ConfigResetModal","HostWndTemplate")
-	local modalHostWnd = modalHostWndTemplate:CreateInstance("Thunder.ConfigResetModal.Instance")
-	local objectTreeTemplate = templateManager:GetTemplate("Thunder.ConfigResetModal","ObjectTreeTemplate")
-	local uiObjectTree = objectTreeTemplate:CreateInstance("Thunder.ConfigResetModal.Instance")
+	local modalHostWndTemplate = templateManager:GetTemplate("Thunder.MessageBox","HostWndTemplate")
+	local modalHostWnd = modalHostWndTemplate:CreateInstance("Thunder.MessageBox.Instance")
+	local objectTreeTemplate = templateManager:GetTemplate("Thunder.MessageBox","ObjectTreeTemplate")
+	local uiObjectTree = objectTreeTemplate:CreateInstance("Thunder.MessageBox.Instance")
 	modalHostWnd:BindUIObjectTree(uiObjectTree)
 	
-	
+	local userData = {Title = "设置中心", Icon="bitmap.confirmmodal.warning", Content="提示:是否还原默认设置？", 
+		Object = self:GetOwnerControl(), EventName = "OnConfigResetConfirm"}
+	modalHostWnd:SetUserData(userData)
 	modalHostWnd:DoModal(mainWnd:GetWndHandle())
 	
 	local objtreeManager = XLGetObject("Xunlei.UIEngine.TreeManager")	
-	objtreeManager:DestroyTree("Thunder.ConfigResetModal.Instance")
-	hostWndManager:RemoveHostWnd("Thunder.ConfigResetModal.Instance")
+	objtreeManager:DestroyTree("Thunder.MessageBox.Instance")
+	hostWndManager:RemoveHostWnd("Thunder.MessageBox.Instance")
 end
 
 --设置发生变更的动画提示
