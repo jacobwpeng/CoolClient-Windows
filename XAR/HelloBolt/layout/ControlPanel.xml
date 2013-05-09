@@ -84,9 +84,22 @@
 								<AniImagelistID>imageseq.openfolder.ani</AniImagelistID>
 							</attr>
 						</obj>
+						<obj id="btn.seed" class="Thunder.ControlPanel.Btn">
+							<attr>
+								<left>26 + 38*5</left>
+								<top></top>
+								<width>38</width>
+								<height>42</height>
+								<BtnName>OpenFolderBtn</BtnName>
+								<NormalResID>button.seed.normal</NormalResID>
+								<DisabledResID>button.seed.disabled</DisabledResID>
+								<AniImagelistID>imageseq.seed.ani</AniImagelistID>
+								<BtnStatus>normal</BtnStatus>
+							</attr>
+						</obj>
 						<obj id="btn.config" class="Thunder.ControlPanel.Btn">
 							<attr>
-								<left>96 + 38*5</left>
+								<left>96 + 38*6</left>
 								<top></top>
 								<width>38</width>
 								<height>42</height>

@@ -84,7 +84,7 @@
 								<TextColor>system.gray</TextColor>
 							</attr>
 						</obj>
-						<obj id="tasklist.header.size" class="BaseUI.TextureButton">
+						<obj id="tasklist.header.retime" class="BaseUI.TextureButton">
 							<attr>
 								<left>534</left>
 								<top></top>
@@ -97,7 +97,7 @@
 								<TextColor>system.gray</TextColor>
 							</attr>
 						</obj>
-						<obj id="tasklist.header.size" class="BaseUI.TextureButton">
+						<obj id="tasklist.header.download" class="BaseUI.TextureButton">
 							<attr>
 								<left>604</left>
 								<top></top>
@@ -110,7 +110,7 @@
 								<TextColor>system.gray</TextColor>
 							</attr>
 						</obj>
-						<obj id="tasklist.header.size" class="BaseUI.TextureButton">
+						<obj id="tasklist.header.upload" class="BaseUI.TextureButton">
 							<attr>
 								<left>649</left>
 								<top></top>

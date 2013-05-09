@@ -99,6 +99,8 @@ function OnSearchPageSearchBtnClick(self)--搜索页面的按钮响应
 	local music = ctrl:GetControlObject("checkbox.music")
 	local game = ctrl:GetControlObject("checkbox.game")
 	local book = ctrl:GetControlObject("checkbox.book")
+	
+	local totalCount = resultPage:GetControlObject("totalcount")
 	if attr.SearchParam == nil then
 		attr.SearchParam = {}
 	end
@@ -128,9 +130,13 @@ function OnSearchPageSearchBtnClick(self)--搜索页面的按钮响应
 	ctrl:AddChild(resultPage)
 	
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
-	coolClientProxy:SearchResource(attr.SearchParam.KeyWords, attr.SearchParam.Type, 0, 9, 
-		function(t) listbox:AddItem(t) end )
-	
+	if coolClientProxy then
+		coolClientProxy:SearchResource(attr.SearchParam.KeyWords, attr.SearchParam.Type, 0, 9, 
+		function(t) listbox:AddItem(t) local tmp = t.TotalCount 
+			if tmp < 10 then totalCount:SetText("当前/总数 ".."1-"..tmp.."/"..tmp) else totalCount:SetText("当前/总数 ".."1-10".."/"..tmp) end end )
+	else
+		totalCount:SetText("测试 当前/总数 1-10/23")
+	end
 	listbox:UpdateUI()
 end
 

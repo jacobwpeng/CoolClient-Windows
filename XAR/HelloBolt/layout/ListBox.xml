@@ -190,112 +190,6 @@
 			</eventlist>
 		</objtemplate>
 	</control>
-	<control class="BaseUI.ListBox.Item">
-		<attr_def>
-		    <!--ListBoxItem 背景图片定义:-->
-			<attr name="BkgNormalTextureID" type="string" >
-			    <default>texture.listbox.item.normal</default>
-			</attr>
-			<attr name="BkgHoverTextureID" type="string" >
-			    <default>texture.listbox.item.hover</default>
-			</attr>
-			<attr name="BkgDownTextureID" type="string" >
-			    <default>texture.listbox.item.down</default>
-			</attr>
-			<attr name="BkgDisableTextureID" type="string" >
-			    <default>texture.listbox.item.disable</default>
-			</attr>
-			<!--ListBoxItem的text字体资源定义：-->	
-			<attr name="TextNormalFontID" type="string">     
-			    <default></default>
-			</attr>
-			<attr name="TextHoverFontID" type="string">
-			    <default></default>
-			</attr>
-			<attr name="TextDownFontID" type="string">
-			    <default></default>
-			</attr>
-			<attr name="TextDisableFontID" type="string">
-			    <default></default>
-			</attr>
-			<!--ListBoxItem的text字体颜色定义：-->	
-			<attr name="TextNormalColorID" type="string">     
-			    <default></default>
-			</attr>
-			<attr name="TextHoverColorID" type="string">
-			    <default></default>
-			</attr>
-			<attr name="TextDownColorID" type="string">
-			    <default></default>
-			</attr>
-			<attr name="TextDisableColorID" type="string">
-			    <default></default>
-			</attr>
-			<!--ListBoxItem的字体内容:-->
-			<attr name="Text" type="string" ><default></default></attr>
-			<attr name="Index" type="int" />
-		</attr_def>
-		<method_def>
-		<!--public function:-->
-			<SetSelect file="ListBox.xml.lua" func="ListBoxItem_SetSelect"/>
-			<GetSelect file="ListBox.xml.lua" func="ListBoxItem_GetSelect"/>
-		<!---->	
-		</method_def>
-		<event_def>
-			<OnSelect>
-			    <param>
-				    <int></int>
-				</param>
-			</OnSelect>
-            <OnWidthExtend>
-			    <param>
-				    <int></int>
-				</param>
-			</OnWidthExtend>			
-		</event_def>
-		<objtemplate>
-		    <children>
-				<obj id="ctrl" class="LayoutObject">
-					<attr>
-						<width>father.width</width>
-						<height>father.height</height>
-					</attr>
-					<children>
-						<obj id="bkg" class="TextureObject">
-							<attr>
-							    <left>0</left>
-								<top>0</top>
-								<width>father.width</width>
-								<height>father.height</height>
-							</attr>
-							<children>
-								<obj id="text" class="TextObject">
-									<attr>
-										<left>0</left>
-										<top>0</top>
-										<width>father.width</width>
-										<height>father.height</height>
-										<text></text>
-									</attr>
-								</obj>
-							</children>
-						</obj>
-					</children>
-				</obj>
-			</children>
-			<eventlist>
-			    <event name="OnInitControl" file="ListBox.xml.lua" func="ListBoxItem_OnInitControl" />
-			    <event name="OnLButtonDown" file="ListBox.xml.lua" func="ListBoxItem_OnLButtonDown" />
-				<event name="OnMouseMove" file="ListBox.xml.lua" func="ListBoxItem_OnMouseMove" />
-				<event name="OnLButtonUp" file="ListBox.xml.lua" func="ListBoxItem_OnLButtonUp" />
-				<event name="OnMouseLeave" file="ListBox.xml.lua" func="ListBoxItem_OnMouseLeave" />
-				<event name="OnVisibleChange" file="ListBox.xml.lua" func="ListBoxItem_OnVisibleChange" />
-				<event name="OnEnableChange" file="ListBox.xml.lua" func="ListBoxItem_OnEnableChange" />
-				<event name="OnPosChange" file="ListBox.xml.lua" func="ListBoxItem_OnPosChange" />
-			</eventlist>
-		</objtemplate>
-	</control>
-	
 	
 	<control class="BaseUI.ListBox.TaskItem">
 		<attr_def>
@@ -414,6 +308,45 @@
 								<obj id="size" class="TextObject">
 									<attr>
 										<left>389</left>
+										<top>0</top>
+										<width>45</width>
+										<height>father.height</height>
+										<valign>center</valign>
+										<halign>center</halign>
+									</attr>
+								</obj>
+								<obj id="progress" class="Thunder.Progress">
+									<attr>
+										<left>434</left>
+										<top>(father.height - 13)/2</top>
+										<width>100</width>
+										<height>13</height>
+										<ShowText>true</ShowText>
+									</attr>
+								</obj>
+								<obj id="retime" class="TextObject">
+									<attr>
+										<left>534</left>
+										<top>0</top>
+										<width>70</width>
+										<height>father.height</height>
+										<valign>center</valign>
+										<halign>center</halign>
+									</attr>
+								</obj>
+								<obj id="download" class="TextObject">
+									<attr>
+										<left>604</left>
+										<top>0</top>
+										<width>45</width>
+										<height>father.height</height>
+										<valign>center</valign>
+										<halign>center</halign>
+									</attr>
+								</obj>
+								<obj id="upload" class="TextObject">
+									<attr>
+										<left>649</left>
 										<top>0</top>
 										<width>45</width>
 										<height>father.height</height>

@@ -234,49 +234,57 @@
 							</attr>
 						</obj>
 
-						<obj id="firstpage" class="BaseUI.TextureButton">
+						<obj id="firstpage" class="Thunder.ImageButton.Ctrl">
 							<attr>
 								<left>20</left>
 								<top>father.height - 24</top>
 								<width>40</width>
 								<height>24</height>
-								<Text>首页</Text>
+								<NormalBkg>bitmap.searchpage.firstpage</NormalBkg>
+								<HoverBkg>bitmap.searchpage.firstpage</HoverBkg>
+								<DownBkg>bitmap.searchpage.firstpage</DownBkg>
 							</attr>
 							<eventlist>
 								<event name="OnClick" file="MessageBox.xml.lua" func="OnFirstPageClick" />
 							</eventlist>
 						</obj>	
-						<obj id="prepage" class="BaseUI.TextureButton">
+						<obj id="prepage" class="Thunder.ImageButton.Ctrl">
 							<attr>
 								<left>70</left>
 								<top>father.height - 24</top>
 								<width>40</width>
 								<height>24</height>
-								<Text>上一页</Text>
+								<NormalBkg>bitmap.searchpage.prepage</NormalBkg>
+								<HoverBkg>bitmap.searchpage.prepage</HoverBkg>
+								<DownBkg>bitmap.searchpage.prepage</DownBkg>
 							</attr>
 							<eventlist>
 								<event name="OnClick" file="MessageBox.xml.lua" func="OnPrePageClick" />
 							</eventlist>
 						</obj>						
-						<obj id="nextpage" class="BaseUI.TextureButton">
+						<obj id="nextpage" class="Thunder.ImageButton.Ctrl">
 							<attr>
 								<left>120</left>
 								<top>father.height - 24</top>
 								<width>40</width>
 								<height>24</height>
-								<Text>下一页</Text>
+								<NormalBkg>bitmap.searchpage.nextpage</NormalBkg>
+								<HoverBkg>bitmap.searchpage.nextpage</HoverBkg>
+								<DownBkg>bitmap.searchpage.nextpage</DownBkg>
 							</attr>
 							<eventlist>
 								<event name="OnClick" file="MessageBox.xml.lua" func="OnNextPageClick" />
 							</eventlist>
 						</obj>
-						<obj id="lastpage" class="BaseUI.TextureButton">
+						<obj id="lastpage" class="Thunder.ImageButton.Ctrl">
 							<attr>
 								<left>170</left>
 								<top>father.height - 24</top>
 								<width>40</width>
 								<height>24</height>
-								<Text>末页</Text>
+								<NormalBkg>bitmap.searchpage.lastpage</NormalBkg>
+								<HoverBkg>bitmap.searchpage.lastpage</HoverBkg>
+								<DownBkg>bitmap.searchpage.lastpage</DownBkg>
 							</attr>
 							<eventlist>
 								<event name="OnClick" file="MessageBox.xml.lua" func="OnLastPageClick" />
@@ -303,7 +311,7 @@
 								<event name="OnClick" file="SearchPage.xml.lua" func="OnSkipPageClick" />
 							</eventlist>
 						</obj>
-						<obj id="totalresnum" class="TextObject">
+						<obj id="totalcount" class="TextObject">
 							<attr>
 								<left>father.width - 160</left>
 								<top>father.height  - 24</top>
@@ -311,7 +319,7 @@
 								<height>24</height>
 								<valign>center</valign>
 								<halign>right</halign>
-								<text>当前/总数 1-10 / 23</text>
+								<text></text>
 							</attr>
 						</obj>
 					</children>

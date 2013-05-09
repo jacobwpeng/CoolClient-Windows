@@ -1,0 +1,202 @@
+<xlue>
+	<objtreetemplate id="Thunder.SeedModal">
+		<attr>
+			<left>-200</left>
+			<top>-200</top>
+			<width>2000</width>
+			<height>2000</height>
+		</attr>
+		<obj id="root" class="LayoutObject">
+			<attr>
+				<left></left>
+				<top></top>
+				<width>452</width>
+				<height>500</height>
+			</attr>
+			<children>
+			<obj id="bkg" class="TextureObject">
+				<attr>
+					<left></left>
+					<top></top>
+					<width>father.width</width>
+					<height>father.height</height>
+					<texture>texture.common.wndbkg</texture>
+				</attr>
+				<children>
+					<obj id="body" class="LayoutObject">
+						<attr>
+							<left></left>
+							<top></top>
+							<width>father.width</width>
+							<height>father.height</height>
+						</attr>
+						<children>
+							<obj id="caption" class="CaptionObject">
+								<attr>
+									<width>father.width</width>
+									<height>32</height>
+									<zorder>-1000</zorder>
+								</attr>
+							</obj>
+							<obj id="" class="TextObject">
+								<attr>
+									<left>20</left>
+									<top>35</top>
+									<width>60</width>
+									<height>30</height>
+									<text>路径:</text>
+									<valign>center</valign>
+								</attr>
+							</obj>
+							<obj id="path" class="Thunder.InputArea">
+								<attr>
+									<left>father.width - 46 - 350</left>
+									<top>35</top>
+									<width>350</width>
+									<height>30</height>
+								</attr>
+							</obj>
+							<obj id="ok" class="BaseUI.TextureButton">
+								<attr>
+									<left>father.width - 75*2 - 10 - 46</left>
+									<top>80</top>
+									<width>75</width>
+									<height>24</height>
+									<Text>添加文件</Text>
+								</attr>
+								<eventlist>
+									<event name="OnClick" file="SeedModal.xml.lua" func="OnAddFile" />
+								</eventlist>
+							</obj>
+							<obj id="ok" class="BaseUI.TextureButton">
+								<attr>
+									<left>father.width - 75*1 - 10 - 46</left>
+									<top>80</top>
+									<width>75</width>
+									<height>24</height>
+									<Text>添加目录</Text>
+								</attr>
+								<eventlist>
+									<event name="OnClick" file="SeedModal.xml.lua" func="OnAddDirectory" />
+								</eventlist>
+							</obj>
+							<obj id="" class="TextObject">
+								<attr>
+									<left>20</left>
+									<top>110</top>
+									<width>80</width>
+									<height>30</height>
+									<text>tracker地址:</text>
+									<valign>center</valign>
+								</attr>
+							</obj>
+							<obj id="" class="Thunder.InputArea">
+								<attr>
+									<left>father.width - 350 - 46</left>
+									<top>145</top>
+									<width>350</width>
+									<height>60</height>
+								</attr>
+							</obj>
+							<obj id="" class="TextObject">
+								<attr>
+									<left>20</left>
+									<top>230</top>
+									<width>80</width>
+									<height>30</height>
+									<text>类型:</text>
+									<valign>center</valign>
+								</attr>
+							</obj>
+							<obj id="RadioGroup" class="Thunder.RadioButtonContainer">
+								<attr>
+									<top>230</top>
+									<left>110</left>
+									<width>father.width - 110</width>
+									<height>80</height>
+								</attr>
+								<eventlist>
+									<event name="OnInitControl" file="SeedModal.xml.lua" func="OnRadioButtonContainerInit" />
+								</eventlist>
+							</obj>
+							<obj id="" class="TextObject">
+								<attr>
+									<left>20</left>
+									<top>320</top>
+									<width>80</width>
+									<height>30</height>
+									<text>简介:</text>
+									<valign>center</valign>
+								</attr>
+							</obj>
+							<obj id="description" class="Thunder.InputArea">
+								<attr>
+									<left>father.width - 46 - 350</left>
+									<top>320</top>
+									<width>350</width>
+									<height>140</height>
+								</attr>
+							</obj>
+							<obj id="system.button.close" class="Thunder.ImageButton.Ctrl">
+								<attr>
+									<left>father.width - 41</left>
+									<top>0</top>
+									<width>41</width>
+									<height>19</height>
+									<NormalBkg>system.button.close.normal</NormalBkg>
+									<HoverBkg>system.button.close.move</HoverBkg>
+									<DownBkg>system.button.close.lbuttondown</DownBkg>
+								</attr>
+								<eventlist>	
+									<event name="OnLButtonUp" file="SeedModal.xml.lua" func="OnCancelClick" />
+								</eventlist>
+							</obj>
+							<obj id="ok" class="BaseUI.TextureButton">
+								<attr>
+									<left>father.width - 75*2 - 10-16</left>
+									<top>father.height - 35</top>
+									<width>75</width>
+									<height>24</height>
+									<Text>确定</Text>
+								</attr>
+								<eventlist>
+									<event name="OnClick" file="NewTaskModal.xml.lua" func="OnOKClick" />
+								</eventlist>
+							</obj>
+							<obj id="cancel" class="BaseUI.TextureButton">
+								<attr>
+									<left>father.width - 75 - 16</left>
+									<top>father.height - 35</top>
+									<width>75</width>
+									<height>24</height>
+									<Text>取消</Text>
+								</attr>
+								<eventlist>
+									<event name="OnClick" file="NewTaskModal.xml.lua" func="OnCancelClick" />
+								</eventlist>
+							</obj>
+						</children>
+					</obj>
+				</children>
+			</obj>
+			</children>
+			<eventlist>
+			</eventlist>
+		</obj>
+	</objtreetemplate>
+	<hostwndtemplate id="Thunder.SeedModal" class="ModalHostWnd" >
+		<attr> 
+			<layered>1</layered>
+			<left>0</left> 
+			<top>0</top>
+			<width>452</width>
+			<height>500</height>
+			<visible>1</visible>
+			<enable>1</enable>
+			<appwindow>0</appwindow>
+		</attr>
+		<eventlist>
+			<event name="OnCreate" file="SeedModal.xml.lua" func="OnCreate" />
+		</eventlist>		
+	</hostwndtemplate>	
+</xlue>

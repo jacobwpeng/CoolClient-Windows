@@ -807,6 +807,7 @@ end
 function ListBoxItem_OnInitControl(self)
     local attr = self:GetAttribute()
 	local statusobj = self:GetControlObject("status")
+	local typeobj = self:GetControlObject("type")
 	local nameobj = self:GetControlObject("name")
 	local dateobj = self:GetControlObject("date")
 	local timeobj = self:GetControlObject("time")
@@ -820,12 +821,25 @@ function ListBoxItem_OnInitControl(self)
 	if attr.Name ~= nil and nameobj then
 	    nameobj:SetText(attr.Name)
 	end
+	if attr.Type and typeobj then
+		if attr.Type == 1 then
+			typeobj:SetResID("bitmap.listbox.taskitem.type.movie")
+		elseif attr.Type == 2 then
+			typeobj:SetResID("bitmap.listbox.taskitem.type.music")
+		elseif attr.Type == 4 then
+			typeobj:SetResID("bitmap.listbox.taskitem.type.game")
+		elseif attr.Type == 8 then
+			typeobj:SetResID("bitmap.listbox.taskitem.type.book")
+		end
+	end
 	if attr.Time ~= nil and dateobj then
 		--通过模式匹配将时间分开
 		local i,j = string.find(attr.Time, ".*|")
 	    dateobj:SetText(string.sub(attr.Time, i, j-1))
 		i,j = string.find(attr.Time, "|.*")
 		timeobj:SetText(string.sub(attr.Time, i+1, j))
+	elseif attr.Time and dateobj == nil then
+		timeobj:SetText(attr.Time)
 	end
 	if attr.Size ~= nil and sizeobj then
 		local b = attr.Size % 1024

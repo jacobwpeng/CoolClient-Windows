@@ -4,6 +4,7 @@
 		<bitmap id="bitmap.searchpage.logo.small" image="searchpage\kudown_small.png" />
 		<imagelist id="imagelist.searchpage.btn" splitter="1" vertical="0" varyblock="1" image="searchpage\search.button.png" />
 		<imagelist id="imagelist.searchpage.magnifier" splitter="1" vertical="0" varyblock="1" image="searchpage\search.magnifer.png" />
+		<imagelist id="imagelist.searchpage.skip" splitter="1" vertical="0" varyblock = "1" image="searchpage\imagelist.skippage.png"/>
 		
 		<bitmap id="bitmap.searchpage.btn.normal" imagelist="imagelist.searchpage.btn" index="1"/>
 		<bitmap id="bitmap.searchpage.btn.hover" imagelist="imagelist.searchpage.btn" index="2"/>
@@ -12,5 +13,9 @@
 		<bitmap id="bitmap.searchpage.magnifier.normal" imagelist="imagelist.searchpage.magnifier" index="1" />
 		<bitmap id="bitmap.searchpage.magnifier.hover" imagelist="imagelist.searchpage.magnifier" index="2" />
 		<bitmap id="bitmap.searchpage.magnifier.down" imagelist="imagelist.searchpage.magnifier" index="3" />
+		<bitmap id="bitmap.searchpage.firstpage" imagelist="imagelist.searchpage.skip" index="1"/>
+		<bitmap id="bitmap.searchpage.prepage" imagelist="imagelist.searchpage.skip" index="2"/>
+		<bitmap id="bitmap.searchpage.nextpage" imagelist="imagelist.searchpage.skip" index="3"/>
+		<bitmap id="bitmap.searchpage.lastpage" imagelist="imagelist.searchpage.skip" index="4"/>
 	</resource> 
 </xlue>

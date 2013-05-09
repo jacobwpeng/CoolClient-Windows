@@ -36,6 +36,12 @@
 		<bitmap id="button.openfolder.disabled" imagelist="imagelist.button.openfolder" index="2" />
 		<imageseq id="imageseq.openfolder.ani"  imagelist="imagelist.openfolder.ani" />
 		
+		<imagelist id="imagelist.seed.ani" vertical="0" splitter="1" varyblock="0" blocksize="38" image="bitmap\imagelist.seeding.ani.png" />
+		<imagelist id="imagelist.button.seed" vertical="0" splitter="1" varyblock="0" blocksize="38" image="bitmap\imagelist.toolbar.seeding.png" />
+		<bitmap id="button.seed.normal" imagelist="imagelist.button.seed" index="1" />
+		<bitmap id="button.seed.disabled" imagelist="imagelist.button.seed" index="2" />
+		<imageseq id="imageseq.seed.ani"  imagelist="imagelist.seed.ani" />
+		
 		<imagelist id="imagelist.config.ani" vertical="0" splitter="1" varyblock="0" blocksize="38" image="bitmap\imagelist.config.ani.png" />
 		<imagelist id="imagelist.button.config" vertical="0" splitter="1" varyblock="0" blocksize="38" image="bitmap\imagelist.toolbar.config.png" />
 		<bitmap id="button.config.normal" imagelist="imagelist.button.config" index="1" />
