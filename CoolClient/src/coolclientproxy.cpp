@@ -229,9 +229,9 @@ int CoolClientProxy::GetResourceTorrentById(lua_State* luaState){
 }
 
 int CoolClientProxy::ChoosePath(lua_State* luaState){
-	if( lua_isnumber(luaState, 1) && lua_isstring(luaState, 2) && lua_isfunction(luaState, 3) ){
-		int path_type = lua_tointeger(luaState, 1);
-		string base_path = lua_tostring(luaState, 2);
+	if( lua_isnumber(luaState, 2) && lua_isstring(luaState, 3) && lua_isfunction(luaState, 4) ){
+		int path_type = lua_tointeger(luaState, 2);
+		string base_path = lua_tostring(luaState, 3);
 		long functionRef = luaL_ref(luaState,LUA_REGISTRYINDEX);
 
 		string init_path;
@@ -266,6 +266,7 @@ int CoolClientProxy::ChoosePath(lua_State* luaState){
 			poco_warning_f1(logger_, "Invalid path_type : %d", path_type);
 			return 0;
 		}
+		resource_path = GBK2UTF8(resource_path);
 		int top = lua_gettop(luaState);
 		lua_rawgeti(luaState, LUA_REGISTRYINDEX, functionRef);
 		lua_pushstring(luaState, resource_path.c_str());
@@ -277,6 +278,11 @@ int CoolClientProxy::ChoosePath(lua_State* luaState){
 		DumpLuaState(luaState);
 	}
 
+	return 0;
+}
+
+int CoolClientProxy::MakeTorrentAndPublish(lua_State* luaState){
+	//if( lua_isstring(luaState, 2), )
 	return 0;
 }
 
