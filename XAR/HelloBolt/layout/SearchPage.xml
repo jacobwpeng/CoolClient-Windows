@@ -232,6 +232,9 @@
 								<width>father.width</width>
 								<height>father.height - 38 - 24 - 25</height>
 							</attr>
+							<eventlist>
+								<event name="OnResItemSave" file="SearchPage.xml.lua" func="OnResItemSave" />
+							</eventlist>
 						</obj>
 
 						<obj id="firstpage" class="Thunder.ImageButton.Ctrl">
@@ -245,7 +248,7 @@
 								<DownBkg>bitmap.searchpage.firstpage</DownBkg>
 							</attr>
 							<eventlist>
-								<event name="OnClick" file="MessageBox.xml.lua" func="OnFirstPageClick" />
+								<event name="OnClick" file="SearchPage.xml.lua" func="OnFirstPageClick" />
 							</eventlist>
 						</obj>	
 						<obj id="prepage" class="Thunder.ImageButton.Ctrl">
@@ -259,7 +262,7 @@
 								<DownBkg>bitmap.searchpage.prepage</DownBkg>
 							</attr>
 							<eventlist>
-								<event name="OnClick" file="MessageBox.xml.lua" func="OnPrePageClick" />
+								<event name="OnClick" file="SearchPage.xml.lua" func="OnPrePageClick" />
 							</eventlist>
 						</obj>						
 						<obj id="nextpage" class="Thunder.ImageButton.Ctrl">
@@ -273,7 +276,7 @@
 								<DownBkg>bitmap.searchpage.nextpage</DownBkg>
 							</attr>
 							<eventlist>
-								<event name="OnClick" file="MessageBox.xml.lua" func="OnNextPageClick" />
+								<event name="OnClick" file="SearchPage.xml.lua" func="OnNextPageClick" />
 							</eventlist>
 						</obj>
 						<obj id="lastpage" class="Thunder.ImageButton.Ctrl">
@@ -287,7 +290,7 @@
 								<DownBkg>bitmap.searchpage.lastpage</DownBkg>
 							</attr>
 							<eventlist>
-								<event name="OnClick" file="MessageBox.xml.lua" func="OnLastPageClick" />
+								<event name="OnClick" file="SearchPage.xml.lua" func="OnLastPageClick" />
 							</eventlist>
 						</obj>
 						<obj id="skippage.input" class="Thunder.InputArea">
@@ -319,7 +322,7 @@
 								<height>24</height>
 								<valign>center</valign>
 								<halign>right</halign>
-								<text></text>
+								<text>当前/总数 0/0</text>
 							</attr>
 						</obj>
 					</children>

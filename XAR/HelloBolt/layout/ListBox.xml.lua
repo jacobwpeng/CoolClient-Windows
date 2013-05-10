@@ -833,19 +833,18 @@ function ListBoxItem_OnInitControl(self)
 		timeobj:SetText(attr.Time)
 	end
 	if attr.Size ~= nil and sizeobj then
-		local b = attr.Size % 1024
-		local kb = attr.Size / 1024
-		local mb = kb / 1024
-		local gb = mb / 1024
+		local KB = 1024
+		local MB = KB*1024
+		local GB = MB*1024
 		local content
-		if gb ~=0 then
-			content = gb.."."..string.format("%02d",(mb%1024)/1024).."GB"
-		elseif mb ~= 0 then
-			content = mb.."."..string.format("%02d",(kb%1024)/1024).."MB"
-		elseif kb ~= 0 then
-			content = kb.."."..string.format("%02d", b/1024).."KB"
+		if attr.Size > GB then
+			content = string.format(".2f GB", attr.Size/GB)
+		elseif attr.Size > MB then
+			content = string.format(".2f MB", attr.Size/MB)
+		elseif attr.Size > KB then
+			content = string.format(".2f KB", attr.Size/KB)
 		else
-			content = b.."B"
+			content = string.format("%d Bytes", attr.Size)
 		end
 	    sizeobj:SetText(content)
 	end
@@ -910,4 +909,10 @@ end
 
 function ListBox_OnPosChange(self)
 	self:UpdateUI()
+end
+
+function OnResItemSave(self)
+	local ctrl = self:GetOwnerControl()
+	local attr = ctrl:GetAttribute()
+	ctrl:GetOwnerControl():FireExtEvent("OnResItemSave", attr.Index)
 end

@@ -3,6 +3,7 @@ function OnLButtonDown(self)
 	local attr = self:GetAttribute()
 	
 	bkg:SetResID(attr.DownBkg)
+	self:FireExtEvent("OnClick")
 end
 
 function OnLButtonUp(self)
@@ -10,8 +11,7 @@ function OnLButtonUp(self)
 	local attr = self:GetAttribute()
 	
 	bkg:SetResID(attr.NormalBkg)
-	
-	self:FireExtEvent("OnClick")
+
 end
 
 function OnMouseEnter(self)

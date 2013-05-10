@@ -120,6 +120,7 @@
 					<int />
 				</param>
 			</OnSelectChanged>
+			<OnResItemSave><param><int></int></param></OnResItemSave>
 		</event_def>
 		<objtemplate>
 			<children>
@@ -436,7 +437,7 @@
 			    <param>
 				    <int></int>
 				</param>
-			</OnWidthExtend>			
+			</OnWidthExtend>		
 		</event_def>
 		<objtemplate>
 		    <children>
@@ -473,6 +474,21 @@
 										<height>father.height</height>
 										<valign>center</valign>
 									</attr>
+									<children>
+										<obj id="save" class="ImageObject">
+											<attr>
+												<left>father.width - 25</left>
+												<top></top>
+												<width>18</width>
+												<height>father.height</height>
+												<valign>center</valign>
+												<image>bitmap.listbox.resitem.open</image>
+											</attr>
+											<eventlist>
+												<event name="OnLButtonDown" file="ListBox.xml.lua" func="OnResItemSave" />
+											</eventlist>
+										</obj>
+									</children>
 								</obj>
 								<obj id="datetime" class="LayoutObject">
 									<attr>
