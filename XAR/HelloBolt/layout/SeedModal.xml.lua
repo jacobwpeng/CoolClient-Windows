@@ -9,6 +9,9 @@ function OnRadioButtonContainerInit(self)
 	self:AddRadioButton("book","图书",240,0,60,24)
 end
 function OnOKClick(self)
+	if self:GetText() == "确定" then
+		hostwnd:EndDialog()
+	end
 	local owner = self:GetOwner()
 	local bkg = owner:GetUIObject("bkg")
 	local hostwnd = owner:GetBindHostWnd()
@@ -31,18 +34,30 @@ function OnOKClick(self)
 	else 
 		seedtype = 8
 	end
-	seedMakeProgress:SetObjPos2(30,"father.height - 80", "father.width - 60", 13)
+	seedMakeProgress:SetObjPos2(30,"father.height - 65", "father.width - 60", 13)
 	self:SetEnable(false)
 	bkg:AddChild(seedMakeProgress)
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
 	coolClientProxy:MakeTorrentAndPublish(path:GetText(), seedtype, tracker:GetText(), des:GetText(), 
 		function(cur, total)
-			seedMakeProgress:SetProgress(cur/total)
+			seedMakeProgress:SetProgress((cur/total)*100)
+			if cur == total then
+				self:SetEnable(true)
+				self:SetText("确定")
+			end
 		end)
-	--XLMessageBox(btnGroup:GetSelectedButtonID())
-	--userData.Object:FireExtEvent(userData.EventName, data)
-	--XLMessageBox(tracker:GetText())
-	--hostwnd:EndDialog(0)
+end
+
+function OnCancelClick(self)
+	local owner = self:GetOwner()
+	local okBtn = owner:GetUIObject("ok")
+	local hostWnd = owner:GetBindHostWnd()
+	if okBtn:GetEnable() == false then
+		--停止做种
+		okBtn:SetEnable(true)
+	else
+		hostWnd:EndDialog()
+	end
 end
 function OnAddFile(self)
 	local owner = self:GetOwner()

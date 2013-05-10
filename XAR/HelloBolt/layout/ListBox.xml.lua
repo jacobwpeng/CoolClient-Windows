@@ -198,6 +198,7 @@ local function ListBox_ShowScrollBarV(self)
 			beginItem = 1
 		end
 		attr.BeginItem = beginItem
+		attr.HorizontalScrollBarHeight = selfHeight/(#attr.ItemDataTable * attr.ItemHeight)*selfHeight 
 	else
 		attr.ItemWidth = selfWidth
 		scrollbarvobj:SetVisible(false)
@@ -265,7 +266,7 @@ local function ListBox_ShowScrollBarH(self) --
 end
 
 function UpdateUI(self)
-    local attr = self:GetAttribute()
+	local attr = self:GetAttribute()
 	if attr.ItemDataTable == nil then
 	    attr.ItemDataTable = {}
 	end
@@ -915,4 +916,9 @@ function OnResItemSave(self)
 	local ctrl = self:GetOwnerControl()
 	local attr = ctrl:GetAttribute()
 	ctrl:GetOwnerControl():FireExtEvent("OnResItemSave", attr.Index)
+end
+
+function ListBoxItem_OnMouseWheel(self,x,y,distance)
+	local scrollbarV = self:GetOwnerControl():GetControlObject("scrollbar.v")
+	scrollbarV:OnMouseWheel(x,y,distance)
 end
