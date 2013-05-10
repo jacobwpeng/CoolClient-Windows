@@ -77,6 +77,7 @@ namespace CoolDown{
 				pCoolClient_->run(argc, argv);
 			}
 
+
             CoolClient::CoolClient()
             :jobThreads_("JobThread"),
             uploadManager_(logger()){
@@ -418,11 +419,11 @@ namespace CoolDown{
                 
             }
 
-            retcode_t CoolClient::MakeTorrent(const Path& path, const Path& torrent_file_path, 
-                    Int32 chunk_size, Int32 type, const string& tracker_address){
+            retcode_t CoolClient::MakeTorrent(const Path& path, const string& torrent_filename, 
+                    Int32 chunk_size, Int32 type, const string& tracker_address, MakeTorrentProgressObj* pProgressObj){
 
-                string pathmsg( format("Call MakeTorrent with path : %s, torrent_file_path : %s", 
-                                    path.toString(), torrent_file_path.toString()
+                string pathmsg( format("Call MakeTorrent with path : %s, torrent_filename : %s", 
+                                    path.toString(), torrent_filename
                                 )
                             );
                 poco_notice_f4(logger(), "%s, chunk_size : %d, type : %d, tracker_address : %s", 
@@ -433,8 +434,9 @@ namespace CoolDown{
                 if( !f.exists() ){
                     return ERROR_FILE_NOT_EXISTS;
                 }
+				string torrent_file_path = format("%s%c%s", this->local_torrent_dir_path_, Path::separator(), torrent_filename);
 
-				ofstream ofs( torrent_file_path.toString().c_str() );
+				ofstream ofs( torrent_file_path.c_str() );
 				if( !ofs ){
 					return ERROR_FILE_CANNOT_CREATE;
 				}
@@ -462,19 +464,27 @@ namespace CoolDown{
 					}
 				}
 
+				if( pProgressObj ){
+					pProgressObj->set_total_count(total_chunk_count);
+				}
+
                 FileList::iterator iter = files.begin();
                 FileList::iterator end = files.end();
 
 
                 string torrent_id_source;
 				int current_chunk_count = 0;
+				bool continue_progress = true;
                 while( iter != end ){
                     //Process one File
                     Path p(iter->path());
 					string file_check_sum;
 					Verification::ChecksumList checksums;
-					Verification::get_file_and_chunk_checksum_list(*iter, chunk_size, &current_chunk_count, total_chunk_count,
-						this->make_torrent_progress_callback_, &file_check_sum, &checksums);
+					continue_progress = Verification::get_file_and_chunk_checksum_list(*iter, chunk_size,
+						&file_check_sum, &checksums, pProgressObj);
+					if( continue_progress == false ){
+						break;
+					}
                     //string file_check_sum = Verification::get_file_verification_code( iter->path() );
                     Int64 file_size = iter->getSize();
                     total_size += file_size;
@@ -507,17 +517,20 @@ namespace CoolDown{
                     }
 
                     ++iter;
-                    //call make_torrent_progress_callback_ here
+                    
                 }
-                string torrent_id = Verification::get_verification_code( torrent_id_source );
-                torrent.set_totalsize( total_size );
-                torrent.set_torrentid( torrent_id );
+				retcode_t ret = ERROR_OK;
+				if( continue_progress == false ){
+					ret = ERROR_VERIFY_STOPPED_BY_CLIENT;
+				}else{
+					string torrent_id = Verification::get_verification_code( torrent_id_source );
+					torrent.set_totalsize( total_size );
+					torrent.set_torrentid( torrent_id );
+					poco_assert( torrent.SerializeToOstream(&ofs) );
+				}
+				ofs.close();
 
-
-                poco_assert( torrent.SerializeToOstream(&ofs) );
-                ofs.close();
-
-                return ERROR_OK;
+                return ret;
             }
 
             //communicate with client
@@ -958,9 +971,9 @@ namespace CoolDown{
                 return this->clientid_;
             }
 
-            void CoolClient::set_make_torrent_progress_callback(make_torrent_progress_callback_t callback){
+            /*void CoolClient::set_make_torrent_progress_callback(make_torrent_progress_callback_t callback){
                 this->make_torrent_progress_callback_ = callback;
-            }
+            }*/
 
             void CoolClient::list_dir_recursive(const File& file, FileList* pList){
                 FileList files;

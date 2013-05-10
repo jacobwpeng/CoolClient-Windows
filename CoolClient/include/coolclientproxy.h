@@ -12,6 +12,7 @@
 using Poco::Logger;
 using CoolDown::Client::CoolClient;
 using CoolDown::Client::ClientThread;
+using CoolDown::Client::MakeTorrentProgressObj;
 
 class CoolClientProxy{
 public:
@@ -31,10 +32,13 @@ public:
 	static void RegisterObj(XL_LRT_ENV_HANDLE hEnv);
 
 private:
-	static void MakeTorrentProgressCallback(int current_count, int total_count);
+	static bool MakeTorrentProgressCallback(int current_count, int total_count, lua_State* luaState, long functionRef);
+	static string GetTorrentName(const string& resource_path);
 	static void DumpLuaState(lua_State* luaState);
+	
 	static CoolClient* pCoolClient;
 	static Logger& logger_;
+	static bool stop_making_torrent;
 };
 
 #endif

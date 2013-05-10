@@ -64,6 +64,7 @@ namespace CoolDown{
 
             typedef LocalSockManager::SockPtr SockPtr; 
 			typedef vector<Info> InfoList;
+			//typedef Verification::make_torrent_progress_callback_t make_torrent_progress_callback_t;
 
 			class ClientThread : public Poco::Runnable{
 			public:
@@ -72,7 +73,6 @@ namespace CoolDown{
 			private:
 				CoolClient* pCoolClient_;
 			};
-
 
             class CoolClient : public ServerApplication{
                 public:
@@ -87,7 +87,7 @@ namespace CoolDown{
                     typedef LocalSockManager::LocalSockManagerPtr LocalSockManagerPtr;
                     //typedef int make_torrent_progress_callback_t;
                     typedef SharedPtr<Job> JobPtr;
-					typedef Verification::make_torrent_progress_callback_t make_torrent_progress_callback_t;
+					//typedef Verification::make_torrent_progress_callback_t make_torrent_progress_callback_t;
 
                     //Application operations
                     void initialize(Application& self);
@@ -155,8 +155,9 @@ namespace CoolDown{
 
                     //torrent operations
                     retcode_t ParseTorrent(const Path& torrent_file_path, Torrent::Torrent* pTorrent);
-                    retcode_t MakeTorrent(const Path& path, const Path& torrent_file_path, 
-                            Int32 chunk_size, Int32 type, const string& tracker_address);
+					retcode_t MakeTorrent(const Path& path, const string& torrent_filename, 
+						Int32 chunk_size, Int32 type, const string& tracker_address, MakeTorrentProgressObj* pProgressObj = NULL);
+                  
 
                     //self identity
                     string clientid() const;
@@ -166,7 +167,7 @@ namespace CoolDown{
                     string current_time() const;
                     static void format_speed(UInt64 speed, string* formatted_speed);
 
-                    void set_make_torrent_progress_callback(make_torrent_progress_callback_t callback);
+                    //void set_make_torrent_progress_callback(make_torrent_progress_callback_t callback);
 
 
                 private:
@@ -226,7 +227,7 @@ namespace CoolDown{
                     //NetTaskManager downloadManager_;
                     NetTaskManager uploadManager_;
 
-                    make_torrent_progress_callback_t make_torrent_progress_callback_;
+                    //make_torrent_progress_callback_t make_torrent_progress_callback_;
 
             };
     }

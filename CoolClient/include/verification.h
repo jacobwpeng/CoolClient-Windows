@@ -8,6 +8,7 @@
 #include <Poco/File.h>
 #include <Poco/SHA1Engine.h>
 #include <boost/function.hpp>
+#include <boost/atomic.hpp>
 
 using std::vector;
 using std::string;
@@ -15,17 +16,30 @@ using Poco::FastMutex;
 using Poco::File;
 using Poco::SHA1Engine;
 using boost::function;
+using boost::atomic_bool;
 
 namespace CoolDown{
     namespace Client{
 
+		typedef function<bool(int, int)> make_torrent_progress_callback_t;
+
+		struct MakeTorrentProgressObj{
+			MakeTorrentProgressObj(make_torrent_progress_callback_t make_torrent_progress_callback_t);
+			bool operator()();
+			void set_total_count(int total_count);
+		private:
+			int total_count_;
+			int current_count_;
+			make_torrent_progress_callback_t callback_;
+		};
+
         class Verification{
             public:
                 typedef vector<string> ChecksumList;
-				typedef function<void(int, int)> make_torrent_progress_callback_t;
+				//typedef function<void()> make_torrent_progress_callback_t;
 				static int get_file_chunk_count(const File& file, int chunk_size);
-				static void get_file_and_chunk_checksum_list(const File& file, int chunk_size, int* current_count, int total_count,
-					make_torrent_progress_callback_t callback, string* pFileChecksum, ChecksumList* pList);
+				static bool get_file_and_chunk_checksum_list(const File& file, int chunk_size,
+					string* pFileChecksum, ChecksumList* pList, MakeTorrentProgressObj* pProgressObj = NULL);
 
 
                 //static string get_file_verification_code(const string& fullpath) ;

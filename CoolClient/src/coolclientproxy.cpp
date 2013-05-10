@@ -3,6 +3,7 @@
 #include <Commdlg.h>
 #include <Shlobj.h>
 #include <string>
+#include <boost/bind.hpp>
 #include <Poco/Thread.h>
 #include <Poco/Logger.h>
 #include <Poco/Types.h>
@@ -69,6 +70,7 @@ namespace{
 
 CoolClient* CoolClientProxy::pCoolClient = new CoolClient;
 Logger& CoolClientProxy::logger_ = CoolClientProxy::pCoolClient->logger();
+bool CoolClientProxy::stop_making_torrent = false;
 
 CoolClientProxy* __stdcall CoolClientProxy::Instance(void*){
 
@@ -205,9 +207,9 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 }
 
 int CoolClientProxy::GetResourceTorrentById(lua_State* luaState){
-	if( lua_isnumber(luaState, 1) && lua_isstring(luaState, 2) ){
-		int torrent_id = lua_tointeger(luaState, 1);
-		string torrent_name = lua_tostring(luaState, 2);
+	if( lua_isnumber(luaState, 2) && lua_isstring(luaState, 3) ){
+		int torrent_id = lua_tointeger(luaState, 2);
+		string torrent_name = lua_tostring(luaState, 3);
 		poco_debug_f2(logger_, "Call CoolClientProxy::GetResourceTorrentById with torrent_id : %d, torrent_name : %s",
 			torrent_id, torrent_name);
 		string local_torrent_path;
@@ -266,11 +268,11 @@ int CoolClientProxy::ChoosePath(lua_State* luaState){
 		int top = lua_gettop(luaState);
 		lua_rawgeti(luaState, LUA_REGISTRYINDEX, functionRef);
 		lua_pushstring(luaState, resource_path.c_str());
-		int nLuaResult = XLLRT_LuaCall(luaState,1,0, L"CoolClientProxy::MakeTorrent");
+		int nLuaResult = XLLRT_LuaCall(luaState,1,0, L"CoolClientProxy::ChoosePath");
 		lua_settop(luaState, top);
 		return 0;
 	}else{
-		poco_warning(logger_, "Invalid args of CoolClientProxy::MakeTorrent.");
+		poco_warning(logger_, "Invalid args of CoolClientProxy::ChoosePath.");
 		DumpLuaState(luaState);
 	}
 
@@ -278,9 +280,63 @@ int CoolClientProxy::ChoosePath(lua_State* luaState){
 }
 
 int CoolClientProxy::MakeTorrentAndPublish(lua_State* luaState){
-	//if( lua_isstring(luaState, 2), )
+	if( lua_isstring(luaState, 2) 
+		&& lua_isnumber(luaState, 3)
+		&& lua_isstring(luaState, 4)
+		&& lua_isstring(luaState, 5)
+		&& lua_isfunction(luaState, 6)){
+			string path = lua_tostring(luaState, 2);
+			string torrent_filename = GetTorrentName(path);
+			int type = lua_tointeger(luaState, 3);
+			string tracker_address = lua_tostring(luaState, 4);
+			string brief_introduction = lua_tostring(luaState, 5);
+			long functionRef = luaL_ref(luaState,LUA_REGISTRYINDEX);
+			const static int chunk_size = 1 << 21;
+			MakeTorrentProgressObj p(boost::bind<bool>( &CoolClientProxy::MakeTorrentProgressCallback, _1, _2, 
+				luaState, functionRef) );
+			pCoolClient->MakeTorrent(path, torrent_filename, chunk_size, type, tracker_address, &p);
+	}else{
+		poco_warning(logger_, "Invalid args of CoolClientProxy::MakeTorrentAndPublish.");
+		DumpLuaState(luaState);
+	}
 	return 0;
 }
+
+string CoolClientProxy::GetTorrentName(const string& resource_path){
+	Path path(resource_path);
+	string path_str = path.toString();
+	size_t end = path_str.find_last_of(Path::separator());
+	string name;
+	if( end != path_str.length() - 1 ){
+		name = path_str.substr(end+1);
+	}else{
+		size_t begin = path_str.find_last_of(Path::separator(), end - 1 );
+		name = path_str.substr(begin + 1 , end - begin - 1); 
+	}   
+	return name + ".cd";
+}
+
+bool CoolClientProxy::MakeTorrentProgressCallback(int current_count, int total_count, lua_State* luaState, long functionRef){
+	poco_debug_f2(logger_, "Call CoolClientProxy::MakeTorrentProgressCallback with current_count : %d, total_count : %d",
+		current_count, total_count);
+
+	int top = lua_gettop(luaState);
+	lua_rawgeti(luaState, LUA_REGISTRYINDEX, functionRef);
+	
+
+	if( stop_making_torrent ){
+		lua_pushnumber(luaState, -1);
+	}else{
+		lua_pushnumber(luaState, current_count);
+	}
+
+	lua_pushnumber(luaState, total_count);
+	XLLRT_LuaCall(luaState, 2, 0, L"CoolClientProxy::MakeTorrentProgressCallback");
+	lua_settop(luaState, top);
+	return !stop_making_torrent;
+}
+
+
 
 int CoolClientProxy::StopClient(lua_State* luaState){
 
@@ -318,9 +374,10 @@ static XLLRTGlobalAPI CoolClientProxyMemberFunctions[] = {
 	//{"CreateInstance",CoolClientProxy::CreateInstance},
 	{"RunClientAsync", CoolClientProxy::RunClientAsync},
 	{"SearchResource", CoolClientProxy::SearchResource},
+	{"GetResourceTorrentById", CoolClientProxy::GetResourceTorrentById},
 	{"StopClient", CoolClientProxy::StopClient},
 	{"ChoosePath", CoolClientProxy::ChoosePath},
-	//{"TestTable", CoolClientProxy::TestTable},
+	{"MakeTorrentAndPublish", CoolClientProxy::MakeTorrentAndPublish},
 	{NULL,NULL}
 };
 

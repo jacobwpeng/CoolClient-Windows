@@ -13,6 +13,25 @@ using Poco::Int64;
 namespace CoolDown{
     namespace Client{
 
+		MakeTorrentProgressObj::MakeTorrentProgressObj(make_torrent_progress_callback_t callback)
+			:total_count_(0), current_count_(0), callback_(callback){
+
+		}
+
+		//if return false, means to stop the making progress
+		bool MakeTorrentProgressObj::operator ()(){
+			this->current_count_ += 1;
+			if( callback_ ){
+				return callback_(this->current_count_, this->total_count_);
+			}else{
+				return true;
+			}
+		}
+
+		void MakeTorrentProgressObj::set_total_count(int total_count){
+			this->total_count_ = total_count;
+		}
+
         Verification::Verification(){
         }
 
@@ -30,8 +49,8 @@ namespace CoolDown{
 			return chunk_count;
 		}
 
-		void Verification::get_file_and_chunk_checksum_list(const File& file, int chunk_size, int* current_count, int total_count,
-			make_torrent_progress_callback_t callback, string* pFileChecksum, ChecksumList* pList){
+		bool Verification::get_file_and_chunk_checksum_list(const File& file, int chunk_size,
+			string* pFileChecksum, ChecksumList* pList, MakeTorrentProgressObj* pProgressObj){
 			poco_assert( chunk_size > 0 );
 			poco_assert( pFileChecksum != NULL );
 			poco_assert( pList != NULL );
@@ -45,14 +64,17 @@ namespace CoolDown{
 				pList->push_back( get_verification_code_without_lock(start, start + chunk_size ) );
 				start += chunk_size;
 				file_engine_.update(start, chunk_size);
-				++(*current_count);
-				if( callback ){
-					callback(*current_count, total_count);
+				if( pProgressObj ){
+					bool continue_this_progress = (*pProgressObj)();
+					if( continue_this_progress == false ){
+						return false;
+					}
 				}
 			}
 			pList->push_back( get_verification_code_without_lock(start, sm.end()) );
 			file_engine_.update(start, sm.end() - start );
 			pFileChecksum->assign(DigestEngine::digestToHex(file_engine_.digest()));
+			return true;
 		}
 
         //string Verification::get_file_verification_code(const string& fullpath) {
