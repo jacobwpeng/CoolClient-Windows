@@ -111,6 +111,21 @@ namespace CoolDown{
 		return mark;
 	}
 
+	int search_count(StreamSocket* sock, string key, int type, int* count)
+	{
+		Ask request;
+		request.set_num(5);
+		request.set_key( key );
+		request.set_type(type);
+
+		Reply* back = new Reply;
+		int mark = connent(request, sock, back);
+		if ( mark == 0)
+		{
+			*count = back->count(); 
+		}
+		return mark;
+	}
 
 
 	int check (StreamSocket* sock, int fileid, string* brief)       //查看资源介绍请求设置

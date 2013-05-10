@@ -61,10 +61,11 @@ void protobuf_AssignDesc_resource_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Ask));
   Reply_descriptor_ = file->message_type(1);
-  static const int Reply_offsets_[5] = {
+  static const int Reply_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Reply, num_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Reply, flag_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Reply, info_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Reply, count_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Reply, brief_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Reply, seed_),
   };
@@ -139,12 +140,12 @@ void protobuf_AddDesc_resource_2eproto() {
     "\n\016resource.proto\"\210\001\n\003Ask\022\013\n\003num\030\001 \002(\005\022\014\n"
     "\004type\030\002 \001(\005\022\013\n\003key\030\003 \001(\t\022\016\n\006counta\030\004 \001(\005"
     "\022\016\n\006countb\030\005 \001(\005\022\016\n\006fileid\030\006 \001(\005\022\014\n\004seed"
-    "\030\007 \001(\t\022\r\n\005brief\030\010 \001(\t\022\014\n\004size\030\t \001(\003\"T\n\005R"
+    "\030\007 \001(\t\022\r\n\005brief\030\010 \001(\t\022\014\n\004size\030\t \001(\003\"c\n\005R"
     "eply\022\013\n\003num\030\001 \002(\005\022\014\n\004flag\030\002 \002(\010\022\023\n\004info\030"
-    "\003 \003(\0132\005.Info\022\r\n\005brief\030\004 \001(\t\022\014\n\004seed\030\005 \001("
-    "\t\"R\n\004Info\022\020\n\010filename\030\001 \002(\t\022\014\n\004time\030\002 \002("
-    "\t\022\016\n\006fileid\030\003 \002(\005\022\014\n\004size\030\004 \002(\003\022\014\n\004type\030"
-    "\005 \002(\005", 325);
+    "\003 \003(\0132\005.Info\022\r\n\005count\030\004 \001(\005\022\r\n\005brief\030\005 \001"
+    "(\t\022\014\n\004seed\030\006 \001(\t\"R\n\004Info\022\020\n\010filename\030\001 \002"
+    "(\t\022\014\n\004time\030\002 \002(\t\022\016\n\006fileid\030\003 \002(\005\022\014\n\004size"
+    "\030\004 \002(\003\022\014\n\004type\030\005 \002(\005", 340);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "resource.proto", &protobuf_RegisterTypes);
   Ask::default_instance_ = new Ask();
@@ -755,6 +756,7 @@ void Ask::Swap(Ask* other) {
 const int Reply::kNumFieldNumber;
 const int Reply::kFlagFieldNumber;
 const int Reply::kInfoFieldNumber;
+const int Reply::kCountFieldNumber;
 const int Reply::kBriefFieldNumber;
 const int Reply::kSeedFieldNumber;
 #endif  // !_MSC_VER
@@ -777,6 +779,7 @@ void Reply::SharedCtor() {
   _cached_size_ = 0;
   num_ = 0;
   flag_ = false;
+  count_ = 0;
   brief_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   seed_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -822,6 +825,7 @@ void Reply::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     num_ = 0;
     flag_ = false;
+    count_ = 0;
     if (has_brief()) {
       if (brief_ != &::google::protobuf::internal::kEmptyString) {
         brief_->clear();
@@ -886,12 +890,28 @@ bool Reply::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(26)) goto parse_info;
-        if (input->ExpectTag(34)) goto parse_brief;
+        if (input->ExpectTag(32)) goto parse_count;
         break;
       }
 
-      // optional string brief = 4;
+      // optional int32 count = 4;
       case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_count:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &count_)));
+          set_has_count();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(42)) goto parse_brief;
+        break;
+      }
+
+      // optional string brief = 5;
+      case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_brief:
@@ -903,12 +923,12 @@ bool Reply::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(42)) goto parse_seed;
+        if (input->ExpectTag(50)) goto parse_seed;
         break;
       }
 
-      // optional string seed = 5;
-      case 5: {
+      // optional string seed = 6;
+      case 6: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_seed:
@@ -958,22 +978,27 @@ void Reply::SerializeWithCachedSizes(
       3, this->info(i), output);
   }
 
-  // optional string brief = 4;
+  // optional int32 count = 4;
+  if (has_count()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->count(), output);
+  }
+
+  // optional string brief = 5;
   if (has_brief()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->brief().data(), this->brief().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      4, this->brief(), output);
+      5, this->brief(), output);
   }
 
-  // optional string seed = 5;
+  // optional string seed = 6;
   if (has_seed()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->seed().data(), this->seed().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      5, this->seed(), output);
+      6, this->seed(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1001,24 +1026,29 @@ void Reply::SerializeWithCachedSizes(
         3, this->info(i), target);
   }
 
-  // optional string brief = 4;
+  // optional int32 count = 4;
+  if (has_count()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->count(), target);
+  }
+
+  // optional string brief = 5;
   if (has_brief()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->brief().data(), this->brief().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        4, this->brief(), target);
+        5, this->brief(), target);
   }
 
-  // optional string seed = 5;
+  // optional string seed = 6;
   if (has_seed()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->seed().data(), this->seed().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        5, this->seed(), target);
+        6, this->seed(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1044,14 +1074,21 @@ int Reply::ByteSize() const {
       total_size += 1 + 1;
     }
 
-    // optional string brief = 4;
+    // optional int32 count = 4;
+    if (has_count()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->count());
+    }
+
+    // optional string brief = 5;
     if (has_brief()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->brief());
     }
 
-    // optional string seed = 5;
+    // optional string seed = 6;
     if (has_seed()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -1100,6 +1137,9 @@ void Reply::MergeFrom(const Reply& from) {
     if (from.has_flag()) {
       set_flag(from.flag());
     }
+    if (from.has_count()) {
+      set_count(from.count());
+    }
     if (from.has_brief()) {
       set_brief(from.brief());
     }
@@ -1136,6 +1176,7 @@ void Reply::Swap(Reply* other) {
     std::swap(num_, other->num_);
     std::swap(flag_, other->flag_);
     info_.Swap(&other->info_);
+    std::swap(count_, other->count_);
     std::swap(brief_, other->brief_);
     std::swap(seed_, other->seed_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);

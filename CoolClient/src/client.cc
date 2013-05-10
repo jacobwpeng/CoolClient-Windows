@@ -343,6 +343,20 @@ namespace CoolDown{
 				return ERROR_OK;
 			}
 
+			retcode_t CoolClient::SearchResourceCount(const string& keywords, int type, int* pCount){
+				SockPtr resource_server_sock = this->GetResourceServerSock();
+				if( resource_server_sock.isNull() ){
+					poco_warning(logger(), "Cannot Connect to Resource Server now.");
+					return ERROR_NET_NOT_CONNECTED;
+				}
+				int ret = CoolDown::Client::search_count(resource_server_sock.get(), keywords, type, pCount);
+				if(ret != 0){
+					poco_warning_f1(logger(), "CoolDown::Client::search_count returns %d", ret);
+					return ERROR_UNKNOWN;
+				}
+				return ERROR_OK;
+			}
+
 			retcode_t CoolClient::GetResourceTorrentById(int torrent_id, const string& torrent_name, string* local_torrent_path){
 				SockPtr resource_server_sock = this->GetResourceServerSock();
 				if( resource_server_sock.isNull() ){
