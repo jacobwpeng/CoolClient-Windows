@@ -97,10 +97,6 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 	static string last_request_keywords;
 	static int last_request_type;
 	static int total_record_count = 0;
-	{
-		//DumpLuaState(luaState);
-	}
-
 
 	//if this is the first search of this keywords and type
 	bool new_search = false;
@@ -166,7 +162,7 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 		
 			int nNowTop = lua_gettop(luaState);
 			lua_rawgeti(luaState, LUA_REGISTRYINDEX, functionRef);
-			lua_createtable(luaState, 0, 7);
+			lua_createtable(luaState, 0, 8);
 
 			lua_pushstring(luaState, "TotalCount");
 			lua_pushinteger(luaState, total_record_count);

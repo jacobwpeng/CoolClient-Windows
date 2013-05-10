@@ -22,10 +22,10 @@ namespace CoolDown{
         class Verification{
             public:
                 typedef vector<string> ChecksumList;
-				typedef function<void()> make_torrent_progress_callback_t;
+				typedef function<void(int, int)> make_torrent_progress_callback_t;
 				static int get_file_chunk_count(const File& file, int chunk_size);
-				static void get_file_and_chunk_checksum_list(const File& file, int chunk_size, make_torrent_progress_callback_t callback, 
-					string* pFileChecksum, ChecksumList* pList);
+				static void get_file_and_chunk_checksum_list(const File& file, int chunk_size, int* current_count, int total_count,
+					make_torrent_progress_callback_t callback, string* pFileChecksum, ChecksumList* pList);
 
 
                 //static string get_file_verification_code(const string& fullpath) ;

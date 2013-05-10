@@ -31,6 +31,7 @@ public:
 	static void RegisterObj(XL_LRT_ENV_HANDLE hEnv);
 
 private:
+	static void MakeTorrentProgressCallback(int current_count, int total_count);
 	static void DumpLuaState(lua_State* luaState);
 	static CoolClient* pCoolClient;
 	static Logger& logger_;

@@ -434,6 +434,11 @@ namespace CoolDown{
                     return ERROR_FILE_NOT_EXISTS;
                 }
 
+				ofstream ofs( torrent_file_path.toString().c_str() );
+				if( !ofs ){
+					return ERROR_FILE_CANNOT_CREATE;
+				}
+
                 //fill torrent info
                 Torrent::Torrent torrent;
                 torrent.set_type(type);
@@ -462,12 +467,13 @@ namespace CoolDown{
 
 
                 string torrent_id_source;
+				int current_chunk_count = 0;
                 while( iter != end ){
                     //Process one File
                     Path p(iter->path());
 					string file_check_sum;
 					Verification::ChecksumList checksums;
-					Verification::get_file_and_chunk_checksum_list(*iter, chunk_size, 
+					Verification::get_file_and_chunk_checksum_list(*iter, chunk_size, &current_chunk_count, total_chunk_count,
 						this->make_torrent_progress_callback_, &file_check_sum, &checksums);
                     //string file_check_sum = Verification::get_file_verification_code( iter->path() );
                     Int64 file_size = iter->getSize();
@@ -507,10 +513,7 @@ namespace CoolDown{
                 torrent.set_totalsize( total_size );
                 torrent.set_torrentid( torrent_id );
 
-                ofstream ofs( torrent_file_path.toString().c_str() );
-                if( !ofs ){
-                    return ERROR_FILE_CANNOT_CREATE;
-                }
+
                 poco_assert( torrent.SerializeToOstream(&ofs) );
                 ofs.close();
 

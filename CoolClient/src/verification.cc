@@ -30,8 +30,8 @@ namespace CoolDown{
 			return chunk_count;
 		}
 
-		void Verification::get_file_and_chunk_checksum_list(const File& file, int chunk_size,
-							make_torrent_progress_callback_t callback, string* pFileChecksum, ChecksumList* pList){
+		void Verification::get_file_and_chunk_checksum_list(const File& file, int chunk_size, int* current_count, int total_count,
+			make_torrent_progress_callback_t callback, string* pFileChecksum, ChecksumList* pList){
 			poco_assert( chunk_size > 0 );
 			poco_assert( pFileChecksum != NULL );
 			poco_assert( pList != NULL );
@@ -45,8 +45,9 @@ namespace CoolDown{
 				pList->push_back( get_verification_code_without_lock(start, start + chunk_size ) );
 				start += chunk_size;
 				file_engine_.update(start, chunk_size);
+				++(*current_count);
 				if( callback ){
-					callback();
+					callback(*current_count, total_count);
 				}
 			}
 			pList->push_back( get_verification_code_without_lock(start, sm.end()) );
