@@ -199,6 +199,8 @@ local function ListBox_ShowScrollBarV(self)
 		end
 		attr.BeginItem = beginItem
 		attr.HorizontalScrollBarHeight = selfHeight/(#attr.ItemDataTable * attr.ItemHeight)*selfHeight 
+		--XLMessageBox(attr.HorizontalScrollBarHeight)
+		scrollbarvobj:SetThumbLength(attr.HorizontalScrollBarHeight)
 	else
 		attr.ItemWidth = selfWidth
 		scrollbarvobj:SetVisible(false)
@@ -209,7 +211,7 @@ local function ListBox_ShowScrollBarV(self)
 		bkgWndobj:SetObjPos(bkgWndleft, 0, bkgWndright, bkgWndbottom)
 	end
 	if scrollbarvobj then
-		scrollbarvobj:SetScrollRange(0, #attr.ItemDataTable*attr.ItemHeight - attr.ItemCountInOnePage*attr.ItemHeight)
+		scrollbarvobj:SetScrollRange(0, #attr.ItemDataTable*attr.ItemHeight - attr.ItemCountInOnePage*attr.ItemHeight )
 	end
 end
 
@@ -331,6 +333,7 @@ function ListBox_VScrollPosChange(self)
 	end
 	
 	local scrollBegin, scrollEnd = scrollbarvobj:GetScrollRange()
+	--XLMessageBox(attr.HorizontalScrollBarHeight)
 	if scrollEnd == pos then
 	    if attr.HScrollBarShow == true then
 		    pos = bkgWndbottom - (#attr.ItemDataTable) * attr.ItemHeight - attr.HorizontalScrollBarHeight
@@ -343,7 +346,6 @@ function ListBox_VScrollPosChange(self)
 		bkgWndobj:SetObjPos(bkgWndleft, bkgWndtop, bkgWndright, bkgWndbottom)
 	end
 	--横向滚动条的特殊处理
-	
 	--
 	--为了让滚动平滑些
 	local value = math.abs(beginItem - attr.BeginItem)

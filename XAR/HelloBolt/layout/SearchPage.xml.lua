@@ -91,6 +91,7 @@ function OnSearchPageSearchBtnClick(self)--搜索页面的按钮响应
 	local ctrl = self:GetOwnerControl()
 	local objFactory = XLGetObject("Xunlei.UIEngine.ObjectFactory")
 	local resultPage = objFactory:CreateUIObject("ResultPage", "ResultPage")
+	local resultPageEdit = resultPage:GetControlObject("inputarea")
 	local listbox = resultPage:GetControlObject("listbox")
 	
 	local attr = resultPage:GetAttribute()
@@ -127,6 +128,7 @@ function OnSearchPageSearchBtnClick(self)--搜索页面的按钮响应
 	--将搜索页面的UI移出
 	ctrl:GetControlObject("ctrl"):SetObjPos2(1920,1080,"father.width","father.height")	
 	resultPage:SetObjPos2(0,0,"father.width","father.height")
+	resultPageEdit:SetText(attr.SearchParam.KeyWords)
 	ctrl:AddChild(resultPage)
 	
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')

@@ -1,5 +1,5 @@
 #include "resource_conn.h"
-#include "utilities.h"
+//#include "utilities.h"
 #include <iostream>
 using namespace std;
 
@@ -92,7 +92,7 @@ namespace CoolDown{
 		Ask request;
 		request.Clear();
 		request.set_num(1);
-		request.set_key( GBK2UTF8( key ) );
+		request.set_key( key );
 		request.set_type(type);
 		request.set_counta(counta);
 		request.set_countb(countb);
@@ -106,9 +106,6 @@ namespace CoolDown{
 			for(int i=0; i< back->info().size(); i++)
 			{
 				info->push_back( back->info().Get(i) );
-				string filename = back->info().Get(i).filename();
-				string converted = UTF82GBK( filename );
-				info->at(i).set_filename( converted );
 			}
 		}
 		return mark;
@@ -128,7 +125,7 @@ namespace CoolDown{
 	    int mark = connent(request, sock, back);
 		if( mark == 0)
 		{
-			*brief = UTF82GBK( back->brief());
+			*brief = back->brief();
 		}
 		return mark;
 	}
@@ -159,8 +156,8 @@ namespace CoolDown{
 		request.set_num( 4 );
 		request.set_seed( seed );
 		request.set_type( type );
-		request.set_key( GBK2UTF8(key) );
-		request.set_brief( GBK2UTF8(brief) );
+		request.set_key( key );
+		request.set_brief( brief );
 		request.set_size( size );
 	//	request.mutable_info()->CopyFrom(info);
 

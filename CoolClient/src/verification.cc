@@ -1,9 +1,13 @@
+#define BOOST_DATE_TIME_NO_LIB 1
 #include "verification.h"
 #include <cmath>
 #include <Poco/SharedMemory.h>
 #include <Poco/File.h>
 #include <Poco/Bugcheck.h>
 #include <Poco/Types.h>
+#include <Poco/Util/Application.h>
+#include <boost/interprocess/file_mapping.hpp>
+#include <boost/interprocess/mapped_region.hpp>
 
 using Poco::DigestEngine;
 using Poco::SharedMemory;
@@ -51,6 +55,8 @@ namespace CoolDown{
 
 		bool Verification::get_file_and_chunk_checksum_list(const File& file, int chunk_size,
 			string* pFileChecksum, ChecksumList* pList, MakeTorrentProgressObj* pProgressObj){
+			
+			Poco::Logger& logger_ = Poco::Util::Application::instance().logger();
 			poco_assert( chunk_size > 0 );
 			poco_assert( pFileChecksum != NULL );
 			poco_assert( pList != NULL );
@@ -58,23 +64,65 @@ namespace CoolDown{
 
 			FastMutex::ScopedLock lock(mutex_);
 			file_engine_.reset();
-			SharedMemory sm(file, SharedMemory::AM_READ);
-			char* start = sm.begin();
-			while( start + chunk_size < sm.end() ){
-				pList->push_back( get_verification_code_without_lock(start, start + chunk_size ) );
-				start += chunk_size;
+			using namespace boost::interprocess;
+			Int64 file_size = file.getSize();
+			file_mapping m_file(file.path().c_str(), read_only);
+			Int64 offset = 0;
+			while( offset + chunk_size < file_size ){
+				mapped_region region(m_file, read_only, offset, chunk_size);
+				char* start = static_cast<char*>( region.get_address() );
+				pList->push_back(get_verification_code_without_lock(start, start + chunk_size) );
 				file_engine_.update(start, chunk_size);
+
 				if( pProgressObj ){
 					bool continue_this_progress = (*pProgressObj)();
 					if( continue_this_progress == false ){
 						return false;
 					}
 				}
+
+				offset += chunk_size;
 			}
-			pList->push_back( get_verification_code_without_lock(start, sm.end()) );
-			file_engine_.update(start, sm.end() - start );
+			
+			mapped_region region(m_file, read_only, offset, file_size - offset);
+			char* last_chunk_start = static_cast<char*>( region.get_address() );
+			pList->push_back(get_verification_code_without_lock(last_chunk_start, last_chunk_start + file_size - offset));
+			file_engine_.update(last_chunk_start, file_size - offset);
+			if( pProgressObj ){
+				bool continue_this_progress = (*pProgressObj)();
+				if( continue_this_progress == false ){
+					return false;
+				}
+			}
 			pFileChecksum->assign(DigestEngine::digestToHex(file_engine_.digest()));
 			return true;
+	
+			//SharedMemory sm(file, SharedMemory::AM_READ);
+			//char* start = sm.begin();
+			//while( start + chunk_size < sm.end() ){
+			//	pList->push_back( get_verification_code_without_lock(start, start + chunk_size ) );
+			//	file_engine_.update(start, chunk_size);
+			//	start += chunk_size;
+
+			//	if( pProgressObj ){
+			//		bool continue_this_progress = (*pProgressObj)();
+			//		if( continue_this_progress == false ){
+			//			return false;
+			//		}
+			//	}
+			//}
+			//pList->push_back( get_verification_code_without_lock(start, sm.end()) );
+			//file_engine_.update(start, sm.end() - start );
+			//if( pProgressObj ){
+			//	bool continue_this_progress = (*pProgressObj)();
+			//	if( continue_this_progress == false ){
+			//		return false;
+			//	}
+			//}
+			//pFileChecksum->assign(DigestEngine::digestToHex(file_engine_.digest()));
+			//return true;
+
+
 		}
 
         //string Verification::get_file_verification_code(const string& fullpath) {

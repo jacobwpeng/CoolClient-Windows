@@ -96,7 +96,8 @@ function rawSetProp(self,rbegin,rend,pgsize)
 	end
 	attr.ThumbPosBegin = tb
 	attr.ThumbPosEnd = te - tl
-	attr.ThumbLength = tl
+	--attr.ThumbLength = tl
+	--XLMessageBox(tl)
 end
 
 function initBtnPosV(self)
@@ -145,9 +146,16 @@ end
 
 
 function setThumbPosV(self,pos)
+	local left,top,right,bottom = self:GetObjPos()
+	local height = bottom - top
 	local thumbbtn = (self:GetControlObject("bkg")):GetControlObject("thumbbtn")
 	local attr = self:GetAttribute()
-	thumbbtn:SetObjPos(0,pos,attr.BtnWidth,pos + attr.ThumbLength)
+	--XLMessageBox(attr.ThumbLength)
+	if pos + attr.ThumbLength > bottom - top then
+		thumbbtn:SetObjPos(0, height - attr.ThumbLength, attr.BtnWidth, height)
+	else
+		thumbbtn:SetObjPos(0,pos,attr.BtnWidth,pos + attr.ThumbLength)
+	end
 end
 
 function setThumbPosH(self,pos)
@@ -567,4 +575,10 @@ end
 
 function OnPosChange(self)
 	rawForceRefresh(self)
+end
+
+function SetThumbLength(self, length)
+	local attr = self:GetAttribute()
+	attr.ThumbLength = length
+	--XLMessageBox(length)
 end

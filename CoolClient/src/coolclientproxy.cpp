@@ -105,7 +105,7 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 	//TODO: Get The total count of records when first call.
 	if( lua_isfunction(luaState, 6) ){
 		long functionRef = luaL_ref(luaState,LUA_REGISTRYINDEX);
-		string keywords( UTF82GBK(lua_tostring(luaState, 2)) );
+		string keywords( lua_tostring(luaState, 2) );
 		int type = lua_tointeger(luaState, 3);
 		int record_begin = lua_tointeger(luaState, 4);
 		int record_end = lua_tointeger(luaState, 5);
@@ -139,7 +139,7 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 		}
 
 		InfoList records;
-		poco_debug_f4(logger_, "Keywords : %s, type : %d, begin : %d, end : %d", GBK2UTF8(keywords), type, record_begin, record_end);
+		poco_debug_f4(logger_, "Keywords : %s, type : %d, begin : %d, end : %d", keywords, type, record_begin, record_end);
 		retcode_t ret = pCoolClient->SearchResource(keywords, type, 
 												record_begin, record_end, &records);
 		if( ret != ERROR_OK ){
@@ -154,7 +154,7 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 		
 		for(size_t i = 0; i != record_count; ++i){
 			Info& oneRecord = records[i];
-			string name(GBK2UTF8(oneRecord.filename()));
+			string name(oneRecord.filename());
 			string released_time(oneRecord.time());
 			int fileid(oneRecord.fileid());
 			Int64 file_size(oneRecord.size());
@@ -213,7 +213,7 @@ int CoolClientProxy::GetResourceTorrentById(lua_State* luaState){
 		poco_debug_f2(logger_, "Call CoolClientProxy::GetResourceTorrentById with torrent_id : %d, torrent_name : %s",
 			torrent_id, torrent_name);
 		string local_torrent_path;
-		retcode_t ret = pCoolClient->GetResourceTorrentById(torrent_id, UTF82GBK(torrent_name), &local_torrent_path);
+		retcode_t ret = pCoolClient->GetResourceTorrentById(torrent_id, torrent_name, &local_torrent_path);
 		if( ret != ERROR_OK ){
 			poco_warning_f1(logger_, "pCoolClient->GetResourceTorrentById returns %d", (int)ret);
 		}
@@ -264,7 +264,7 @@ int CoolClientProxy::ChoosePath(lua_State* luaState){
 			poco_warning_f1(logger_, "Invalid path_type : %d", path_type);
 			return 0;
 		}
-		resource_path = GBK2UTF8(resource_path);
+		//resource_path = GBK2UTF8(resource_path);
 		int top = lua_gettop(luaState);
 		lua_rawgeti(luaState, LUA_REGISTRYINDEX, functionRef);
 		lua_pushstring(luaState, resource_path.c_str());
@@ -290,6 +290,10 @@ int CoolClientProxy::MakeTorrentAndPublish(lua_State* luaState){
 			int type = lua_tointeger(luaState, 3);
 			string tracker_address = lua_tostring(luaState, 4);
 			string brief_introduction = lua_tostring(luaState, 5);
+			poco_debug_f4(logger_, 
+				"Call CoolClientProxy::MakeTorrentAndPublish, path : %s, filename : %s, type : %d, intro : %s",
+				path, torrent_filename, type, brief_introduction);
+
 			long functionRef = luaL_ref(luaState,LUA_REGISTRYINDEX);
 			const static int chunk_size = 1 << 21;
 			MakeTorrentProgressObj p(boost::bind<bool>( &CoolClientProxy::MakeTorrentProgressCallback, _1, _2, 
