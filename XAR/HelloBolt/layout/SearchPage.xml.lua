@@ -130,7 +130,7 @@ function OnSearchPageSearchBtnClick(self)--搜索页面的按钮响应
 	resultPage:SetObjPos2(0,0,"father.width","father.height")
 	resultPageEdit:SetText(attr.SearchParam.KeyWords)
 	ctrl:AddChild(resultPage)
-	
+	--[[
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
 	if coolClientProxy then
 		coolClientProxy:SearchResource(attr.SearchParam.KeyWords, attr.SearchParam.Type, 0, 9, 
@@ -146,6 +146,10 @@ function OnSearchPageSearchBtnClick(self)--搜索页面的按钮响应
 		end )	
 	else
 		totalCount:SetText("测试 当前/总数 1-10/23")
+	end
+	]]
+	for i = 1, 10 do
+		listbox:AddItem({Name = i})
 	end
 	listbox:UpdateUI()
 end

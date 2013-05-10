@@ -579,6 +579,9 @@ end
 
 function SetThumbLength(self, length)
 	local attr = self:GetAttribute()
+	local left,top,right,bottom = self:GetObjPos()
+	attr.ThumbPosEnd = bottom - top - length
 	attr.ThumbLength = length
+	attr.RangeEnd = bottom - top - length
 	--XLMessageBox(length)
 end
