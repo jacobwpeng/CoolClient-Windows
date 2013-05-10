@@ -44,3 +44,16 @@ function SetText(self,text)
 	local txtObj = self:GetControlObject("texturebtn.text")
 	txtObj:SetText(text)
 end
+
+function OnEnableChange(self, isEnable)
+	local bkg = self:GetControlObject("texturebtn.bkg")
+	local text = self:GetControlObject("texturebtn.text")
+	local attr = self:GetAttribute()
+	if isEnable then
+		bkg:SetResID(attr.NormalBkg)
+		text:SetTextColorResID("system.black")
+	else
+		bkg:SetResID(attr.DisabledBkg)
+		text:SetTextColorResID("system.gray")
+	end
+end

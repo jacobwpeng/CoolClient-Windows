@@ -5,6 +5,7 @@
 			<attr name="NormalBkg" type="string"><default>texture.general.button.normal</default></attr>
 			<attr name="HoverBkg" type="string" ><default>texture.general.button.hover</default></attr>
 			<attr name="DownBkg" type="string" ><default>texture.general.button.down</default></attr>
+			<attr name="DisabledBkg" type="string"><default>texture.general.button.disabled</default></attr>
 			<attr name="Text" type="string" />
 			<attr name="isResizable " type="bool"><default>false</default></attr>
 			<attr name="TextColor" type="string" ><default>system.black</default></attr>
@@ -43,6 +44,7 @@
 				<event name="OnLButtonUp" file="TextureButton.xml.lua" func="OnLButtonUp" />
 				<event name="OnLButtonDown" file="TextureButton.xml.lua" func="OnLButtonDown" />
 				<event name="OnPosChange" file="TextureButton.xml.lua" func="OnPosChange" />
+				<event name="OnEnableChange" file="TextureButton.xml.lua" func="OnEnableChange" />
 			</eventlist>
 		</objtemplate>
 	</control>
