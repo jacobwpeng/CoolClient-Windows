@@ -57,3 +57,8 @@ function OnEnableChange(self, isEnable)
 		text:SetTextColorResID("system.gray")
 	end
 end
+
+function GetText(self)
+	local txtObj = self:GetControlObject("texturebtn.text")
+	return txtObj:GetText()
+end
