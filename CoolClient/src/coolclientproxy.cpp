@@ -1,16 +1,18 @@
 #include "coolclientproxy.h"
 #include "utilities.h"
+#include "make_torrent_runnable.h"
 #include <Commdlg.h>
 #include <Shlobj.h>
 #include <string>
 #include <boost/bind.hpp>
-#include <Poco/Thread.h>
+#include <Poco/ThreadPool.h>
 #include <Poco/Logger.h>
 #include <Poco/Types.h>
 #include <Poco/Path.h>
 
 using std::string;
 using Poco::Int64;
+using CoolDown::Client::MakeTorrentRunnable;
 
 namespace{
 	string OpenFileSelectDialog(const string& init_path){
@@ -296,9 +298,11 @@ int CoolClientProxy::MakeTorrentAndPublish(lua_State* luaState){
 
 			long functionRef = luaL_ref(luaState,LUA_REGISTRYINDEX);
 			const static int chunk_size = 1 << 21;
-			MakeTorrentProgressObj p(boost::bind<bool>( &CoolClientProxy::MakeTorrentProgressCallback, _1, _2, 
+			MakeTorrentRunnable *p = new MakeTorrentRunnable(pCoolClient, path, torrent_filename, chunk_size, type, tracker_address, 
+				boost::bind<bool>( &CoolClientProxy::MakeTorrentProgressCallback, _1, _2, 
 				luaState, functionRef) );
-			pCoolClient->MakeTorrent(path, torrent_filename, chunk_size, type, tracker_address, &p);
+
+			ThreadPool::defaultPool().start(*p);
 	}else{
 		poco_warning(logger_, "Invalid args of CoolClientProxy::MakeTorrentAndPublish.");
 		DumpLuaState(luaState);

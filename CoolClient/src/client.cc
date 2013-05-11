@@ -476,45 +476,54 @@ namespace CoolDown{
 				int current_chunk_count = 0;
 				bool continue_progress = true;
                 while( iter != end ){
-                    //Process one File
-                    Path p(iter->path());
-					string file_check_sum;
-					Verification::ChecksumList checksums;
-					continue_progress = Verification::get_file_and_chunk_checksum_list(*iter, chunk_size,
-						&file_check_sum, &checksums, pProgressObj);
-					if( continue_progress == false ){
-						break;
+					try{
+						//Process one File
+						Path p(iter->path());
+						//poco_trace_f1(logger(), "in MakeTorrent, Processing %s.", iter->path());
+						string file_check_sum;
+						Verification::ChecksumList checksums;
+						continue_progress = Verification::get_file_and_chunk_checksum_list(*iter, chunk_size,
+							&file_check_sum, &checksums, pProgressObj);
+						if( continue_progress == false ){
+							break;
+						}
+						//string file_check_sum = Verification::get_file_verification_code( iter->path() );
+						Int64 file_size = iter->getSize();
+						total_size += file_size;
+	                    
+						//Verification::get_file_checksum_list(*iter, chunk_size, &checksums);
+						int last_chunk_size = file_size % chunk_size;
+
+						//file file info in Torrent
+						Torrent::File* aFile = torrent.add_file();
+						string abs_path( p.parent().toString() );
+						pair<string::iterator, string::iterator> pa = mismatch(top_path.begin(), top_path.end(), abs_path.begin() );
+						string relative_path( pa.second, abs_path.end() );
+						aFile->set_relativepath( relative_path );
+						aFile->set_filename( p.getFileName() );
+						aFile->set_size( file_size );
+						aFile->set_checksum( file_check_sum );
+
+						torrent_id_source.append( p.parent().toString() ).append( p.getFileName() ).append( file_check_sum );
+
+						Verification::ChecksumList::iterator checksum_iter = checksums.begin();
+
+						//Process chunks in a File
+						while( checksum_iter != checksums.end() ){
+							int this_chunk_size = ( checksum_iter == checksums.end() -1 ) ? last_chunk_size : chunk_size;
+							//fill chunk info in File
+							Torrent::Chunk* aChunk = aFile->add_chunk();
+							aChunk->set_checksum( *checksum_iter );
+							aChunk->set_size( this_chunk_size );
+							++checksum_iter;
+						}
+					}catch(Poco::Exception& e){
+						poco_warning_f2(logger(), "catch Poco::Exception in CoolClient::MakeTorrent while processing %s, msg : %s", 
+							iter->path(), e.displayText());
+					}catch(std::exception& e){
+						poco_warning_f2(logger(), "catch std::exception in CoolClient::MakeTorrent while processing %s, msg : %s", 
+							iter->path(), string(e.what()));
 					}
-                    //string file_check_sum = Verification::get_file_verification_code( iter->path() );
-                    Int64 file_size = iter->getSize();
-                    total_size += file_size;
-                    
-                    //Verification::get_file_checksum_list(*iter, chunk_size, &checksums);
-                    int last_chunk_size = file_size % chunk_size;
-
-                    //file file info in Torrent
-                    Torrent::File* aFile = torrent.add_file();
-                    string abs_path( p.parent().toString() );
-                    pair<string::iterator, string::iterator> pa = mismatch(top_path.begin(), top_path.end(), abs_path.begin() );
-                    string relative_path( pa.second, abs_path.end() );
-                    aFile->set_relativepath( relative_path );
-                    aFile->set_filename( p.getFileName() );
-                    aFile->set_size( file_size );
-                    aFile->set_checksum( file_check_sum );
-
-                    torrent_id_source.append( p.parent().toString() ).append( p.getFileName() ).append( file_check_sum );
-
-                    Verification::ChecksumList::iterator checksum_iter = checksums.begin();
-
-                    //Process chunks in a File
-                    while( checksum_iter != checksums.end() ){
-                        int this_chunk_size = ( checksum_iter == checksums.end() -1 ) ? last_chunk_size : chunk_size;
-                        //fill chunk info in File
-                        Torrent::Chunk* aChunk = aFile->add_chunk();
-                        aChunk->set_checksum( *checksum_iter );
-                        aChunk->set_size( this_chunk_size );
-                        ++checksum_iter;
-                    }
 
                     ++iter;
                     
@@ -522,14 +531,15 @@ namespace CoolDown{
 				retcode_t ret = ERROR_OK;
 				if( continue_progress == false ){
 					ret = ERROR_VERIFY_STOPPED_BY_CLIENT;
+					poco_trace(logger(), "MakeTorrent failed because stopped by client!");
 				}else{
 					string torrent_id = Verification::get_verification_code( torrent_id_source );
 					torrent.set_totalsize( total_size );
 					torrent.set_torrentid( torrent_id );
 					poco_assert( torrent.SerializeToOstream(&ofs) );
+					poco_trace(logger(), "MakeTorrent succeed!");
 				}
 				ofs.close();
-
                 return ret;
             }
 

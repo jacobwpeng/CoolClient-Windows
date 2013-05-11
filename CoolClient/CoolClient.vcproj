@@ -227,6 +227,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\make_torrent_runnable.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\net_task_manager.cc"
 				>
 			</File>
@@ -338,6 +342,10 @@
 			</File>
 			<File
 				RelativePath=".\include\local_sock_manager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\make_torrent_runnable.h"
 				>
 			</File>
 			<File
