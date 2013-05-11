@@ -198,6 +198,9 @@ local function ListBox_ShowScrollBarV(self)
 			beginItem = 1
 		end
 		attr.BeginItem = beginItem
+		attr.HorizontalScrollBarHeight = selfHeight/(#attr.ItemDataTable * attr.ItemHeight)*selfHeight - 35
+		--XLMessageBox(attr.HorizontalScrollBarHeight)
+		scrollbarvobj:SetThumbLength(attr.HorizontalScrollBarHeight)
 	else
 		attr.ItemWidth = selfWidth
 		scrollbarvobj:SetVisible(false)
@@ -208,7 +211,7 @@ local function ListBox_ShowScrollBarV(self)
 		bkgWndobj:SetObjPos(bkgWndleft, 0, bkgWndright, bkgWndbottom)
 	end
 	if scrollbarvobj then
-		scrollbarvobj:SetScrollRange(0, #attr.ItemDataTable*attr.ItemHeight - attr.ItemCountInOnePage*attr.ItemHeight)
+		scrollbarvobj:SetScrollRange(0, #attr.ItemDataTable*attr.ItemHeight - attr.ItemCountInOnePage*attr.ItemHeight )
 	end
 end
 
@@ -265,7 +268,7 @@ local function ListBox_ShowScrollBarH(self) --
 end
 
 function UpdateUI(self)
-    local attr = self:GetAttribute()
+	local attr = self:GetAttribute()
 	if attr.ItemDataTable == nil then
 	    attr.ItemDataTable = {}
 	end
@@ -322,7 +325,11 @@ function ListBox_VScrollPosChange(self)
 	local scrollbarvobj = owner:GetControlObject("scrollbar.v")
 	local bkgWndobj = owner:GetControlObject("bkgWnd")
 	local bkgWndleft, bkgWndtop, bkgWndright, bkgWndbottom = bkgWndobj:GetObjPos()
+	local bkgWidth = bkgWndright - bkgWndleft
+	local bkgHeight = bkgWndbottom - bkgWndtop
 	local pos = scrollbarvobj:GetScrollPos()
+	--XLMessageBox(pos)
+	--XLMessageBox((#attr.ItemDataTable) * attr.ItemHeight/(bkgWndbottom - bkgWndtop) )
 	local beginItem = math.floor(pos / attr.ItemHeight)
 	beginItem = beginItem - attr.ItemCountInOnePage
 	if beginItem < 1 then
@@ -330,19 +337,21 @@ function ListBox_VScrollPosChange(self)
 	end
 	
 	local scrollBegin, scrollEnd = scrollbarvobj:GetScrollRange()
+	--XLMessageBox(attr.HorizontalScrollBarHeight)
 	if scrollEnd == pos then
 	    if attr.HScrollBarShow == true then
 		    pos = bkgWndbottom - (#attr.ItemDataTable) * attr.ItemHeight - attr.HorizontalScrollBarHeight
 		else
 		    pos = bkgWndbottom - (#attr.ItemDataTable) * attr.ItemHeight
 		end
-	    bkgWndobj:SetObjPos(bkgWndleft, pos, bkgWndright, bkgWndbottom)
+		pos = pos * ((#attr.ItemDataTable) * attr.ItemHeight/(bkgWndbottom - bkgWndtop))
+	    --bkgWndobj:SetObjPos2(bkgWndleft, pos, bkgWidth, bkgHeight)
 	else
+		pos = pos * ((#attr.ItemDataTable) * attr.ItemHeight/(bkgWndbottom - bkgWndtop))
 	    bkgWndtop = 0 - pos
-		bkgWndobj:SetObjPos(bkgWndleft, bkgWndtop, bkgWndright, bkgWndbottom)
+		bkgWndobj:SetObjPos2(bkgWndleft, bkgWndtop, bkgWidth, bkgHeight)
 	end
 	--横向滚动条的特殊处理
-	
 	--
 	--为了让滚动平滑些
 	local value = math.abs(beginItem - attr.BeginItem)
@@ -915,4 +924,9 @@ function OnResItemSave(self)
 	local ctrl = self:GetOwnerControl()
 	local attr = ctrl:GetAttribute()
 	ctrl:GetOwnerControl():FireExtEvent("OnResItemSave", attr.Index)
+end
+
+function ListBoxItem_OnMouseWheel(self,x,y,distance)
+	local scrollbarV = self:GetOwnerControl():GetControlObject("scrollbar.v")
+	scrollbarV:OnMouseWheel(x,y,distance)
 end

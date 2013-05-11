@@ -11,7 +11,7 @@
 				<left></left>
 				<top></top>
 				<width>452</width>
-				<height>500</height>
+				<height>480</height>
 			</attr>
 			<children>
 			<obj id="bkg" class="TextureObject">
@@ -161,7 +161,7 @@
 									<top>father.height - 35</top>
 									<width>75</width>
 									<height>24</height>
-									<Text>确定</Text>
+									<Text>发布</Text>
 								</attr>
 								<eventlist>
 									<event name="OnClick" file="SeedModal.xml.lua" func="OnOKClick" />
@@ -176,7 +176,7 @@
 									<Text>取消</Text>
 								</attr>
 								<eventlist>
-									<event name="OnClick" file="MessageBox.xml.lua" func="OnCancelClick" />
+									<event name="OnClick" file="SeedModal.xml.lua" func="OnCancelClick" />
 								</eventlist>
 							</obj>
 						</children>
@@ -194,7 +194,7 @@
 			<left>0</left> 
 			<top>0</top>
 			<width>452</width>
-			<height>500</height>
+			<height>480</height>
 			<visible>1</visible>
 			<enable>1</enable>
 			<appwindow>0</appwindow>

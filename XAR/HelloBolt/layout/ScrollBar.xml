@@ -56,7 +56,7 @@
 				<default></default>	
 			</attr>
 			<attr name="NavigationBtnLength" type="int" >
-				<default>12</default>
+				<default>0</default>
 			</attr>		
 			<attr name="ThumbBtnNormalBitmapID" type="string" >	
 			</attr>
@@ -69,18 +69,19 @@
 			<attr name="ThumbBtnDisableBitmapID" type="string" >
 				<default></default>
 			</attr>
+			<attr name="ThumbLength" type="int" ><default>15</default></attr>
 			<attr name="ThumbBtnMinLength" type="int">
 				<default>15</default>
 			</attr>
 		
 			<attr name="WheelSpeed" type="int">
-				<default>5</default>
+				<default>20</default>
 			</attr>
 			<attr name="NavigationSpeed" type="int">
-				<default>2</default>
+				<default>15</default>
 			</attr>
 			<attr name="NavigationAcceleration" type="float">
-				<default>2</default>
+				<default>10</default>
 			</attr>
 			<attr name="PageSize" type="int">
 				<default>20</default>
@@ -106,6 +107,7 @@
 			<SetNavigationSpeed file="ScrollBar.xml.lua" func="SetNavigationSpeed"/>
 			<GetNavigationSpeed file="ScrollBar.xml.lua" func="GetNavigationSpeed"/>
 			
+			<SetThumbLength file="ScrollBar.xml.lua" func="SetThumbLength"/>
 			<OnMouseWheel file="ScrollBar.xml.lua" func="OnMouseWheel"/>
 		</method_def>
 		
@@ -160,7 +162,6 @@
 								</obj>
 							</children>
 							<eventlist>
-								<!--<event name="OnClick" file="ScrollBar.xml.lua" func="Bkg_OnClick" />-->
 								<event name="OnLButtonDown" file="ScrollBar.xml.lua" func="Bkg_OnLButtonDown"/>
 								<event name="OnLButtonUp" file="ScrollBar.xml.lua" func="Bkg_OnLButtonUp"/>
 								<event name="OnMouseWheel" file="ScrollBar.xml.lua" func="Bkg_OnMouseWheel"/>

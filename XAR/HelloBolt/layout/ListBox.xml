@@ -366,6 +366,7 @@
 				<event name="OnMouseMove" file="ListBox.xml.lua" func="ListBoxItem_OnMouseMove" />
 				<event name="OnLButtonUp" file="ListBox.xml.lua" func="ListBoxItem_OnLButtonUp" />
 				<event name="OnMouseLeave" file="ListBox.xml.lua" func="ListBoxItem_OnMouseLeave" />
+				<event name="OnMouseWheel" file="ListBox.xml.lua" func="ListBoxItem_OnMouseWheel" />
 				<event name="OnVisibleChange" file="ListBox.xml.lua" func="ListBoxItem_OnVisibleChange" />
 				<event name="OnEnableChange" file="ListBox.xml.lua" func="ListBoxItem_OnEnableChange" />
 				<event name="OnPosChange" file="ListBox.xml.lua" func="ListBoxItem_OnPosChange" />
@@ -561,6 +562,7 @@
 				<event name="OnMouseMove" file="ListBox.xml.lua" func="ListBoxItem_OnMouseMove" />
 				<event name="OnLButtonUp" file="ListBox.xml.lua" func="ListBoxItem_OnLButtonUp" />
 				<event name="OnMouseLeave" file="ListBox.xml.lua" func="ListBoxItem_OnMouseLeave" />
+				<event name="OnMouseWheel" file="ListBox.xml.lua" func="ListBoxItem_OnMouseWheel" />
 				<event name="OnVisibleChange" file="ListBox.xml.lua" func="ListBoxItem_OnVisibleChange" />
 				<event name="OnEnableChange" file="ListBox.xml.lua" func="ListBoxItem_OnEnableChange" />
 				<event name="OnPosChange" file="ListBox.xml.lua" func="ListBoxItem_OnPosChange" />

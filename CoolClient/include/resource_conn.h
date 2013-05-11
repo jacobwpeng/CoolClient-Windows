@@ -46,6 +46,8 @@ namespace CoolDown{
 
 		int search(StreamSocket* sock, string key, int type, int counta, int countb, InfoList* info);       //搜索请求设置
 
+		int search_count(StreamSocket* sock, string key, int type, int* count);
+
 
 		int check (StreamSocket* sock, int fileid, string* brief);       //查看资源介绍请求设置
 

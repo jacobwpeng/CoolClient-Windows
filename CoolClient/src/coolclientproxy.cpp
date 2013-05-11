@@ -70,9 +70,9 @@ namespace{
 	}
 }
 
-CoolClient* CoolClientProxy::pCoolClient = new CoolClient;
-Logger& CoolClientProxy::logger_ = CoolClientProxy::pCoolClient->logger();
-bool CoolClientProxy::stop_making_torrent = false;
+CoolClient* CoolClientProxy::pCoolClient(new CoolClient);
+Logger& CoolClientProxy::logger_( CoolClientProxy::pCoolClient->logger() );
+atomic_bool CoolClientProxy::stop_making_torrent(false);
 
 CoolClientProxy* __stdcall CoolClientProxy::Instance(void*){
 
@@ -130,14 +130,23 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 			//Add get Total Count of records of this search
 			//total_record_count = ...
 			//current use this nasty way to get it.
-			InfoList tmpList;
-			retcode_t ret = pCoolClient->SearchResource(keywords, type, 
-				0, 999999, &tmpList);
+
+			//InfoList tmpList;
+			//retcode_t ret = pCoolClient->SearchResource(keywords, type, 
+			//	0, 999999, &tmpList);
+			//if( ret != ERROR_OK ){
+			//	poco_warning_f1(logger_, "Cannot get total_record_count, pCoolClient->SearchResource returns %d", (int)ret);
+			//	return 0;
+			//}
+			//total_record_count = tmpList.size();
+			int count = 0;
+			retcode_t ret = pCoolClient->SearchResourceCount(keywords, type, &count);
 			if( ret != ERROR_OK ){
-				poco_warning_f1(logger_, "Cannot get total_record_count, pCoolClient->SearchResource returns %d", (int)ret);
+				poco_warning_f1(logger_, "Cannot get total_record_count, pCoolClient->SearchResourceCount returns %d", (int)ret);
 				return 0;
 			}
-			total_record_count = tmpList.size();
+			total_record_count = count;
+
 		}
 
 		InfoList records;
@@ -189,7 +198,7 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 			lua_settable(luaState, -3);
 
 			lua_pushstring(luaState, "Size");
-			lua_pushinteger(luaState, file_size);
+			lua_pushnumber(luaState, file_size);
 			lua_settable(luaState, -3);
 
 			lua_pushstring(luaState, "Upload");
@@ -288,7 +297,7 @@ int CoolClientProxy::MakeTorrentAndPublish(lua_State* luaState){
 		&& lua_isstring(luaState, 5)
 		&& lua_isfunction(luaState, 6)){
 			string path = lua_tostring(luaState, 2);
-			string torrent_filename = GetTorrentName(path);
+			string torrent_filename = GetTorrentNameByResourcePath(path);
 			int type = lua_tointeger(luaState, 3);
 			string tracker_address = lua_tostring(luaState, 4);
 			string brief_introduction = lua_tostring(luaState, 5);
@@ -301,8 +310,9 @@ int CoolClientProxy::MakeTorrentAndPublish(lua_State* luaState){
 			MakeTorrentRunnable *p = new MakeTorrentRunnable(pCoolClient, path, torrent_filename, chunk_size, type, tracker_address, 
 				boost::bind<bool>( &CoolClientProxy::MakeTorrentProgressCallback, _1, _2, 
 				luaState, functionRef) );
-
+			stop_making_torrent = false;
 			ThreadPool::defaultPool().start(*p);
+			
 	}else{
 		poco_warning(logger_, "Invalid args of CoolClientProxy::MakeTorrentAndPublish.");
 		DumpLuaState(luaState);
@@ -310,7 +320,7 @@ int CoolClientProxy::MakeTorrentAndPublish(lua_State* luaState){
 	return 0;
 }
 
-string CoolClientProxy::GetTorrentName(const string& resource_path){
+string CoolClientProxy::GetTorrentNameByResourcePath(const string& resource_path){
 	Path path(resource_path);
 	string path_str = path.toString();
 	size_t end = path_str.find_last_of(Path::separator());
@@ -344,6 +354,9 @@ bool CoolClientProxy::MakeTorrentProgressCallback(int current_count, int total_c
 	return !stop_making_torrent;
 }
 
+int CoolClientProxy::StopMakeTorrent(lua_State* luaState){
+	return 0;
+}
 
 
 int CoolClientProxy::StopClient(lua_State* luaState){

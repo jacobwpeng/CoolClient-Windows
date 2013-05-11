@@ -294,10 +294,17 @@ class Reply : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::Info >*
       mutable_info();
 
-  // optional string brief = 4;
+  // optional int32 count = 4;
+  inline bool has_count() const;
+  inline void clear_count();
+  static const int kCountFieldNumber = 4;
+  inline ::google::protobuf::int32 count() const;
+  inline void set_count(::google::protobuf::int32 value);
+
+  // optional string brief = 5;
   inline bool has_brief() const;
   inline void clear_brief();
-  static const int kBriefFieldNumber = 4;
+  static const int kBriefFieldNumber = 5;
   inline const ::std::string& brief() const;
   inline void set_brief(const ::std::string& value);
   inline void set_brief(const char* value);
@@ -306,10 +313,10 @@ class Reply : public ::google::protobuf::Message {
   inline ::std::string* release_brief();
   inline void set_allocated_brief(::std::string* brief);
 
-  // optional string seed = 5;
+  // optional string seed = 6;
   inline bool has_seed() const;
   inline void clear_seed();
-  static const int kSeedFieldNumber = 5;
+  static const int kSeedFieldNumber = 6;
   inline const ::std::string& seed() const;
   inline void set_seed(const ::std::string& value);
   inline void set_seed(const char* value);
@@ -324,6 +331,8 @@ class Reply : public ::google::protobuf::Message {
   inline void clear_has_num();
   inline void set_has_flag();
   inline void clear_has_flag();
+  inline void set_has_count();
+  inline void clear_has_count();
   inline void set_has_brief();
   inline void clear_has_brief();
   inline void set_has_seed();
@@ -336,9 +345,10 @@ class Reply : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::Info > info_;
   ::std::string* brief_;
   ::std::string* seed_;
+  ::google::protobuf::int32 count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_resource_2eproto();
   friend void protobuf_AssignDesc_resource_2eproto();
@@ -901,15 +911,37 @@ Reply::mutable_info() {
   return &info_;
 }
 
-// optional string brief = 4;
-inline bool Reply::has_brief() const {
+// optional int32 count = 4;
+inline bool Reply::has_count() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void Reply::set_has_brief() {
+inline void Reply::set_has_count() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void Reply::clear_has_brief() {
+inline void Reply::clear_has_count() {
   _has_bits_[0] &= ~0x00000008u;
+}
+inline void Reply::clear_count() {
+  count_ = 0;
+  clear_has_count();
+}
+inline ::google::protobuf::int32 Reply::count() const {
+  return count_;
+}
+inline void Reply::set_count(::google::protobuf::int32 value) {
+  set_has_count();
+  count_ = value;
+}
+
+// optional string brief = 5;
+inline bool Reply::has_brief() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Reply::set_has_brief() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Reply::clear_has_brief() {
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void Reply::clear_brief() {
   if (brief_ != &::google::protobuf::internal::kEmptyString) {
@@ -971,15 +1003,15 @@ inline void Reply::set_allocated_brief(::std::string* brief) {
   }
 }
 
-// optional string seed = 5;
+// optional string seed = 6;
 inline bool Reply::has_seed() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void Reply::set_has_seed() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void Reply::clear_has_seed() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void Reply::clear_seed() {
   if (seed_ != &::google::protobuf::internal::kEmptyString) {

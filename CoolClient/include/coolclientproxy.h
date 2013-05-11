@@ -8,11 +8,13 @@
 #include <Windows.h>
 #include <XLLuaRuntime.h>
 #include <Poco/Logger.h>
+#include <boost/atomic.hpp>
 
 using Poco::Logger;
 using CoolDown::Client::CoolClient;
 using CoolDown::Client::ClientThread;
 using CoolDown::Client::MakeTorrentProgressObj;
+using boost::atomic_bool;
 
 class CoolClientProxy{
 public:
@@ -24,6 +26,7 @@ public:
 	static int GetResourceTorrentById(lua_State* luaState);
 	static int ChoosePath(lua_State* luaState);
 	static int MakeTorrentAndPublish(lua_State* luaState);
+	static int StopMakeTorrent(lua_State* luaState);
 	static int StopClient(lua_State* luaState);
 
 public:
@@ -33,12 +36,12 @@ public:
 
 private:
 	static bool MakeTorrentProgressCallback(int current_count, int total_count, lua_State* luaState, long functionRef);
-	static string GetTorrentName(const string& resource_path);
+	static string GetTorrentNameByResourcePath(const string& resource_path);
 	static void DumpLuaState(lua_State* luaState);
 	
 	static CoolClient* pCoolClient;
 	static Logger& logger_;
-	static bool stop_making_torrent;
+	static atomic_bool stop_making_torrent;
 };
 
 #endif
