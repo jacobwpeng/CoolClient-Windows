@@ -70,8 +70,11 @@
 								<Text>大小</Text>
 								<TextColor>system.gray</TextColor>
 							</attr>
+							<eventlist>
+								<event name="OnClick" file="TasklistStatusBar.xml.lua" func="OnSizeClick" />
+							</eventlist>
 						</obj>
-						<obj id="tasklist.header.size" class="BaseUI.TextureButton">
+						<obj id="tasklist.header.progress" class="BaseUI.TextureButton">
 							<attr>
 								<left>434</left>
 								<top></top>
@@ -83,6 +86,9 @@
 								<Text>进度</Text>
 								<TextColor>system.gray</TextColor>
 							</attr>
+							<eventlist>
+								<event name="OnClick" file="TasklistStatusBar.xml.lua" func="OnProgressClick" />
+							</eventlist>
 						</obj>
 						<obj id="tasklist.header.retime" class="BaseUI.TextureButton">
 							<attr>
@@ -96,6 +102,9 @@
 								<Text>剩余时间</Text>
 								<TextColor>system.gray</TextColor>
 							</attr>
+							<eventlist>
+								<event name="OnClick" file="TasklistStatusBar.xml.lua" func="OnRetimeClick" />
+							</eventlist>
 						</obj>
 						<obj id="tasklist.header.download" class="BaseUI.TextureButton">
 							<attr>
@@ -109,6 +118,9 @@
 								<Text>下载</Text>
 								<TextColor>system.gray</TextColor>
 							</attr>
+							<eventlist>
+								<event name="OnClick" file="TasklistStatusBar.xml.lua" func="OnDownloadClick" />
+							</eventlist>
 						</obj>
 						<obj id="tasklist.header.upload" class="BaseUI.TextureButton">
 							<attr>
@@ -122,6 +134,9 @@
 								<Text>上传</Text>
 								<TextColor>system.gray</TextColor>
 							</attr>
+							<eventlist>
+								<event name="OnClick" file="TasklistStatusBar.xml.lua" func="OnUploadClick" />
+							</eventlist>
 						</obj>
 					</children>
 				</obj>

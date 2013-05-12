@@ -1,7 +1,5 @@
 function SetAlpha(self,nAlpha)
-	local obj = self:GetControlObject("ProgressTextLeft")
-	obj:SetAlpha(nAlpha)
-	local obj = self:GetControlObject("ProgressTextRight")
+	local obj = self:GetControlObject("ProgressText")
 	obj:SetAlpha(nAlpha)
 	local obj = self:GetControlObject("LightBkg.Ani.Light")
 	obj:SetAlpha(nAlpha)
@@ -13,6 +11,7 @@ end
 
 function CalcProgressText(self)
 	local attr = self:GetAttribute()
+	local text = self:GetControlObject("ProgressText")
 	local progresstext 
 	if attr.HighBound ~= attr.LowBound then
 		--根据文字样式 计算对应的数据
@@ -50,19 +49,25 @@ function UpdateProgress(self)
     emptypart:SetObjPos(nFullWidth, 0, width, height)
     
     local fullbkn = self:GetControlObject("FullBkn")
-	local textleft = self:GetControlObject("ProgressTextLeft")
     fullbkn:SetObjPos(0, 0, width, height)
-    textleft:SetObjPos2(0, 0, width, height)   
+                
     local emptybkn = self:GetControlObject("EmptyBkn")
-	local textright = self:GetControlObject("ProgressTextRight")
     emptybkn:SetObjPos(-nFullWidth, 0, width - nFullWidth, height)
-    textright:SetObjPos2(-nFullWidth, 0, width, height)
+    
+    --local textpart = self:GetControlObject("TextPart")
+    --textpart:SetObjPos(0, 0, width, height)
     local text = self:GetControlObject("ProgressText")
     local progresstext = self:CalcProgressText()
 	if attr.ShowText then
-		textleft:SetText(progresstext)
-		textright:SetText(progresstext)
+		text:SetText(progresstext)
 	end
+    local textwidth, textheight = text:GetTextExtent()
+    --text:SetObjPos((width - textwidth) / 2, 0, (width + textwidth) / 2, height)
+    if nFullWidth >= (width + textwidth) / 2 then
+        text:SetTextColorResID("system.white")
+    else
+        text:SetTextColorResID("system.black")
+    end
 end
 
 function SetProgress(self, newProgress,inAnimation)
@@ -139,19 +144,16 @@ function OnBind(self)
 	
 	OnEnableChange(self, self:GetEnable())
 
-    local textleft = self:GetControlObject("ProgressTextLeft")
-	local textright = self:GetControlObject("ProgressTextRight")
+    local text = self:GetControlObject("ProgressText")
     if attr.ShowText then
-        textleft:SetVisible(true)
-		textright:SetVisible(true)
+        text:SetVisible(true)
     else
-        textleft:SetVisible(false)
-		textright:SetVisible(false)
+        text:SetVisible(false)
+		
     end
 	
 	if attr.Font then
-		textleft:SetTextFontResID(attr.Font)
-		textright:SetTextFontResID(attr.Font)
+		text:SetTextFontResID(attr.Font)
 	end
     
     self:UpdateProgress()
@@ -276,10 +278,8 @@ function Progress_OnInitControl(self)
 	else
 		FullProcessBkg:SetVisible(false)
 	end
-	local textleft = self:GetControlObject("ProgressTextLeft")
-	local textright = self:GetControlObject("ProgressTextRight")
-	textleft:SetObjPos2("0", tostring(attr.TextTop), "father.width", "father.height")
-	textright:SetObjPos2("0", tostring(attr.TextTop), "father.width", "father.height")
+	local text = self:GetControlObject("ProgressText")
+	text:SetObjPos2("0", tostring(attr.TextTop), "father.width", "father.height")
 end
 
 function SetFloor(self, n)
@@ -313,10 +313,8 @@ end
 function OnVisibleChange(self, visible)
 	local attr = self:GetAttribute()
 
-    local textobj = self:GetControlObject("ProgressTextLeft")
+    local textobj = self:GetControlObject("ProgressText")
     textobj:SetVisible(visible)
-	textobj = self:GetControlObject("ProgressTextRight")
-	textobj:SetVisible(visible)
     local fullobj = self:GetControlObject("FullBkn")
     fullobj:SetVisible(visible)
     local emptyobj = self:GetControlObject("EmptyBkn")
