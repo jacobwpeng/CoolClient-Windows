@@ -91,4 +91,6 @@ function OnListBoxSelectChanged(self,eventname,index)
 	pause:SetEnable(true)
 	delete:SetEnable(true)
 	openfolder:SetEnable(true)
+	
+	--XLMessageBox(self:GetItemByIndex(0):GetControlObject("progress"):GetControlObject("ProgressTextLeft"):GetAlpha())
 end

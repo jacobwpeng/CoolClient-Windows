@@ -12,7 +12,7 @@
 		</attr_def>
 		<method_def>
 			<SetText file="TextureButton.xml.lua" func="SetText" />
-			<GetText file="TextureButton.xml.lua" func="SetText" />
+			<GetText file="TextureButton.xml.lua" func="GetText" />
 		</method_def>
 		<event_def>
 			<OnClick />

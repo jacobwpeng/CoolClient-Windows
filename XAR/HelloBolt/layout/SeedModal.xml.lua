@@ -9,12 +9,15 @@ function OnRadioButtonContainerInit(self)
 	self:AddRadioButton("book","图书",240,0,60,24)
 end
 function OnOKClick(self)
-	if self:GetText() == "确定" then
-		hostwnd:EndDialog()
-	end
 	local owner = self:GetOwner()
 	local bkg = owner:GetUIObject("bkg")
 	local hostwnd = owner:GetBindHostWnd()
+	
+	if self:GetText() == "确定" then
+		hostwnd:EndDialog(0)
+		return 
+	end
+	
 	local userData = hostwnd:GetUserData()
 	local path = owner:GetUIObject("path")
 	local tracker = owner:GetUIObject("tracker")
@@ -56,7 +59,7 @@ function OnCancelClick(self)
 		--停止做种
 		okBtn:SetEnable(true)
 	else
-		hostWnd:EndDialog()
+		hostWnd:EndDialog(0)
 	end
 end
 function OnAddFile(self)
