@@ -128,7 +128,6 @@
 			    	<attr>
 			    		<width>father.width</width>
 			    		<height>father.height</height>
-						<limitchild>1</limitchild>
 			    	</attr>
 			    	<children>
 			    		<obj id="bkg" class="TextureObject">

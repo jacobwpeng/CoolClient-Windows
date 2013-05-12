@@ -20,7 +20,7 @@
 					<attr>
 						<left></left>
 						<top></top>
-						<width>father.width</width>
+						<width>father.width - 1</width>
 						<height>father.height</height>
 					</attr>
 					<children>

@@ -1,6 +1,7 @@
 --local function:
 --NowState normal:Normal, down:Down, disable:Disable, hover:Hover
 local function ListBox_UpdateRes(self, newState)
+
     local attr = self:GetAttribute()
     
 	local bkgTexture
@@ -23,6 +24,7 @@ local function ListBox_UpdateRes(self, newState)
 	end
 	
 	attr.NowState = newState
+
 end
 
 
@@ -750,7 +752,7 @@ local function ListBoxItem_UpdateRes(self, newState)
 	local bkgObj = self:GetControlObject("bkg")
 	
 	if bkgTexture ~= "" and bkgObj then
-	    bkgObj:SetTextureID(bkgTexture)
+		bkgObj:SetTextureID(bkgTexture)
 	end
 	
 	attr.NowState = newState

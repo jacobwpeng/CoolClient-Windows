@@ -75,7 +75,7 @@ function OnCronMenuItemClick(self)
 	end
 end
 
---listbox选中发生变化，这里用来更新按钮之类的
+--listbox选中发生变化，这里用来更新按钮之类的 index从1开始
 function OnListBoxSelectChanged(self,eventname,index)
 	--XLMessageBox(self:GetItemByIndex(index):GetClass())
 	local page = self:GetOwnerControl()
@@ -91,6 +91,4 @@ function OnListBoxSelectChanged(self,eventname,index)
 	pause:SetEnable(true)
 	delete:SetEnable(true)
 	openfolder:SetEnable(true)
-	
-	--XLMessageBox(self:GetItemByIndex(0):GetControlObject("progress"):GetControlObject("ProgressTextLeft"):GetAlpha())
 end
