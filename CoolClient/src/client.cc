@@ -633,14 +633,22 @@ namespace CoolDown{
 				if( continue_progress == false ){
 					ret = ERROR_VERIFY_STOPPED_BY_CLIENT;
 					poco_trace(logger(), "MakeTorrent failed because stopped by client!");
+					ofs.close();
+					//delete this file when it's stopped by client
+					int remove_ret = remove(torrent_file_path.c_str());
+					if( remove_ret != 0 ){
+						poco_warning_f2(logger(), "in CoolClient::MakeTorrent, Cannot remove file('%s'), ret : %d", 
+									torrent_file_path, remove_ret);
+					}
 				}else{
 					string torrent_id = Verification::get_verification_code( torrent_id_source );
 					torrent.set_totalsize( total_size );
 					torrent.set_torrentid( torrent_id );
 					poco_assert( torrent.SerializeToOstream(&ofs) );
 					poco_trace_f1(logger(), "MakeTorrent succeed! torrent file : %s", torrent_file_path);
+					ofs.close();
 				}
-				ofs.close();
+				
                 return ret;
             }
 
