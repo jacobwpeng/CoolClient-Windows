@@ -97,7 +97,9 @@ namespace CoolDown{
                     //NetTaskManager& download_manager();
                     NetTaskManager& upload_manager();
 
+					//used by CoolClientProxy
 					retcode_t PublishResource(const string& torrent_name, const Torrent::Torrent& torrent);
+					retcode_t DownloadTorrent(int id, const string& torrent_name);
 
                     //communicate with tracker
                     retcode_t LoginTracker(const string& tracker_address, int port = TRACKER_PORT);
@@ -169,7 +171,9 @@ namespace CoolDown{
 
                     //utilities functions
                     string current_time() const;
+					string get_torrent_path(const string& torrent_name) const;
                     static void format_speed(UInt64 speed, string* formatted_speed);
+
 
                     //void set_make_torrent_progress_callback(make_torrent_progress_callback_t callback);
 

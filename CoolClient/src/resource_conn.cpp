@@ -41,7 +41,7 @@ namespace CoolDown{
 			receive.clear();
 			n = 0;
 			while( n != d){
-				n = sock->receiveBytes(buffer, d);              //接收消息
+				n = sock->receiveBytes(buffer, 1024);              //接收消息
 				if( n <= 0 ){
 					return 3;
 				}

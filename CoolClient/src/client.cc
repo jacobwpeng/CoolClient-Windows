@@ -179,6 +179,14 @@ namespace CoolDown{
                 Poco::RunnableAdapter<CoolClient> reportProgressRunnable( *this, &CoolClient::ReportProgressRoutine );
                 this->report_progress_thread_.start( reportProgressRunnable );
 
+				{
+					//retcode_t ret = ERROR_OK;
+					//ret = this->DownloadTorrent(46, "");
+					//poco_trace_f1(logger(), "DownloadTorrent returns %d", (int)ret);
+				}
+
+
+
 				ServerSocket svs(LOCAL_PORT);
 				svs.setReusePort(false);
 
@@ -228,22 +236,22 @@ namespace CoolDown{
             }
 
 			retcode_t CoolClient::PublishResource(const string& torrent_name, const Torrent::Torrent& torrent){
-				string torrent_path = format("%s%c%s", this->local_torrent_dir_path_, Path::separator(), torrent_name);
+				string torrent_path = get_torrent_path(torrent_name);
 				poco_trace_f1(logger(), "Publish torrent('%s').", torrent_path);
 				Torrent::Torrent torrent_info(torrent);
 
 				bool is_completed_publish = true;
 				//first publish all file to Tracker
 				{
-					BOOST_FOREACH(const Torrent::File& oneFile, torrent_info.file()){
-						string fileid( oneFile.checksum() );
-						retcode_t ret = this->PublishResourceToTracker(this->tracker_addr_, fileid);
-						if( ret != ERROR_OK ){
-							poco_warning_f3(logger(), "Publish file(%s) to tracker(%s) return %d",
-								fileid, this->tracker_addr_, (int)ret);
-							is_completed_publish = false;
-						}
-					}
+					//BOOST_FOREACH(const Torrent::File& oneFile, torrent_info.file()){
+					//	string fileid( oneFile.checksum() );
+					//	retcode_t ret = this->PublishResourceToTracker(this->tracker_addr_, fileid);
+					//	if( ret != ERROR_OK ){
+					//		poco_warning_f3(logger(), "Publish file(%s) to tracker(%s) return %d",
+					//			fileid, this->tracker_addr_, (int)ret);
+					//		is_completed_publish = false;
+					//	}
+					//}
 				}
 
 				//then publish the torrent to Resource Server
@@ -255,7 +263,8 @@ namespace CoolDown{
 					torrent.SerializeToString(&torrent_content);
 					ostringstream encode_oss;
 					Poco::Base64Encoder encoder(encode_oss);
-					encoder << torrent_content;
+					encoder.write(torrent_content.data(), (std::streamsize) torrent_content.size());
+					encoder.close();
 					
 					string encoded_torrent_content = encode_oss.str();
 					int ret = CoolDown::Client::upload(resource_server_sock.get(), encoded_torrent_content, torrent_info.type(), 
@@ -267,6 +276,35 @@ namespace CoolDown{
 					}
 				}
 				return is_completed_publish ? ERROR_OK : ERROR_PUBLISH_NOT_COMPLETE;
+			}
+
+			retcode_t CoolClient::DownloadTorrent(int id, const string& torrent_name){
+				SockPtr resource_server_sock = this->sockManager_->get_resource_server_sock();
+				if( resource_server_sock.isNull() ){
+					return ERROR_NET_NOT_CONNECTED;
+				}
+				string encoded_torrent_content;
+				int download_ret = CoolDown::Client::download(resource_server_sock.get(), id, &encoded_torrent_content);
+				if( download_ret != 0 ){
+					poco_warning_f1(logger(), "in CoolClient::DownloadTorrent, CoolDown::Client::download returns %d",
+									download_ret);
+					return ERROR_UNKNOWN;
+				}
+
+				istringstream  decode_iss(encoded_torrent_content);
+				Poco::Base64Decoder decoder(decode_iss);
+				string torrent_content;
+				//decode_iss >> torrent_content;
+
+				int c = decoder.get();
+				while (c != -1) { torrent_content += char(c); c = decoder.get(); }
+
+				Torrent::Torrent torrent;
+				if( false == torrent.ParseFromString(torrent_content) ){
+					poco_warning(logger(), "in CoolClient::DownloadTorrent, cannot ParseFromString");
+					return ERROR_PROTO_PARSE_ERROR;
+				}
+				return ERROR_OK;
 			}
 
             retcode_t CoolClient::LoginTracker(const string& tracker_address, int port){
@@ -416,7 +454,7 @@ namespace CoolDown{
 					poco_warning_f1(logger(), "CoolDown::Client::download returns %d", ret);
 					return ERROR_UNKNOWN;
 				}
-				string torrent_path( format("%s%c%s.cd", this->local_torrent_dir_path_, Path::separator(), torrent_name) );
+				string torrent_path( get_torrent_path(torrent_name) );
 				ofstream ofs(torrent_path.c_str());
 				ofs << torrent_content;
 				ofs.close();
@@ -496,7 +534,7 @@ namespace CoolDown{
                 if( !f.exists() ){
                     return ERROR_FILE_NOT_EXISTS;
                 }
-				string torrent_file_path = format("%s%c%s", this->local_torrent_dir_path_, Path::separator(), torrent_filename);
+				string torrent_file_path = get_torrent_path(torrent_filename);
 
 				ofstream ofs( torrent_file_path.c_str() );
 				if( !ofs ){
@@ -1028,6 +1066,10 @@ namespace CoolDown{
                 LocalDateTime now;
                 return Poco::DateTimeFormatter::format(now, Poco::DateTimeFormat::HTTP_FORMAT);
             }
+
+			string CoolClient::get_torrent_path(const string& torrent_name) const{
+				return format("%s%c%s", this->local_torrent_dir_path_, Path::separator(), torrent_name);
+			}
 
             void CoolClient::format_speed(UInt64 speed, string* formatted_speed){
                 if( speed > (1 << 20) ){
