@@ -57,7 +57,7 @@
 									<Readonly>true</Readonly>
 								</attr>
 							</obj>
-							<obj id="ok" class="BaseUI.TextureButton">
+							<obj id="addfile" class="BaseUI.TextureButton">
 								<attr>
 									<left>father.width - 75*2 - 10 - 46</left>
 									<top>80</top>
@@ -69,7 +69,7 @@
 									<event name="OnClick" file="SeedModal.xml.lua" func="OnAddFile" />
 								</eventlist>
 							</obj>
-							<obj id="ok" class="BaseUI.TextureButton">
+							<obj id="adddirectory" class="BaseUI.TextureButton">
 								<attr>
 									<left>father.width - 75*1 - 10 - 46</left>
 									<top>80</top>

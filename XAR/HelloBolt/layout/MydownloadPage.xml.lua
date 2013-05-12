@@ -5,12 +5,24 @@ function OnPageInit(self)
 	local list = self:GetControlObject("listbox")
 	local data = {}
 	data.Name = "音乐"
+	data.Size = 1
+	data.Progress = 90
+	data.Download = 1024*120
 	list:AddItem(data)
 	data.Name = "电影"
+	data.Size = 2
+	data.Progress = 80
+	data.Download = 1024*1024*8
 	list:AddItem(data)
 	data.Name = "游戏"
+	data.Size = 3
+	data.Progress = 70
+	data.Download = 140
 	list:AddItem(data)
 	data.Name = "图书"
+	data.Size = 4
+	data.Progress = 60
+	data.Download = 1024*10
 	list:AddItem(data)
 
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')

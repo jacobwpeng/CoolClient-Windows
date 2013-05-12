@@ -14,6 +14,7 @@ function OnOKClick(self)
 	local hostwnd = owner:GetBindHostWnd()
 	
 	if self:GetText() == "确定" then
+		--开始做种
 		hostwnd:EndDialog(0)
 		return 
 	end
@@ -53,10 +54,16 @@ end
 
 function OnCancelClick(self)
 	local owner = self:GetOwner()
+	local bkg = owner:GetUIObject("bkg")
 	local okBtn = owner:GetUIObject("ok")
 	local hostWnd = owner:GetBindHostWnd()
 	if okBtn:GetEnable() == false then
-		--停止做种
+		local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+		coolClientProxy:StopMakingTorrent()
+		local progress = owner:GetUIObject("seedmakeprogress")
+		if progress then
+			bkg:RemoveChild(progress)
+		end
 		okBtn:SetEnable(true)
 	else
 		hostWnd:EndDialog(0)
