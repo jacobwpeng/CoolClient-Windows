@@ -37,6 +37,7 @@ public:
 
 private:
 	static void JobStatusCallback(lua_State* luaState, const CoolDown::Client::JobStatusMap& job_status);
+	static void UpdateJobStatusTable(lua_State* luaState, const CoolDown::Client::JobStatus& status);
 	static bool MakeTorrentProgressCallback(int current_count, int total_count, lua_State* luaState, long functionRef);
 	static string GetTorrentNameByResourcePath(const string& resource_path);
 	static void DumpLuaState(lua_State* luaState);

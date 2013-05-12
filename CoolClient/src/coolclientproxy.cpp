@@ -417,9 +417,14 @@ void CoolClientProxy::JobStatusCallback(lua_State* luaState, const CoolDown::Cli
 	while( citer != cend ){
 		int handle = citer->first;
 		const CoolDown::Client::JobStatus& status = citer->second;
+		UpdateJobStatusTable(luaState, status);
 		++citer;
 	}
 	return;
+}
+
+void UpdateJobStatusTable(lua_State* luaState, const CoolDown::Client::JobStatus& status){
+
 }
 
 bool CoolClientProxy::MakeTorrentProgressCallback(int current_count, int total_count, lua_State* luaState, long functionRef){

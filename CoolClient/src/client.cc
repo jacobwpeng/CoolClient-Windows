@@ -756,7 +756,14 @@ namespace CoolDown{
                 pJob->MutableJobInfo()->downloadInfo.is_job_removed = true;
                 pJob->MutableJobInfo()->downloadInfo.download_pause_cond.broadcast();
                 pJob->MutableJobInfo()->downloadInfo.download_speed_limit_cond.broadcast();
-                this->jobs_.erase(handle);
+				{
+					FastMutex::ScopedLock lock_(this->mutex_);
+					this->jobs_.erase(handle);
+				}
+				{
+					FastMutex::ScopedLock lock_(this->job_status_mutex_);
+					this->job_status_.erase(handle);
+				}
 
                 //since we never roll back the handle, we never destructor the job until application exit;
                 this->removed_jobs_[handle] = pJob;
@@ -924,8 +931,10 @@ namespace CoolDown{
             retcode_t CoolClient::AddNewJob(const SharedPtr<JobInfo>& info, const string& torrent_path, int* handle){
                 int this_job_index = job_index_;
                 
-                FastMutex::ScopedLock lock(mutex_);
-                jobs_[job_index_] = JobPtr( new Job(info, *(this->sockManager_), logger()) );
+				{
+					FastMutex::ScopedLock lock(mutex_);
+					jobs_[job_index_] = JobPtr( new Job(info, *(this->sockManager_), logger()) );
+				}
                 poco_debug_f1(logger(), "add Job to jobs_, torrent_id : %s", info->torrentInfo.torrentid());
                 ++job_index_;
                 *handle = this_job_index;
