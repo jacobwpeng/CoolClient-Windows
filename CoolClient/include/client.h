@@ -97,6 +97,8 @@ namespace CoolDown{
                     //NetTaskManager& download_manager();
                     NetTaskManager& upload_manager();
 
+					retcode_t PublishResource(const string& torrent_name, const Torrent::Torrent& torrent);
+
                     //communicate with tracker
                     retcode_t LoginTracker(const string& tracker_address, int port = TRACKER_PORT);
                     retcode_t LogoutTracker(const string& tracker_address, int port = TRACKER_PORT);
@@ -157,7 +159,8 @@ namespace CoolDown{
                     //torrent operations
                     retcode_t ParseTorrent(const Path& torrent_file_path, Torrent::Torrent* pTorrent);
 					retcode_t MakeTorrent(const Path& path, const string& torrent_filename, 
-						Int32 chunk_size, Int32 type, const string& tracker_address, MakeTorrentProgressObj* pProgressObj = NULL);
+						Int32 chunk_size, Int32 type, const string& tracker_address, 
+						Torrent::Torrent* torrent, MakeTorrentProgressObj* pProgressObj = NULL);
                   
 
                     //self identity
@@ -187,6 +190,7 @@ namespace CoolDown{
 					//network setting
                     int LOCAL_PORT;
 					string resource_server_ip_;
+					string tracker_addr_;
 
                     bool exiting_;
 

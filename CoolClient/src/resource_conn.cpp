@@ -108,6 +108,7 @@ namespace CoolDown{
 				info->push_back( back->info().Get(i) );
 			}
 		}
+		delete back;
 		return mark;
 	}
 
@@ -124,6 +125,7 @@ namespace CoolDown{
 		{
 			*count = back->count(); 
 		}
+		delete back;
 		return mark;
 	}
 
@@ -142,6 +144,7 @@ namespace CoolDown{
 		{
 			*brief = back->brief();
 		}
+		delete back;
 		return mark;
 	}
 
@@ -160,6 +163,7 @@ namespace CoolDown{
 		{
 			*seed =  back->seed();
 		}
+		delete back;
 		return mark;
 	}
 
@@ -179,7 +183,7 @@ namespace CoolDown{
 		Reply* back = new Reply;
 		back->Clear();
 		int mark = connent(request, sock, back);
-		
+		delete back;
 		return mark;
 	}
 
