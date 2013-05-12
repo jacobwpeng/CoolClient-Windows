@@ -152,6 +152,7 @@ local function ListBox_CreateInstanceItem(self)--添加item实例，不同type�
 				newListBoxItemAttr.Name = attr.ItemDataTable[i].Name
 				newListBoxItemAttr.Time = attr.ItemDataTable[i].Time
 				newListBoxItemAttr.Size = attr.ItemDataTable[i].Size
+				newListBoxItemAttr.Progress = attr.ItemDataTable[i].Progress
 				newListBoxItemAttr.Upload = attr.ItemDataTable[i].Upload
 				newListBoxItemAttr.Download = attr.ItemDataTable[i].Download	
 			elseif attr.ItemType == "BaseUI.ListBox.ResItem" then
@@ -814,6 +815,7 @@ function ListBoxItem_OnInitControl(self)
 	local dateobj = self:GetControlObject("date")
 	local timeobj = self:GetControlObject("time")
 	local sizeobj = self:GetControlObject("size")
+	local progressobj = self:GetControlObject("progress")
 	local uploadobj = self:GetControlObject("upload")
 	local downloadobj = self:GetControlObject("download")
 	local ctrlObj = self:GetControlObject("ctrl")
@@ -849,21 +851,38 @@ function ListBoxItem_OnInitControl(self)
 		local GB = MB*1024
 		local content
 		if attr.Size > GB then
-			content = string.format(".2f GB", attr.Size/GB)
+			content = string.format("%.2f GB", attr.Size/GB)
 		elseif attr.Size > MB then
-			content = string.format(".2f MB", attr.Size/MB)
+			content = string.format("%.2f MB", attr.Size/MB)
 		elseif attr.Size > KB then
-			content = string.format(".2f KB", attr.Size/KB)
+			content = string.format("%.2f KB", attr.Size/KB)
 		else
-			content = string.format("%d Bytes", attr.Size)
+			content = string.format("%d B", attr.Size)
 		end
 	    sizeobj:SetText(content)
+	end
+	if attr.Progress ~= nil and progressobj then
+		progressobj:SetProgress(attr.Progress)
 	end
 	if attr.Upload ~= nil and uploadobj then
 	    uploadobj:SetText(attr.Upload)
 	end
 	if attr.Download ~= nil and downloadobj then
-	    downloadobj:SetText(attr.Download)
+		if self:GetClass() == "BaseUI.ListBox.TaskItem" then
+			local KB = 1024
+			local MB = KB*1024
+			local content
+			if attr.Download > MB then
+				content = string.format("%.1fMB/s", attr.Download/MB)
+			elseif attr.Download > KB then
+				content = string.format("%dKB/s", attr.Download/KB)
+			else
+				content = string.format("%dB/s", attr.Download)
+			end
+			downloadobj:SetText(content)
+		else
+			downloadobj:SetText(attr.Download)
+		end
 	end
 	if not self:GetVisible() then
 		ctrlObj:SetVisible(false)
