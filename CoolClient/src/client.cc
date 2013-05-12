@@ -67,11 +67,11 @@ namespace CoolDown{
                 }
             }
 
-			ClientThread::ClientThread(CoolClient* pCoolClient)
+			ClientRunnable::ClientRunnable(CoolClient* pCoolClient)
 				:pCoolClient_(pCoolClient){
 			}
 
-			void ClientThread::run(){
+			void ClientRunnable::run(){
 				int argc = 1;
 				char* argv[] = {
 					"CoolClient.exe"
@@ -306,6 +306,10 @@ namespace CoolDown{
 					return ERROR_PROTO_PARSE_ERROR;
 				}
 				return ERROR_OK;
+			}
+
+			void CoolClient::set_job_status_callback(JobStatusCallback callback){
+				this->status_callback_ = callback;
 			}
 
             retcode_t CoolClient::LoginTracker(const string& tracker_address, int port){
@@ -912,6 +916,8 @@ namespace CoolDown{
                 if( ret != ERROR_OK ){
                     return ret;
                 }
+
+				
                 return ERROR_OK;
             }
 
@@ -924,6 +930,15 @@ namespace CoolDown{
                 ++job_index_;
                 *handle = this_job_index;
                 torrent_path_map_[this_job_index] = torrent_path;
+
+				JobStatus status;
+				Path tmp(torrent_path);
+				status.name = tmp.getBaseName();
+				status.size = info->torrentInfo.get_total_size();
+				status.type = info->torrentInfo.get_type();
+				status.status = JOB_DOWNLOADING;		//for 
+				FastMutex::ScopedLock lock_(this->job_status_mutex_);
+				job_status_[this_job_index] = status;
                 return ERROR_OK;
             }
 
@@ -977,56 +992,107 @@ namespace CoolDown{
             void CoolClient::onJobInfoCollectorWakeUp(Timer& timer){
                 FastMutex::ScopedLock lock(mutex_);
                 progress_info_list_t progress_to_report;
+				JobStatusMap job_status;
+				{
+					FastMutex::ScopedLock lock_(this->job_status_mutex_);
+					job_status = this->job_status_;
+				}
                 BOOST_FOREACH(JobMap::value_type& p, jobs_){
                     int handle = p.first;
+					poco_assert( job_status.find(handle) != job_status.end() );
+					JobStatus& status = job_status[handle];
+
                     JobInfoPtr pInfo = p.second->MutableJobInfo();
+					//Upload Speed of this job
                     UInt64 bytes_upload_this_second = pInfo->downloadInfo.bytes_upload_this_second;
+					status.upload_speed_per_second_in_bytes = static_cast<int>(bytes_upload_this_second);
+
+					//Download Speed of this Job
                     UInt64 bytes_download_this_second = pInfo->downloadInfo.bytes_download_this_second;
+					status.upload_speed_per_second_in_bytes = static_cast<int>(bytes_download_this_second);
+
+
                     string upload_speed, download_speed;
                     format_speed(bytes_upload_this_second, &upload_speed);
                     format_speed(bytes_download_this_second, &download_speed);
 
-                    pInfo->downloadInfo.time_to_next_report -= 1;
-                    bool need_to_report;
-                    if( pInfo->downloadInfo.time_to_next_report == 0 
-                            && p.second->is_running() == true
-                            ){
 
-                        need_to_report = true;
-                        pInfo->downloadInfo.time_to_next_report = DownloadInfo::report_period;
-                    }else{
-                        need_to_report = false;
-                    }
+					//see if it's time to report progress to Tracker
+					{
+						pInfo->downloadInfo.time_to_next_report -= 1;
+						bool need_to_report;
+						if( pInfo->downloadInfo.time_to_next_report == 0 
+							&& p.second->is_running() == true
+							){
+
+								need_to_report = true;
+								pInfo->downloadInfo.time_to_next_report = DownloadInfo::report_period;
+						}else{
+							need_to_report = false;
+						}
+
+						string tracker_address( pInfo->torrentInfo.tracker_address());
+						BOOST_FOREACH(DownloadInfo::file_bitmap_map_t::value_type& p, pInfo->downloadInfo.bitmap_map){
+							string fileid(p.first);
+							//calc the download percentage of one file
+							int percentage = static_cast<int>( (double)p.second->count() / p.second->size() * 100 );
+							pInfo->downloadInfo.percentage_map[fileid] = percentage;
+							if( need_to_report ){
+								ProgressInfo oneInfo = { tracker_address, fileid, percentage };
+								progress_to_report.push_back( oneInfo );
+							}
+						}
+					}
 
                     poco_notice_f3(logger(), "Job handle : %d, upload speed : %s, download speed : %s",
                             handle, upload_speed, download_speed);
-
-                    string tracker_address( pInfo->torrentInfo.tracker_address());
-                    BOOST_FOREACH(DownloadInfo::file_bitmap_map_t::value_type& p, pInfo->downloadInfo.bitmap_map){
-                        string fileid(p.first);
-                        int percentage = static_cast<int>( (double)p.second->count() / p.second->size() * 100 );
-                        pInfo->downloadInfo.percentage_map[fileid] = percentage;
-                        if( need_to_report ){
-                            ProgressInfo oneInfo = { tracker_address, fileid, percentage };
-                            progress_to_report.push_back( oneInfo );
-                        }
-                    }
 
                     pInfo->downloadInfo.upload_total += bytes_upload_this_second;
                     pInfo->downloadInfo.download_total += bytes_download_this_second;
                     pInfo->downloadInfo.bytes_upload_this_second = 0;
                     pInfo->downloadInfo.bytes_download_this_second = 0;
                     pInfo->downloadInfo.download_speed_limit_cond.broadcast();
+		
+					status.percentage = static_cast<int>( 
+								(double)pInfo->downloadInfo.download_total / status.size * 100 
+						);
+
+					int status_code = -1;
+					if( pInfo->downloadInfo.is_stopped ){
+						status_code = JOB_STOPPED;
+					}else if( pInfo->downloadInfo.is_download_paused ){
+						status_code = JOB_PAUSED;
+					}else if( bytes_download_this_second != 0 ){
+						status_code = JOB_DOWNLOADING;
+					}else if( bytes_upload_this_second != 0 ){
+						status_code = JOB_UPLOADING;
+					}else{
+						status_code = JOB_INACTIVE;
+					}
+
+					poco_assert(status_code != -1);
+					status.status = (JobTransportStatus)status_code;
                 }
 
+				//see if something to report
                 if( progress_to_report.size() != 0 ){
                     {
                         FastMutex::ScopedLock lock(this->progress_info_mutex_);
                         this->progress_info_to_report_.swap(progress_to_report);
                     }
                     this->reportProgressCond_.signal();
-
                 }
+
+				//see if set a status callback
+				if( this->status_callback_ ){
+					this->status_callback_(job_status);
+				}
+
+				//copy the status map back to the class member 
+				{
+					FastMutex::ScopedLock lock_(this->job_status_mutex_);
+					this->job_status_ = job_status;
+				}
             }
 
             void CoolClient::ReportProgressRoutine(){

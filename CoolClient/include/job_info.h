@@ -104,6 +104,8 @@ namespace CoolDown{
                 typedef map<string, vector<TorrentFileInfoPtr> >file_map_t;
                 TorrentInfo(const Torrent::Torrent& torrent);
                 ~TorrentInfo();
+				int get_type() const;
+				Int64 get_total_size() const;
                 int get_file_count() const;
                 const file_map_t& get_file_map() const;
                 const TorrentFileInfoPtr& get_one_file_of_same_fileid(const string& fileid);
@@ -114,6 +116,7 @@ namespace CoolDown{
             private:
                 Torrent::Torrent torrent_;
                 int file_count_;
+				Int64 total_size_;
                 file_map_t fileMap_;
         };
 

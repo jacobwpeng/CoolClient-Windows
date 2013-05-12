@@ -11,6 +11,7 @@
 #include <set>
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include <boost/function.hpp>
 
 #include <Poco/Util/Application.h>
 #include <Poco/Util/ServerApplication.h>
@@ -29,6 +30,7 @@ using std::vector;
 using std::set;
 using std::string;
 using boost::shared_ptr;
+using boost::function;
 using Poco::Util::Application;
 using Poco::Util::ServerApplication;
 using Poco::Path;
@@ -66,16 +68,24 @@ namespace CoolDown{
 			typedef vector<Info> InfoList;
 			//typedef Verification::make_torrent_progress_callback_t make_torrent_progress_callback_t;
 
-			class ClientThread : public Poco::Runnable{
+			class ClientRunnable : public Poco::Runnable{
 			public:
-				ClientThread(CoolClient* pCoolClient);
+				ClientRunnable(CoolClient* pCoolClient);
 				virtual void run();
 			private:
 				CoolClient* pCoolClient_;
 			};
 
+			enum JobTransportStatus{
+				JOB_STOPPED = 0,
+				JOB_PAUSED = 1,
+				JOB_DOWNLOADING = 2,
+				JOB_UPLOADING = 3,
+				JOB_INACTIVE = 4,
+			};
+
 			struct JobStatus{
-				int status;
+				JobTransportStatus status;				//0 for stopped, 1 for paused, 2 for download active, 3 for upload active, 4 for inactive 
 				int type;
 				string name;
 				Int64 size;
@@ -84,6 +94,9 @@ namespace CoolDown{
 				int download_speed_per_second_in_bytes;
 				int upload_speed_per_second_in_bytes;
 			};
+
+			typedef map<int, JobStatus> JobStatusMap;
+			typedef function<void(const JobStatusMap&)> JobStatusCallback;
 
             class CoolClient : public ServerApplication{
                 public:
@@ -98,6 +111,7 @@ namespace CoolDown{
                     typedef LocalSockManager::LocalSockManagerPtr LocalSockManagerPtr;
                     //typedef int make_torrent_progress_callback_t;
                     typedef SharedPtr<Job> JobPtr;
+					
 					//typedef Verification::make_torrent_progress_callback_t make_torrent_progress_callback_t;
 
                     //Application operations
@@ -111,6 +125,7 @@ namespace CoolDown{
 					//used by CoolClientProxy
 					retcode_t PublishResource(const string& torrent_name, const Torrent::Torrent& torrent);
 					retcode_t DownloadTorrent(int id, const string& torrent_name);
+					void set_job_status_callback(JobStatusCallback callback);
 
                     //communicate with tracker
                     retcode_t LoginTracker(const string& tracker_address, int port = TRACKER_PORT);
@@ -233,10 +248,13 @@ namespace CoolDown{
                     progress_info_list_t progress_info_to_report_;
 
                     typedef map<int, JobPtr> JobMap;
+					
                     //guard by mutex_;
                     JobMap jobs_;
+					JobStatusMap job_status_;
                     JobMap removed_jobs_;
                     FastMutex mutex_;
+					FastMutex job_status_mutex_;
 
                     ThreadPool jobThreads_;
 
@@ -248,6 +266,7 @@ namespace CoolDown{
                     NetTaskManager uploadManager_;
 
                     //make_torrent_progress_callback_t make_torrent_progress_callback_;
+					JobStatusCallback status_callback_;
 
             };
     }

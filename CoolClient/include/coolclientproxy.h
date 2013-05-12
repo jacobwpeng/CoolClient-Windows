@@ -3,6 +3,7 @@
 
 #define COOLCLIENT_PROXY_LUA_CLASS "CoolDown.CoolClient.Proxy.Class"
 #define COOLCLIENT_PROXY_LUA_OBJ "CoolDown.CoolClient.Proxy"
+#define JOB_STATUS_TABLE_NAME "JobStatusTable"
 
 #include "client.h"
 #include <Windows.h>
@@ -12,7 +13,7 @@
 
 using Poco::Logger;
 using CoolDown::Client::CoolClient;
-using CoolDown::Client::ClientThread;
+using CoolDown::Client::ClientRunnable;
 using CoolDown::Client::MakeTorrentProgressObj;
 using boost::atomic_bool;
 
@@ -35,6 +36,7 @@ public:
 	static void RegisterObj(XL_LRT_ENV_HANDLE hEnv);
 
 private:
+	static void JobStatusCallback(lua_State* luaState, const CoolDown::Client::JobStatusMap& job_status);
 	static bool MakeTorrentProgressCallback(int current_count, int total_count, lua_State* luaState, long functionRef);
 	static string GetTorrentNameByResourcePath(const string& resource_path);
 	static void DumpLuaState(lua_State* luaState);

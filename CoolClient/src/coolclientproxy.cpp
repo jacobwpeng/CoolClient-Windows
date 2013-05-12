@@ -88,10 +88,16 @@ CoolClientProxy* __stdcall CoolClientProxy::Instance(void*){
 
 int CoolClientProxy::RunClientAsync(lua_State* luaState){
 	//just run once, so no resource/memroy leak
-	ClientThread* backgroudClient = new ClientThread(CoolClientProxy::pCoolClient);
+	ClientRunnable* backgroudClient = new ClientRunnable(CoolClientProxy::pCoolClient);
 	Poco::Thread* pThread = new Poco::Thread;
+	//create the global table for job status used in lua
+	{
+		lua_newtable(luaState);
+		lua_setfield(luaState, LUA_GLOBALSINDEX, JOB_STATUS_TABLE_NAME);
+	}
+	//set the job status callback so we get the job status automaticlly
+	pCoolClient->set_job_status_callback(boost::bind<void>(&CoolClientProxy::JobStatusCallback, luaState, _1));
 	pThread->start(*backgroudClient);
-	//lua_pushboolean(luaState, 1);
 	return 0;
 }
 
@@ -401,6 +407,19 @@ void CoolClientProxy::RegisterObj(XL_LRT_ENV_HANDLE hEnv){
 	theObject.pfnGetObject = (fnGetObject)CoolClientProxy::Instance;
 
 	XLLRT_RegisterGlobalObj(hEnv,theObject); 
+}
+
+void CoolClientProxy::JobStatusCallback(lua_State* luaState, const CoolDown::Client::JobStatusMap& job_status){
+	lua_getfield(luaState, LUA_GLOBALSINDEX, JOB_STATUS_TABLE_NAME);
+	int status_count = job_status.size();
+	CoolDown::Client::JobStatusMap::const_iterator citer = job_status.begin();
+	CoolDown::Client::JobStatusMap::const_iterator cend = job_status.end();
+	while( citer != cend ){
+		int handle = citer->first;
+		const CoolDown::Client::JobStatus& status = citer->second;
+		++citer;
+	}
+	return;
 }
 
 bool CoolClientProxy::MakeTorrentProgressCallback(int current_count, int total_count, lua_State* luaState, long functionRef){

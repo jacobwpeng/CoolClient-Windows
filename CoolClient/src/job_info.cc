@@ -187,10 +187,13 @@ namespace CoolDown{
         TorrentInfo::TorrentInfo(const Torrent::Torrent& torrent)
         :torrent_(torrent), 
         file_count_(torrent_.file().size()){
+			Int64 total_size = 0;
             for(int pos = 0; pos != torrent_.file().size(); ++pos){
                 const Torrent::File& file = torrent_.file().Get(pos);
+				total_size += file.size();
                 fileMap_[file.checksum()].push_back( TorrentFileInfoPtr(new TorrentFileInfo(file) ) );
             }
+			this->total_size_ = total_size;
         }
 
         TorrentInfo::~TorrentInfo(){
@@ -199,6 +202,13 @@ namespace CoolDown{
         const TorrentInfo::file_map_t& TorrentInfo::get_file_map() const{
             return this->fileMap_;
         }
+
+		int TorrentInfo::get_type() const{
+			return torrent_.type();
+		}
+		Int64 TorrentInfo::get_total_size() const{
+			return this->total_size_;
+		}
         
         int TorrentInfo::get_file_count() const{
             return this->file_count_;
