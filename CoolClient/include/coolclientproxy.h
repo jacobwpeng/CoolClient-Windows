@@ -26,7 +26,7 @@ public:
 	static int GetResourceTorrentById(lua_State* luaState);
 	static int ChoosePath(lua_State* luaState);
 	static int MakeTorrentAndPublish(lua_State* luaState);
-	static int StopMakeTorrent(lua_State* luaState);
+	static int StopMakingTorrent(lua_State* luaState);
 	static int StopClient(lua_State* luaState);
 
 public:

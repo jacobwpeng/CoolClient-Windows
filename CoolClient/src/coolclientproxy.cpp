@@ -334,27 +334,10 @@ string CoolClientProxy::GetTorrentNameByResourcePath(const string& resource_path
 	return name + ".cd";
 }
 
-bool CoolClientProxy::MakeTorrentProgressCallback(int current_count, int total_count, lua_State* luaState, long functionRef){
-	poco_debug_f2(logger_, "Call CoolClientProxy::MakeTorrentProgressCallback with current_count : %d, total_count : %d",
-		current_count, total_count);
 
-	int top = lua_gettop(luaState);
-	lua_rawgeti(luaState, LUA_REGISTRYINDEX, functionRef);
-	
 
-	if( stop_making_torrent ){
-		lua_pushnumber(luaState, -1);
-	}else{
-		lua_pushnumber(luaState, current_count);
-	}
-
-	lua_pushnumber(luaState, total_count);
-	XLLRT_LuaCall(luaState, 2, 0, L"CoolClientProxy::MakeTorrentProgressCallback");
-	lua_settop(luaState, top);
-	return !stop_making_torrent;
-}
-
-int CoolClientProxy::StopMakeTorrent(lua_State* luaState){
+int CoolClientProxy::StopMakingTorrent(lua_State* luaState){
+	stop_making_torrent = true;
 	return 0;
 }
 
@@ -396,6 +379,7 @@ static XLLRTGlobalAPI CoolClientProxyMemberFunctions[] = {
 	{"RunClientAsync", CoolClientProxy::RunClientAsync},
 	{"SearchResource", CoolClientProxy::SearchResource},
 	{"GetResourceTorrentById", CoolClientProxy::GetResourceTorrentById},
+	{"StopMakingTorrent", CoolClientProxy::StopMakingTorrent},
 	{"StopClient", CoolClientProxy::StopClient},
 	{"ChoosePath", CoolClientProxy::ChoosePath},
 	{"MakeTorrentAndPublish", CoolClientProxy::MakeTorrentAndPublish},
@@ -416,6 +400,26 @@ void CoolClientProxy::RegisterObj(XL_LRT_ENV_HANDLE hEnv){
 	theObject.pfnGetObject = (fnGetObject)CoolClientProxy::Instance;
 
 	XLLRT_RegisterGlobalObj(hEnv,theObject); 
+}
+
+bool CoolClientProxy::MakeTorrentProgressCallback(int current_count, int total_count, lua_State* luaState, long functionRef){
+	poco_debug_f2(logger_, "Call CoolClientProxy::MakeTorrentProgressCallback with current_count : %d, total_count : %d",
+		current_count, total_count);
+
+	int top = lua_gettop(luaState);
+	lua_rawgeti(luaState, LUA_REGISTRYINDEX, functionRef);
+
+
+	if( stop_making_torrent ){
+		lua_pushnumber(luaState, -1);
+	}else{
+		lua_pushnumber(luaState, current_count);
+	}
+
+	lua_pushnumber(luaState, total_count);
+	XLLRT_LuaCall(luaState, 2, 0, L"CoolClientProxy::MakeTorrentProgressCallback");
+	lua_settop(luaState, top);
+	return !stop_making_torrent;
 }
 
 void CoolClientProxy::DumpLuaState(lua_State* luaState){
