@@ -423,7 +423,7 @@ void CoolClientProxy::JobStatusCallback(lua_State* luaState, const CoolDown::Cli
 	return;
 }
 
-void UpdateJobStatusTable(lua_State* luaState, const CoolDown::Client::JobStatus& status){
+void CoolClientProxy::UpdateJobStatusTable(lua_State* luaState, const CoolDown::Client::JobStatus& status){
 
 }
 
