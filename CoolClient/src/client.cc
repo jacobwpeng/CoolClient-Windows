@@ -104,10 +104,11 @@ namespace CoolDown{
 				this->local_torrent_dir_path_ = config().getString("client.local_torrent_dir", default_local_torrent_dir_path);
                 this->exiting_ = false;
                 this->init_error_ = false;
+				job_index_ = 1;
                 string msg;
 				
                 try{
-                    job_index_ = 0;
+                    
                     sockManager_.assign( new LocalSockManager );
                     if( sockManager_.isNull() ){
                         msg = "Cannot create LocalSockManager.";

@@ -87,6 +87,7 @@ CoolClientProxy* __stdcall CoolClientProxy::Instance(void*){
 
 
 int CoolClientProxy::RunClientAsync(lua_State* luaState){
+	//just run once, so no resource/memroy leak
 	ClientThread* backgroudClient = new ClientThread(CoolClientProxy::pCoolClient);
 	Poco::Thread* pThread = new Poco::Thread;
 	pThread->start(*backgroudClient);
