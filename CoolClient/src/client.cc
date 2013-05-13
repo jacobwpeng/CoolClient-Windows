@@ -120,10 +120,10 @@ namespace CoolDown{
 						torrent_dir.createDirectories();
 					}
 
-					retcode_t ret = this->ReloadJobHistory(this->history_file_path_);
-					if( ret != ERROR_OK ){
-						poco_warning_f1(logger(), "ReloadJobHistory returns %d", (int)ret);
-					}
+					//retcode_t ret = this->ReloadJobHistory(this->history_file_path_);
+					//if( ret != ERROR_OK ){
+					//	poco_warning_f1(logger(), "ReloadJobHistory returns %d", (int)ret);
+					//}
                 }
                 catch(Exception& e){
                     poco_error_f1(logger(), "Got exception in initialize : %s", msg);
@@ -133,8 +133,8 @@ namespace CoolDown{
             }
 
             void CoolClient::uninitialize(){
-                this->SaveJobHistory( history_file_path_ );
-				poco_trace(logger(), "Return from SaveJobHistory");
+                //this->SaveJobHistory( history_file_path_ );
+				//poco_trace(logger(), "Return from SaveJobHistory");
 				
 				//crash when waiting two threads below.... so we just do not wait them....
 				/*

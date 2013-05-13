@@ -278,6 +278,7 @@ namespace CoolDown{
                 }
             }
 
+			poco_debug(logger_, "Going to wait all task to finish");
             tm_.joinAll();
             typedef map<string, StringList> same_files_map_t ;
             same_files_map_t& same_files = jobInfo_.localFileInfo.same_files_map();
