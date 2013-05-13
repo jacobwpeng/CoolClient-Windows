@@ -126,6 +126,8 @@ namespace CoolDown{
 					retcode_t PublishResource(const string& torrent_name, const Torrent::Torrent& torrent);
 					retcode_t DownloadTorrent(int id, const string& torrent_name);
 					void set_job_status_callback(JobStatusCallback callback);
+					string GetConfig(const string& key) const;
+					void SetConfig(const string& key, const string& value) const;
 
                     //communicate with tracker
                     retcode_t LoginTracker(const string& tracker_address, int port = TRACKER_PORT);

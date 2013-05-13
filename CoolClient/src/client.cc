@@ -967,7 +967,6 @@ namespace CoolDown{
                 }
                 poco_debug_f1(logger(), "in  AddNewDownloadJob, pass unique check of torrent_id : %s", torrent_id);
                 this->RegisterTorrent( torrent_id );
-
                 SharedPtr<JobInfo> info( new JobInfo( torrent, top_path, needs) );
                 return this->AddNewJob(info, torrent_path, handle);
             }

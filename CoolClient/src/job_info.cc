@@ -44,6 +44,8 @@ namespace CoolDown{
         //LocalFileInfo
         LocalFileInfo::LocalFileInfo(const string& top_path)
         :top_path_(top_path){
+			File f(top_path);
+			f.createDirectories();
         }
 
         retcode_t LocalFileInfo::add_file(const string& fileid, const string& relative_path, const string& filename, Int64 filesize){
