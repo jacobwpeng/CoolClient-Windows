@@ -22,9 +22,9 @@ function OnNewTaskItemCheck(self, eventName, index, isCheck)
 		userData.SelectedFiles = {}
 	end
 	if isCheck then
-		table.insert(userData.SelectedFiles, self:GetItemByIndex(index):GetControlObject("name"):GetText())
+		table.insert(userData.SelectedFiles, index, self:GetItemByIndex(index):GetControlObject("name"):GetText())
 	else
-		
+		table.remove(userData.SelectedFiles, index)
 	end
 	if isCheck then
 		userData.TotalSize = userData.TotalSize + listboxAttr.ItemDataTable[index].Size
@@ -56,6 +56,9 @@ function OnOKClick(self)
 	local savepath = owner:GetUIObject("savepath"):GetText()
 	local torrentpath = userData.path
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	--for i, v in ipairs(userData.SelectedFiles) do
+	--	XLMessageBox(i .. ' -> ' .. v )
+	--end
 	local ret = coolClientProxy:AddNewDownload(torrentpath, savepath, userData.SelectedFiles)
 	if ret == -1 then
 		XLMessageBox("error")
