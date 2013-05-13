@@ -341,7 +341,12 @@ string CoolClientProxy::GetTorrentNameByResourcePath(const string& resource_path
 	return name + ".cd";
 }
 
-
+int CoolClientProxy::SelectTorrent(lua_State* luaState){
+	string torrent_path = OpenFileSelectDialog("");
+	string utf8_torrent_path = GBK2UTF8(torrent_path);
+	lua_pushstring(luaState, utf8_torrent_path.c_str());
+	return 1;
+}
 
 int CoolClientProxy::StopMakingTorrent(lua_State* luaState){
 	stop_making_torrent = true;
@@ -388,6 +393,7 @@ static XLLRTGlobalAPI CoolClientProxyMemberFunctions[] = {
 	{"GetResourceTorrentById", CoolClientProxy::GetResourceTorrentById},
 	{"StopMakingTorrent", CoolClientProxy::StopMakingTorrent},
 	{"StopClient", CoolClientProxy::StopClient},
+	{"SelectTorrent", CoolClientProxy::SelectTorrent},
 	{"ChoosePath", CoolClientProxy::ChoosePath},
 	{"MakeTorrentAndPublish", CoolClientProxy::MakeTorrentAndPublish},
 	{NULL,NULL}
