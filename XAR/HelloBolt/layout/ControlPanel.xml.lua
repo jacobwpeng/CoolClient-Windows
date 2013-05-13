@@ -1,4 +1,22 @@
 --这里还是用了很多静态的值，可以做修改，修改后如果素材发生了变化只用修改XML文件
+local function deepcopy(object)
+    local lookup_table = {}
+    local function _copy(object)
+        if type(object) ~= "table" then
+            return object
+        elseif lookup_table[object] then
+            return lookup_table[object]
+        end  -- if
+        local new_table = {}
+        lookup_table[object] = new_table
+        for index, value in pairs(object) do
+            new_table[_copy(index)] = _copy(value)
+        end  -- for
+        return setmetatable(new_table, getmetatable(object))
+    end  -- function _copy
+    return _copy(object)
+end  -- function deepcopy
+
 function AddBtn(self, userdata)
 	local panelattr = self:GetAttribute()
 	local fillObj = self:GetControlObject("ctrl")
@@ -132,11 +150,15 @@ end
 --用来定义各按钮的处理函数
 local function OnBtnNewTaskClick(self)--新建任务
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
-	local path, torrent_type, files = coolClientProxy:SelectTorrent()
+	local path, name, torrent_type, files = coolClientProxy:SelectTorrent()
+	
 	if path == -1 then
 		--不是种子文件
 		XLMessageBox("path  = -1")
 	else
+		--XLMessageBox(path)
+		--XLMessageBox(name)
+		--XLMessageBox(string.format("path:%s name:%s type:%s"),type(path),type(name),type(torrent_type))
 		local templateManager = XLGetObject("Xunlei.UIEngine.TemplateManager")
 		local hostWndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
 		local mainWnd = hostWndManager:GetHostWnd("MainFrame")
@@ -144,8 +166,27 @@ local function OnBtnNewTaskClick(self)--新建任务
 		local modalHostWnd = modalHostWndTemplate:CreateInstance("Thunder.NewTaskModal.Instance")
 		local objectTreeTemplate = templateManager:GetTemplate("Thunder.NewTaskModal","ObjectTreeTemplate")
 		local uiObjectTree = objectTreeTemplate:CreateInstance("Thunder.NewTaskModal.Instance")
+		local folderName = uiObjectTree:GetUIObject("foldername")
+		local typeobj = uiObjectTree:GetUIObject("type")
+		local listbox = uiObjectTree:GetUIObject("listbox")
+		if torrent_type and typeobj then
+			if torrent_type == 1 then
+				typeobj:SetResID("bitmap.listbox.taskitem.type.movie")
+			elseif torrent_type == 2 then
+				typeobj:SetResID("bitmap.listbox.taskitem.type.music")
+			elseif torrent_type == 4 then
+				typeobj:SetResID("bitmap.listbox.taskitem.type.game")
+			elseif torrent_type == 8 then
+				typeobj:SetResID("bitmap.listbox.taskitem.type.book")
+			end
+		end
+		for key, value in pairs(files) do
+			listbox:AddItem({['Name'] = key, ['Size'] =  value})
+		end
+		listbox:UpdateUI()
+		folderName:SetText(name)
 		modalHostWnd:BindUIObjectTree(uiObjectTree)
-		local userData = {path = path, torrent_type = torrent_type, files = files}
+		local userData = {path = path, name = name, torrent_type = torrent_type, files = files}
 		modalHostWnd:SetUserData(userData)
 		modalHostWnd:DoModal(mainWnd:GetWndHandle())
 		
@@ -153,8 +194,6 @@ local function OnBtnNewTaskClick(self)--新建任务
 		objtreeManager:DestroyTree("Thunder.NewTaskModal.Instance")
 		hostWndManager:RemoveHostWnd("Thunder.NewTaskModal.Instance")
 	end
-	
-
 end
 
 local function OnBtnDeleteClick(self, index)--删除任务

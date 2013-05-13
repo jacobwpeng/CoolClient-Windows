@@ -37,7 +37,7 @@
 									<top>0</top>
 									<width>father.width</width>
 									<height>father.height</height>
-									<texture>texture.theme.default.bkg</texture>
+									<texture>texture.theme.default.bkg11</texture>
 									<alpha>150</alpha>
 								</attr>
 							</obj>
@@ -103,6 +103,7 @@
 									<width>father.width - 80</width>
 									<height>30</height>
 									<HasBtn>true</HasBtn>
+									<Text>E:\download</Text>
 								</attr>
 								<children>
 									<obj id="choosepath" class="BaseUI.TextureButton">
@@ -182,16 +183,17 @@
 											</obj>
 										</children>
 									</obj>
-									<obj id="list.box" class="BaseUI.ListBox">
+									<obj id="listbox" class="BaseUI.ListBox">
 										<attr>
 											<left>1</left>
 											<top>22 + 1</top>
 											<width>father.width - 2</width>
 											<height>father.height - 22 - 1 - 32 - 1</height>
 											<ItemType>BaseUI.ListBox.NewTaskItem</ItemType>
+											<ItemHeight>24</ItemHeight>
 										</attr>
 										<eventlist>	
-											<event name="" file="NewTaskModal.xml.lua" func="" />
+											<event name="OnNewTaskItemCheck" file="NewTaskModal.xml.lua" func="OnNewTaskItemCheck" />
 										</eventlist>
 									</obj>
 									<obj id="list.bottom.bkg" class="TextureObject">

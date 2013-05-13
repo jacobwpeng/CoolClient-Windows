@@ -163,6 +163,13 @@ local function ListBox_CreateInstanceItem(self)--添加item实例，不同type�
 				newListBoxItemAttr.Upload = attr.ItemDataTable[i].Upload
 				newListBoxItemAttr.Download = attr.ItemDataTable[i].Download
 			elseif attr.ItemType == "BaseUI.ListBox.NewTaskItem" then
+				if intIndex%2 ~= 0 then
+					newListBoxItemAttr.BkgNormalTextureID = "texture.newataskmodal.bkg.odd"
+				else
+					newListBoxItemAttr.BkgNormalTextureID = "texture.newataskmodal.bkg.even"
+				end
+				newListBoxItemAttr.Name = attr.ItemDataTable[i].Name
+				newListBoxItemAttr.Size = attr.ItemDataTable[i].Size
 		end
 		--XLMessageBox(attr.ItemDataTable[i].Name.."i:"..i)
 		newListBoxItemAttr.Index = intIndex			
@@ -819,6 +826,7 @@ function ListBoxItem_OnInitControl(self)
 	local uploadobj = self:GetControlObject("upload")
 	local downloadobj = self:GetControlObject("download")
 	local ctrlObj = self:GetControlObject("ctrl")
+	--XLMessageBox(attr.Name)
 	if attr.Status ~= "" and statusobj then
 	    
 	end
@@ -950,4 +958,11 @@ end
 function ListBoxItem_OnMouseWheel(self,x,y,distance)
 	local scrollbarV = self:GetOwnerControl():GetControlObject("scrollbar.v")
 	scrollbarV:OnMouseWheel(x,y,distance)
+end
+
+function OnNewTaskItemCheck(self, bool)
+	local attr = self:GetOwnerControl():GetAttribute()
+	local owner = self:GetOwnerControl():GetOwnerControl()
+	owner:FireExtEvent("OnNewTaskItemCheck",attr.Index, bool)
+	--XLMessageBox("itemcheck")
 end

@@ -15,6 +15,7 @@ function OnOKClick(self)
 	
 	if self:GetText() == "确定" then
 		--开始做种
+		local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
 		hostwnd:EndDialog(0)
 		return 
 	end

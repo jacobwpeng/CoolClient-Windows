@@ -7,7 +7,8 @@
 		<texture id="texture.newtaskmodal.list.border" image="newtaskmodal\bkg.border.png" type="NineInOne"/>
 		<texture id="texture.newtaskmodal.listtop" image="newtaskmodal\upside.png" type="ThreeInOneH"/>
 		<texture id="texture.newtaskmodal.listbottom" image="newtaskmodal\downside.png" type="ThreeInOneH"/>
-		
+		<texture id="texture.newataskmodal.bkg.odd" image="newtaskmodal\white.png" type="ThreeInOneH"/>
+		<texture id="texture.newataskmodal.bkg.even" image="newtaskmodal\grey.png" type="ThreeInOneH"/>
 		<color id="color.newtaskmodal.select" red="50" green="133" blue="200" />
 	</resource>
 </xlue>

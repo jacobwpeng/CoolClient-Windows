@@ -121,6 +121,7 @@
 				</param>
 			</OnSelectChanged>
 			<OnResItemSave><param><int></int></param></OnResItemSave>
+			<OnNewTaskItemCheck><param><int></int><bool/></param></OnNewTaskItemCheck>
 		</event_def>
 		<objtemplate>
 			<children>
@@ -658,7 +659,7 @@
 										<height>24</height>
 									</attr>
 									<eventlist>
-										
+										<event name="OnCheck" file="ListBox.xml.lua" func="OnNewTaskItemCheck" />
 									</eventlist>
 								</obj>
 								<obj id="name" class="TextObject">
