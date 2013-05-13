@@ -381,18 +381,26 @@ int CoolClientProxy::AddNewDownload(lua_State* luaState){
 			string local_path = lua_tostring(luaState, 3);
 			CoolDown::Client::FileIdentityInfoList needs;
 			poco_trace(logger_, "Before traverse the needs file table");
-			//lua_pushnil(luaState);
-			lua_pushinteger(luaState, 1);
-			while(lua_next(luaState, -1) != 0){
-				string full_relative_path( lua_tostring(luaState, -1) );
+			
+			int table_index = lua_gettop(luaState);
+			lua_pushnil(luaState);
+			//lua_pushinteger(luaState, 1);
+			vector<string> filenames;
+			while(lua_next(luaState, table_index) != 0){
+				int key = lua_tointeger(luaState, -2);
+				string value = lua_tostring(luaState, -1);
+				filenames.push_back( value );
+				lua_pop(luaState, 1);
+			}
+
+			for(int i = 0; i != filenames.size(); ++i){
+				string full_relative_path( filenames[i] );
 				Path p(full_relative_path);
 				string filename = p.getFileName();
 				string relative_path = p.parent().toString();
 				poco_trace_f3(logger_, "Split %s into path : %s, name : %s",
 					full_relative_path, filename, relative_path);
 				needs.push_back(CoolDown::Client::FileIdentityInfo(relative_path, filename));
-				
-				lua_pop(luaState, 1);
 			}
 			
 			Torrent::Torrent torrent;
@@ -408,6 +416,7 @@ int CoolClientProxy::AddNewDownload(lua_State* luaState){
 				poco_trace_f3(logger_, "in CoolClientProxy::AddNewDownload, add new download succeed, "
 					"torrent_path : %s, local_path : %s, count of files to download : %d",
 					torrent_path, local_path, (int)needs.size());
+				pCoolClient->StartJob(handle);
 				return 0;
 			}
 

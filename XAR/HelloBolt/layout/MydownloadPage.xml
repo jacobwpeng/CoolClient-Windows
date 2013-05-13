@@ -4,7 +4,7 @@
 			
 		</attr_def>
 		<method_def>
-			
+			<UpdateListBox file="MydownloadPage.xml.lua" func="UpdateListBox" />
 		</method_def>
 		<event_def>
 			

@@ -31,6 +31,9 @@ namespace CoolDown{
 				ret = pCoolClient_->AddNewUploadJob(torrent_path, path_, torrent, &handle);
 				poco_debug_f1(logger_, "in MakeTorrentRunnable::run, Call CoolClient::AddNewUploadJob returns %d",
 					(int)ret);
+				ret = pCoolClient_->StartJob(handle);
+				poco_debug_f1(logger_, "in MakeTorrentRunnable::run, Call CoolClient::StartJob returns %d",
+					(int)ret);
 			}catch(Poco::Exception& e){
 				Application::instance().logger().log(e);
 			}catch(std::exception& e){

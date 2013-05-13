@@ -104,3 +104,8 @@ function OnListBoxSelectChanged(self,eventname,index)
 	delete:SetEnable(true)
 	openfolder:SetEnable(true)
 end
+
+function UpdateListBox(self, jobTable)
+	local listbox = self:GetControlObject("listbox")
+	local listboxAttr = listbox:GetAttribute()
+end

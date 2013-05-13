@@ -228,8 +228,8 @@ local function OnBtnSeedClick(self)--制作种子的对话框
 	local objectTreeTemplate = templateManager:GetTemplate("Thunder.SeedModal","ObjectTreeTemplate")
 	local uiObjectTree = objectTreeTemplate:CreateInstance("Thunder.SeedModal.Instance")
 	modalHostWnd:BindUIObjectTree(uiObjectTree)
-	
-	local userData = { Object = self:GetOwnerControl(), EventName = "OnSeedConfrim"}
+	--XLMessageBox(self:GetOwnerControl():GetOwnerControl():GetClass())Mydownloadpage
+	local userData = { Object = self:GetOwnerControl():GetOwnerControl(), EventName = "OnSeedConfrim"}
 	modalHostWnd:SetUserData(userData)
 	modalHostWnd:DoModal(mainWnd:GetWndHandle())
 	

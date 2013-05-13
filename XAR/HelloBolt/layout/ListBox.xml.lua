@@ -172,7 +172,7 @@ local function ListBox_CreateInstanceItem(self)--添加item实例，不同type�
 				newListBoxItemAttr.Size = attr.ItemDataTable[i].Size
 		end
 		--XLMessageBox(attr.ItemDataTable[i].Name.."i:"..i)
-		newListBoxItemAttr.Index = intIndex			
+		newListBoxItemAttr.Index = intIndex + 1	
 					
 		local ctrlLeft, ctrlTop, cltrRight, ctrlBottom = bkgWndobj:GetObjPos()
 		bkgWndobj:AddChild(newListBoxItem)
@@ -960,9 +960,9 @@ function ListBoxItem_OnMouseWheel(self,x,y,distance)
 	scrollbarV:OnMouseWheel(x,y,distance)
 end
 
-function OnNewTaskItemCheck(self, bool)
+function OnNewTaskItemCheck(self, eventName, isCheck)
 	local attr = self:GetOwnerControl():GetAttribute()
 	local owner = self:GetOwnerControl():GetOwnerControl()
-	owner:FireExtEvent("OnNewTaskItemCheck",attr.Index, bool)
+	owner:FireExtEvent("OnNewTaskItemCheck",attr.Index, isCheck)
 	--XLMessageBox("itemcheck")
 end
