@@ -188,7 +188,11 @@
 											<top>22 + 1</top>
 											<width>father.width - 2</width>
 											<height>father.height - 22 - 1 - 32 - 1</height>
+											<ItemType>BaseUI.ListBox.NewTaskItem</ItemType>
 										</attr>
+										<eventlist>	
+											<event name="" file="NewTaskModal.xml.lua" func="" />
+										</eventlist>
 									</obj>
 									<obj id="list.bottom.bkg" class="TextureObject">
 										<attr>

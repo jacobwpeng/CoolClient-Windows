@@ -131,21 +131,30 @@ end
 
 --用来定义各按钮的处理函数
 local function OnBtnNewTaskClick(self)--新建任务
-	local templateManager = XLGetObject("Xunlei.UIEngine.TemplateManager")
-	local hostWndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
-	local mainWnd = hostWndManager:GetHostWnd("MainFrame")
-	local modalHostWndTemplate = templateManager:GetTemplate("Thunder.NewTaskModal","HostWndTemplate")
-	local modalHostWnd = modalHostWndTemplate:CreateInstance("Thunder.NewTaskModal.Instance")
-	local objectTreeTemplate = templateManager:GetTemplate("Thunder.NewTaskModal","ObjectTreeTemplate")
-	local uiObjectTree = objectTreeTemplate:CreateInstance("Thunder.NewTaskModal.Instance")
-	modalHostWnd:BindUIObjectTree(uiObjectTree)
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	local path, torrent_type, files = coolClientProxy:SelectTorrent()
+	if path == -1 then
+		--不是种子文件
+		XLMessageBox("path  = -1")
+	else
+		local templateManager = XLGetObject("Xunlei.UIEngine.TemplateManager")
+		local hostWndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
+		local mainWnd = hostWndManager:GetHostWnd("MainFrame")
+		local modalHostWndTemplate = templateManager:GetTemplate("Thunder.NewTaskModal","HostWndTemplate")
+		local modalHostWnd = modalHostWndTemplate:CreateInstance("Thunder.NewTaskModal.Instance")
+		local objectTreeTemplate = templateManager:GetTemplate("Thunder.NewTaskModal","ObjectTreeTemplate")
+		local uiObjectTree = objectTreeTemplate:CreateInstance("Thunder.NewTaskModal.Instance")
+		modalHostWnd:BindUIObjectTree(uiObjectTree)
+		local userData = {path = path, torrent_type = torrent_type, files = files}
+		modalHostWnd:SetUserData(userData)
+		modalHostWnd:DoModal(mainWnd:GetWndHandle())
+		
+		local objtreeManager = XLGetObject("Xunlei.UIEngine.TreeManager")	
+		objtreeManager:DestroyTree("Thunder.NewTaskModal.Instance")
+		hostWndManager:RemoveHostWnd("Thunder.NewTaskModal.Instance")
+	end
 	
-	
-	modalHostWnd:DoModal(mainWnd:GetWndHandle())
-	
-	local objtreeManager = XLGetObject("Xunlei.UIEngine.TreeManager")	
-	objtreeManager:DestroyTree("Thunder.NewTaskModal.Instance")
-	hostWndManager:RemoveHostWnd("Thunder.NewTaskModal.Instance")
+
 end
 
 local function OnBtnDeleteClick(self, index)--删除任务

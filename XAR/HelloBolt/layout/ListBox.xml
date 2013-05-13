@@ -372,7 +372,7 @@
 			</eventlist>
 		</objtemplate>
 	</control>
-		<control class="BaseUI.ListBox.ResItem">
+	<control class="BaseUI.ListBox.ResItem">
 		<attr_def>
 		    <!--ListBoxItem 背景图片定义:-->
 			<attr name="BkgNormalTextureID" type="string" >
@@ -548,6 +548,135 @@
 										<height>father.height</height>
 										<valign>center</valign>
 										<halign>center</halign>
+									</attr>
+								</obj>
+							</children>
+						</obj>
+					</children>
+				</obj>
+			</children>
+			<eventlist>
+			    <event name="OnInitControl" file="ListBox.xml.lua" func="ListBoxItem_OnInitControl" />
+			    <event name="OnLButtonDown" file="ListBox.xml.lua" func="ListBoxItem_OnLButtonDown" />
+				<event name="OnMouseMove" file="ListBox.xml.lua" func="ListBoxItem_OnMouseMove" />
+				<event name="OnLButtonUp" file="ListBox.xml.lua" func="ListBoxItem_OnLButtonUp" />
+				<event name="OnMouseLeave" file="ListBox.xml.lua" func="ListBoxItem_OnMouseLeave" />
+				<event name="OnMouseWheel" file="ListBox.xml.lua" func="ListBoxItem_OnMouseWheel" />
+				<event name="OnVisibleChange" file="ListBox.xml.lua" func="ListBoxItem_OnVisibleChange" />
+				<event name="OnEnableChange" file="ListBox.xml.lua" func="ListBoxItem_OnEnableChange" />
+				<event name="OnPosChange" file="ListBox.xml.lua" func="ListBoxItem_OnPosChange" />
+			</eventlist>
+		</objtemplate>
+	</control>
+	<control class="BaseUI.ListBox.NewTaskItem">
+		<attr_def>
+		    <!--ListBoxItem 背景图片定义:-->
+			<attr name="BkgNormalTextureID" type="string" >
+			    <default>texture.listbox.item.normal</default>
+			</attr>
+			<attr name="BkgHoverTextureID" type="string" >
+			    <default>texture.listbox.item.hover</default>
+			</attr>
+			<attr name="BkgDownTextureID" type="string" >
+			    <default>texture.listbox.item.down</default>
+			</attr>
+			<attr name="BkgDisableTextureID" type="string" >
+			    <default>texture.listbox.item.disable</default>
+			</attr>
+			<!--ListBoxItem的text字体资源定义：-->	
+			<attr name="TextNormalFontID" type="string">     
+			    <default></default>
+			</attr>
+			<attr name="TextHoverFontID" type="string">
+			    <default></default>
+			</attr>
+			<attr name="TextDownFontID" type="string">
+			    <default></default>
+			</attr>
+			<attr name="TextDisableFontID" type="string">
+			    <default></default>
+			</attr>
+			<!--ListBoxItem的text字体颜色定义：-->	
+			<attr name="TextNormalColorID" type="string">     
+			    <default></default>
+			</attr>
+			<attr name="TextHoverColorID" type="string">
+			    <default></default>
+			</attr>
+			<attr name="TextDownColorID" type="string">
+			    <default></default>
+			</attr>
+			<attr name="TextDisableColorID" type="string">
+			    <default></default>
+			</attr>
+			<!--ListBoxItem的字体内容:-->
+			<attr name="Text" type="string" >
+			    <default></default>
+			</attr>
+			<attr name="Index" type="int" />
+			
+		</attr_def>
+		<method_def>
+		<!--public function:-->
+			<SetSelect file="ListBox.xml.lua" func="ListBoxItem_SetSelect"/>
+			<GetSelect file="ListBox.xml.lua" func="ListBoxItem_GetSelect"/>
+		<!---->	
+		</method_def>
+		<event_def>
+			<OnSelect>
+			    <param>
+				    <int></int>
+				</param>
+			</OnSelect>
+            <OnWidthExtend>
+			    <param>
+				    <int></int>
+				</param>
+			</OnWidthExtend>		
+		</event_def>
+		<objtemplate>
+		    <children>
+				<obj id="ctrl" class="LayoutObject">
+					<attr>
+						<width>father.width</width>
+						<height>father.height</height>
+					</attr>
+					<children>
+						<obj id="bkg" class="TextureObject">
+							<attr>
+							    <left>0</left>
+								<top>0</top>
+								<width>father.width</width>
+								<height>father.height</height>
+							</attr>
+							<children>
+								<obj id="check" class="Thunder.CheckBox">
+									<attr>
+										<left>12</left>
+										<top></top>
+										<width>24</width>
+										<height>24</height>
+									</attr>
+									<eventlist>
+										
+									</eventlist>
+								</obj>
+								<obj id="name" class="TextObject">
+									<attr>
+										<left>40</left>
+										<top>0</top>
+										<width>300</width>
+										<height>24</height>
+										<valign>center</valign>
+									</attr>
+								</obj>
+								<obj id="size" class="TextObject">
+									<attr>
+										<left>340</left>
+										<top>0</top>
+										<width>80</width>
+										<height>24</height>
+										<valign>center</valign>
 									</attr>
 								</obj>
 							</children>
