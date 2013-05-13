@@ -380,7 +380,9 @@ int CoolClientProxy::AddNewDownload(lua_State* luaState){
 			string torrent_path = lua_tostring(luaState, 2);
 			string local_path = lua_tostring(luaState, 3);
 			CoolDown::Client::FileIdentityInfoList needs;
-			lua_pushnil(luaState);
+			poco_trace(logger_, "Before traverse the needs file table");
+			//lua_pushnil(luaState);
+			lua_pushinteger(luaState, 1);
 			while(lua_next(luaState, -1) != 0){
 				string full_relative_path( lua_tostring(luaState, -1) );
 				Path p(full_relative_path);

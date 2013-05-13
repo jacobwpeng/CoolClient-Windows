@@ -106,7 +106,7 @@ namespace CoolDown{
                 this->init_error_ = false;
 				job_index_ = 1;
                 string msg;
-				
+			
                 try{
                     
                     sockManager_.assign( new LocalSockManager );
@@ -119,6 +119,11 @@ namespace CoolDown{
 					if( torrent_dir.exists() == false){
 						torrent_dir.createDirectories();
 					}
+
+					retcode_t ret = this->ReloadJobHistory(this->history_file_path_);
+					if( ret != ERROR_OK ){
+						poco_warning_f1(logger(), "ReloadJobHistory returns %d", (int)ret);
+					}
                 }
                 catch(Exception& e){
                     poco_error_f1(logger(), "Got exception in initialize : %s", msg);
@@ -128,9 +133,9 @@ namespace CoolDown{
             }
 
             void CoolClient::uninitialize(){
-                exiting_ = true;
                 this->SaveJobHistory( history_file_path_ );
 				poco_trace(logger(), "Return from SaveJobHistory");
+				
 				//crash when waiting two threads below.... so we just do not wait them....
 				/*
 				if( this->report_progress_thread_.isRunning() ){
@@ -147,9 +152,8 @@ namespace CoolDown{
 					}
 				}
 				*/
-
-				
                 ServerApplication::uninitialize();
+				exiting_ = true;
             }
 
             int CoolClient::main(const vector<string>& args){
@@ -952,7 +956,7 @@ namespace CoolDown{
 				status.name = tmp.getBaseName();
 				status.size = info->torrentInfo.get_total_size();
 				status.type = info->torrentInfo.get_type();
-				status.status = JOB_DOWNLOADING;		//for 
+				status.status = JOB_PAUSED;		//for 
 				FastMutex::ScopedLock lock_(this->job_status_mutex_);
 				job_status_[this_job_index] = status;
                 return ERROR_OK;
