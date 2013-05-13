@@ -528,12 +528,29 @@ void CoolClientProxy::RegisterObj(XL_LRT_ENV_HANDLE hEnv){
 }
 
 void CoolClientProxy::JobStatusCallback(lua_State* luaState, const CoolDown::Client::JobStatusMap& job_status){
+	int top = lua_gettop(luaState);
 	lua_getfield(luaState, LUA_GLOBALSINDEX, JOB_STATUS_TABLE_NAME);
+	int table_index = lua_gettop(luaState);
 	int status_count = job_status.size();
 	CoolDown::Client::JobStatusMap::const_iterator citer = job_status.begin();
 	CoolDown::Client::JobStatusMap::const_iterator cend = job_status.end();
+	
 	while( citer != cend ){
 		int handle = citer->first;
+		lua_pushinteger(luaState, handle);
+		lua_gettable(luaState, table_index);
+		if( lua_type(luaState, -1) == LUA_TTABLE) {
+			//we have this job info in table, so just update it
+		}
+		else if( lua_type(luaState, -1) == LUA_TNIL){
+			//we create the job info table
+			lua_createtable(luaState, 0, 8);
+		}else{
+			poco_warning_f2(logger_, "Unknown type of lua_Status at index : %d, type : %d",
+							handle, lua_type(luaState, -1));
+			return;
+		}
+		//when we are here, the top of the stack is the table for this job
 		const CoolDown::Client::JobStatus& status = citer->second;
 		UpdateJobStatusTable(luaState, status);
 		++citer;
@@ -543,6 +560,10 @@ void CoolClientProxy::JobStatusCallback(lua_State* luaState, const CoolDown::Cli
 }
 
 void CoolClientProxy::UpdateJobStatusTable(lua_State* luaState, const CoolDown::Client::JobStatus& status){
+
+	//pre condition : the table of This job is at the top of luaState
+	//post condition : the table is filled with info and still at the top of luaState
+	poco_assert(lua_type(luaState, -1) == LUA_TTABLE);
 
 }
 
