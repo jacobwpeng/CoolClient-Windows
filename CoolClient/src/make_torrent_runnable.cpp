@@ -28,7 +28,8 @@ namespace CoolDown{
 					(int)ret);
 				string torrent_path = pCoolClient_->get_torrent_path(torrent_name_);
 				int handle;
-				ret = pCoolClient_->AddNewUploadJob(torrent_path, path_, torrent, &handle);
+				string top_path = Path(path_).parent().toString();
+				ret = pCoolClient_->AddNewUploadJob(torrent_path, top_path, torrent, &handle);
 				poco_debug_f1(logger_, "in MakeTorrentRunnable::run, Call CoolClient::AddNewUploadJob returns %d",
 					(int)ret);
 				ret = pCoolClient_->StartJob(handle);

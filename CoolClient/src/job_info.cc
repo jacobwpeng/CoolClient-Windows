@@ -52,6 +52,7 @@ namespace CoolDown{
             FastMutex::ScopedLock lock(mutex_);
             Logger& logger_ = Application::instance().logger();
             try{
+				poco_debug_f1(logger_, "top_path_ : %s", top_path_);
                 poco_debug_f4(logger_, "Call add_file with fileid '%s', relative_path : '%s', filename : '%s', filesize : '%Ld'",
                         fileid, relative_path, filename, filesize);
                 //make sure we don't add a file twice
@@ -256,6 +257,7 @@ namespace CoolDown{
          localFileInfo(top_path),
          torrentInfo(torrent)
         {
+			poco_debug_f1(logger_, "top_path : %s", top_path);
             fileidlist_.reserve( torrent.file().size() );
             for(int pos = 0; pos != torrent.file().size(); ++pos){
                 const Torrent::File& file = torrent.file().Get(pos);
