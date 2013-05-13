@@ -46,8 +46,8 @@ namespace CoolDown{
 			this->resource_server_sock_.assign(NULL);
 			SockPtr resource_server_sock = this->make_connection(resource_server_address, port);
 			if( resource_server_sock.isNull() ){
-				poco_warning_f2(logger_, "Cannot connect to Resource server, addr : %s, port :¡¡%d", resource_server_address, 
-					port);
+				poco_warning_f2(logger_, "Cannot connect to Resource server, addr : %s, port : %d", 
+					resource_server_address, port);
 				return ERROR_NET_CONNECT;
 			}
 
