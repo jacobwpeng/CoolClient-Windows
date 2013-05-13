@@ -181,6 +181,8 @@ namespace CoolDown{
                 this->report_progress_thread_.start( reportProgressRunnable );
 
 				{
+					Torrent::Torrent torrent;
+					//this->ParseTorrent("E:\\repos\\CoolClient-Windows\\CoolClient\\Torrents\\dependences.rar.cd", &torrent);
 					//retcode_t ret = ERROR_OK;
 					//ret = this->DownloadTorrent(46, "");
 					//poco_trace_f1(logger(), "DownloadTorrent returns %d", (int)ret);
@@ -541,7 +543,7 @@ namespace CoolDown{
                 }
 				string torrent_file_path = get_torrent_path(torrent_filename);
 
-				ofstream ofs( torrent_file_path.c_str() );
+				ofstream ofs( torrent_file_path.c_str(), ofstream::binary);
 				if( !ofs ){
 					return ERROR_FILE_CANNOT_CREATE;
 				}
@@ -652,6 +654,11 @@ namespace CoolDown{
 					poco_assert( torrent.SerializeToOstream(&ofs) );
 					poco_trace_f1(logger(), "MakeTorrent succeed! torrent file : %s", torrent_file_path);
 					ofs.close();
+					{
+						//test if we can parse this torrent
+						Torrent::Torrent torrent;
+						this->ParseTorrent(torrent_file_path, &torrent);
+					}
 				}
 				
                 return ret;
@@ -1132,7 +1139,7 @@ namespace CoolDown{
 			}
 
             retcode_t CoolClient::ParseTorrent(const Path& torrent_file_path, Torrent::Torrent* pTorrent){
-                ifstream ifs(torrent_file_path.toString().c_str() );
+				ifstream ifs( torrent_file_path.toString().c_str(), ifstream::binary);
                 if( !ifs ){
                     poco_debug_f1(logger(), "Cannot open %s in ParseTorrent.", torrent_file_path.toString());
                     return ERROR_FILE_NOT_EXISTS;

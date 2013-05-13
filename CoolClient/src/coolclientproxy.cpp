@@ -347,7 +347,8 @@ int CoolClientProxy::SelectTorrent(lua_State* luaState){
 	Torrent::Torrent torrent;
 	retcode_t parse_ret = pCoolClient->ParseTorrent(utf8_torrent_path, &torrent);
 	if( parse_ret != ERROR_OK ){
-		poco_warning_f1(logger_, "in CoolClientProxy::SelectTorrent, cannot parsetorrent of path : %s ", utf8_torrent_path);
+		poco_warning_f2(logger_, "in CoolClientProxy::SelectTorrent, cannot parsetorrent of path : %s, ret : %d", 
+			utf8_torrent_path, (int)parse_ret);
 		lua_pushinteger(luaState, -1);
 		return 1;
 	}else{
@@ -357,7 +358,8 @@ int CoolClientProxy::SelectTorrent(lua_State* luaState){
 		lua_createtable(luaState, 0, file_count);
 		for(int pos = 0; pos != file_count; ++pos){
 			const Torrent::File& oneFile = torrent.file(pos);
-			lua_pushstring(luaState, oneFile.filename().c_str());
+			string full_relative_path = oneFile.relativepath() + oneFile.filename();
+			lua_pushstring(luaState, full_relative_path.c_str());
 			lua_pushnumber(luaState, oneFile.size());
 			lua_settable(luaState, -3);
 		}
@@ -367,6 +369,10 @@ int CoolClientProxy::SelectTorrent(lua_State* luaState){
 }
 
 int CoolClientProxy::AddNewDownload(lua_State* luaState){
+	if( lua_isstring(luaState, 2)			//torrent_path
+		&& lua_isstring(luaState, 3)		//local_path
+		&& lua_istable(luaState, 4)			//files selected
+		)
 	return 0;
 }
 
