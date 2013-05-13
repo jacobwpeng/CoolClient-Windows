@@ -1,5 +1,6 @@
 #include "coolclientproxy.h"
 #include "utilities.h"
+#include "job_info.h"
 #include "make_torrent_runnable.h"
 #include <Commdlg.h>
 #include <Shlobj.h>
@@ -375,8 +376,45 @@ int CoolClientProxy::AddNewDownload(lua_State* luaState){
 	if( lua_isstring(luaState, 2)			//torrent_path
 		&& lua_isstring(luaState, 3)		//local_path
 		&& lua_istable(luaState, 4)			//files selected
-		)
-	return 0;
+		){
+			string torrent_path = lua_tostring(luaState, 2);
+			string local_path = lua_tostring(luaState, 3);
+			CoolDown::Client::FileIdentityInfoList needs;
+			lua_pushnil(luaState);
+			while(lua_next(luaState, -1) != 0){
+				string full_relative_path( lua_tostring(luaState, -1) );
+				Path p(full_relative_path);
+				string filename = p.getFileName();
+				string relative_path = p.parent().toString();
+				poco_trace_f3(logger_, "Split %s into path : %s, name : %s",
+					full_relative_path, filename, relative_path);
+				needs.push_back(CoolDown::Client::FileIdentityInfo(relative_path, filename));
+				
+				lua_pop(luaState, 1);
+			}
+			
+			Torrent::Torrent torrent;
+			poco_assert(ERROR_OK == pCoolClient->ParseTorrent(torrent_path, &torrent));
+			int handle;
+			retcode_t ret = pCoolClient->AddNewDownloadJob(torrent_path, torrent, needs, local_path, &handle);
+			if( ERROR_OK != ret ){
+				poco_warning_f1(logger_, "in CoolClientProxy::AddNewDownload, CoolClient::AddNewDownloadJob returns %d",
+					(int)ret);
+				lua_pushinteger(luaState, -1);
+				return 1;
+			}else{
+				poco_trace_f3(logger_, "in CoolClientProxy::AddNewDownload, add new download succeed, "
+					"torrent_path : %s, local_path : %s, count of files to download : %d",
+					torrent_path, local_path, (int)needs.size());
+				return 0;
+			}
+
+	}else{
+		poco_warning(logger_, "Invalid args of CoolClientProxy::AddNewDownload");
+		DumpLuaState(luaState);
+		return 0;
+	}
+	
 }
 
 int CoolClientProxy::StopMakingTorrent(lua_State* luaState){
@@ -425,6 +463,7 @@ static XLLRTGlobalAPI CoolClientProxyMemberFunctions[] = {
 	{"StopMakingTorrent", CoolClientProxy::StopMakingTorrent},
 	{"StopClient", CoolClientProxy::StopClient},
 	{"SelectTorrent", CoolClientProxy::SelectTorrent},
+	{"AddNewDownload", CoolClientProxy::AddNewDownload},
 	{"ChoosePath", CoolClientProxy::ChoosePath},
 	{"MakeTorrentAndPublish", CoolClientProxy::MakeTorrentAndPublish},
 	{NULL,NULL}
