@@ -406,7 +406,7 @@ int CoolClientProxy::AddNewDownload(lua_State* luaState){
 			Torrent::Torrent torrent;
 			poco_assert(ERROR_OK == pCoolClient->ParseTorrent(torrent_path, &torrent));
 			int handle;
-			retcode_t ret = pCoolClient->AddNewDownloadJob(torrent_path, torrent, needs, local_path, &handle);
+			retcode_t ret = pCoolClient->AddNewDownloadJob(torrent_path, torrent, needs, local_path + Path::separator(), &handle);
 			if( ERROR_OK != ret ){
 				poco_warning_f1(logger_, "in CoolClientProxy::AddNewDownload, CoolClient::AddNewDownloadJob returns %d",
 					(int)ret);
@@ -434,10 +434,13 @@ int CoolClientProxy::AddNewUpload(lua_State* luaState){
 		){
 		string torrent_path = lua_tostring(luaState, 2);
 		string local_path = lua_tostring(luaState, 3);
+		string top_path = Path(local_path).parent().toString();
 		Torrent::Torrent torrent;
 		poco_assert(ERROR_OK == pCoolClient->ParseTorrent(torrent_path, &torrent));
 		int handle;
-		retcode_t ret = pCoolClient->AddNewUploadJob(torrent_path, local_path, torrent, &handle);
+		poco_debug_f2(logger_, "in CoolClientProxy::AddNewUpload, torrent_path : %s, top_path : %s",
+			torrent_path, top_path);
+		retcode_t ret = pCoolClient->AddNewUploadJob(torrent_path, top_path, torrent, &handle);
 		if( ret != ERROR_OK ){
 			poco_warning_f1(logger_, "in CoolClientProxy::AddNewUpload, CoolClient::AddNewUploadJob returns %d",
 				(int)ret);
