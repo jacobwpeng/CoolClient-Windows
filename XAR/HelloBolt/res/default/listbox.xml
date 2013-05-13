@@ -24,5 +24,6 @@
 		<bitmap id="bitmap.listbox.taskitem.type.music" image="listbox\type.music.png"/>
 		<bitmap id="bitmap.listbox.taskitem.type.movie" image="listbox\type.movie.png"/>
 		<bitmap id="bitmap.listbox.taskitem.type.game" image="listbox\type.game.png"/>
+		<bitmap id="bitmap.listbox.taskitem.type.book" image="listbox\type.book.png"/>
 	</resource>
 </xlue>
