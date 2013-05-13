@@ -353,7 +353,10 @@ int CoolClientProxy::SelectTorrent(lua_State* luaState){
 		return 1;
 	}else{
 		int file_count = torrent.file().size();
+		Path p(utf8_torrent_path);
+		string name = p.getBaseName();
 		lua_pushstring(luaState, utf8_torrent_path.c_str());
+		lua_pushstring(luaState, name.c_str());
 		lua_pushinteger(luaState, torrent.type());
 		lua_createtable(luaState, 0, file_count);
 		for(int pos = 0; pos != file_count; ++pos){
@@ -363,7 +366,7 @@ int CoolClientProxy::SelectTorrent(lua_State* luaState){
 			lua_pushnumber(luaState, oneFile.size());
 			lua_settable(luaState, -3);
 		}
-		return 3;
+		return 4;
 	}
 
 }

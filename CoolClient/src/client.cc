@@ -656,8 +656,8 @@ namespace CoolDown{
 					ofs.close();
 					{
 						//test if we can parse this torrent
-						Torrent::Torrent torrent;
-						this->ParseTorrent(torrent_file_path, &torrent);
+						//Torrent::Torrent torrent;
+						//this->ParseTorrent(torrent_file_path, &torrent);
 					}
 				}
 				
@@ -825,7 +825,7 @@ namespace CoolDown{
             }
 
             retcode_t CoolClient::SaveJobHistory(const string& filename){
-                ofstream ofs(filename.c_str());
+				ofstream ofs(filename.c_str(), ofstream::binary);
                 if( !ofs ){
                     poco_warning_f1(logger(), "Cannot open history file : %s for write.", filename);
                     return ERROR_FILE_NOT_EXISTS;
@@ -874,7 +874,7 @@ namespace CoolDown{
             }
 
             retcode_t CoolClient::ReloadJobHistory(const string& filename){
-                ifstream ifs(filename.c_str());
+				ifstream ifs(filename.c_str(), ifstream::binary);
                 if( !ifs ){
                     poco_warning_f1(logger(), "Cannot load job history file : %s", filename);
                     return ERROR_FILE_NOT_EXISTS;
