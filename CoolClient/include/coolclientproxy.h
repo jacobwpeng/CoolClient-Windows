@@ -29,6 +29,7 @@ public:
 	static int MakeTorrentAndPublish(lua_State* luaState);
 	static int SelectTorrent(lua_State* luaState);
 	static int AddNewDownload(lua_State* luaState);
+	static int AddNewUpload(lua_State* luaState);
 
 	static int StopMakingTorrent(lua_State* luaState);
 	static int StopClient(lua_State* luaState);

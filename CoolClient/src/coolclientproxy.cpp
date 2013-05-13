@@ -417,6 +417,33 @@ int CoolClientProxy::AddNewDownload(lua_State* luaState){
 	
 }
 
+int CoolClientProxy::AddNewUpload(lua_State* luaState){
+	if( lua_isstring(luaState, 2)				//torrent path
+		&&lua_isstring(luaState, 3)				//local path
+		){
+		string torrent_path = lua_tostring(luaState, 2);
+		string local_path = lua_tostring(luaState, 3);
+		Torrent::Torrent torrent;
+		poco_assert(ERROR_OK == pCoolClient->ParseTorrent(torrent_path, &torrent));
+		int handle;
+		retcode_t ret = pCoolClient->AddNewUploadJob(torrent_path, local_path, torrent, &handle);
+		if( ret != ERROR_OK ){
+			poco_warning_f1(logger_, "in CoolClientProxy::AddNewUpload, CoolClient::AddNewUploadJob returns %d",
+				(int)ret);
+			lua_pushinteger(luaState, -1);
+			return 1;
+		}else{
+			poco_trace_f2(logger_, "in CoolClientProxy::AddNewUpload, add new upload succeed, torrent_path : %s, local_path : %s"
+				,torrent_path, local_path);
+			return 0;
+		}
+	}else{
+		poco_warning(logger_, "Invalid args of CoolClientProxy::AddNewUpload");
+		DumpLuaState(luaState);
+		return 0;
+	}
+}
+
 int CoolClientProxy::StopMakingTorrent(lua_State* luaState){
 	stop_making_torrent = true;
 	return 0;
@@ -464,6 +491,7 @@ static XLLRTGlobalAPI CoolClientProxyMemberFunctions[] = {
 	{"StopClient", CoolClientProxy::StopClient},
 	{"SelectTorrent", CoolClientProxy::SelectTorrent},
 	{"AddNewDownload", CoolClientProxy::AddNewDownload},
+	{"AddNewUpload", CoolClientProxy::AddNewUpload},
 	{"ChoosePath", CoolClientProxy::ChoosePath},
 	{"MakeTorrentAndPublish", CoolClientProxy::MakeTorrentAndPublish},
 	{NULL,NULL}
