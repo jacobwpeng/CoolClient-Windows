@@ -88,7 +88,7 @@ namespace CoolDown{
             pTask->set_reported();
             poco_debug_f1(logger_, "return sock of client '%s'", pTask->clientid());
             sockManager_.return_sock(pTask->clientid(), pTask->sock() );
-            max_payload_cond_.signal();
+            //max_payload_cond_.signal();
             this->available_thread_cond_.signal();
         }
 
@@ -253,8 +253,9 @@ namespace CoolDown{
                             poco_assert( file.isNull() == false );
                             
                             poco_debug_f1(logger_, "available thread : %d", tp_.available() );
-                            while( tp_.available() == 0 ){
+                            while( tp_.used() == tp_.capacity() ){
                                 try{
+									poco_debug(logger_, "Going to wait for idel thread");
                                     this->available_thread_cond_.wait( this->available_thread_mutex_, COND_WAIT_TIMEOUT);
                                     poco_debug(logger_, "wake up from wait available_thread_cond_");
                                 }catch(Poco::TimeoutException& e){

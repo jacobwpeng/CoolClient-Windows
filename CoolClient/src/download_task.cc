@@ -142,7 +142,7 @@ namespace CoolDown{
             SharedMemory sm(file_, SharedMemory::AM_WRITE);
             //64bits problem???
             memcpy(sm.begin() + fileInfo_.chunk_offset(chunk_pos_), content.data(), content.length() );
-			poco_debug_f2(logger_, "Download task finished, file : %s, offset : %Ld",
+			poco_debug_f2(logger_, "Download task finished, file : %s, offset : %Lu",
 							file_.path(), fileInfo_.chunk_offset(chunk_pos_));
         }
     }

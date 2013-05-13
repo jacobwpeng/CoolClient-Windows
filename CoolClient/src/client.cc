@@ -944,7 +944,8 @@ namespace CoolDown{
                 
 				{
 					FastMutex::ScopedLock lock(mutex_);
-					jobs_[job_index_] = JobPtr( new Job(info, *(this->sockManager_), logger()) );
+					JobPtr job(new Job(info, *(this->sockManager_), logger()));
+					jobs_[job_index_] = job;
 				}
                 poco_debug_f1(logger(), "add Job to jobs_, torrent_id : %s", info->torrentInfo.torrentid());
                 ++job_index_;
