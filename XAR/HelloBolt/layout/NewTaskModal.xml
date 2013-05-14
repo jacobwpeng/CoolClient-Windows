@@ -12,6 +12,7 @@
 				<top></top>
 				<width>452</width>
 				<height>500</height>
+				<limitchild>1</limitchild>
 			</attr>
 			<children>
 			<obj id="bkg" class="TextureObject">
@@ -268,7 +269,7 @@
 							<obj id="ok" class="BaseUI.TextureButton">
 								<attr>
 									<left>father.width - 75*2 - 10-16</left>
-									<top>father.height - 35</top>
+									<top>500 - 35</top>
 									<width>75</width>
 									<height>24</height>
 									<Text>确定</Text>
@@ -280,7 +281,7 @@
 							<obj id="cancel" class="BaseUI.TextureButton">
 								<attr>
 									<left>father.width - 75 - 16</left>
-									<top>father.height - 35</top>
+									<top>500 - 35</top>
 									<width>75</width>
 									<height>24</height>
 									<Text>取消</Text>

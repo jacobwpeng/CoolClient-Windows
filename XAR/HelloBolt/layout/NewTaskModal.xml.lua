@@ -56,11 +56,18 @@ function OnOKClick(self)
 	local savepath = owner:GetUIObject("savepath"):GetText()
 	local torrentpath = userData.path
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
-	--for i, v in ipairs(userData.SelectedFiles) do
-	--	XLMessageBox(i .. ' -> ' .. v )
-	--end
+
 	local ret = coolClientProxy:AddNewDownload(torrentpath, savepath, userData.SelectedFiles)
 	if ret == -1 then
-		XLMessageBox("error")
+		--添加下载失败
 	end
+	local treeManager = XLGetObject("Xunlei.UIEngine.TreeManager")				
+	local tree = treeManager:GetUIObjectTree("MainObjectTree")
+	tree:GetUIObject("tabbkg"):GetControlObject("MydownloadPage"):UpdateListBox()
+	
+	local root = owner:GetRootObject()
+	local left,top,right,bottom = root:GetObjPos()
+	local height = bottom - top
+	local timer = SetTimer(function() root:SetObjPos2(0,top,right-left,height) top = top+10 height = height-20 end, 10)
+	local timer = SetOnceTimer(function() KillTimer(timer) hostwnd:EndDialog(0) end, 1000)
 end

@@ -470,11 +470,12 @@ int CoolClientProxy::GetJobStatusTable(lua_State* luaState){
 	CoolDown::Client::JobStatusMap::const_iterator cend = job_status.end();
 
 	while( citer != cend ){
+		int this_top = lua_gettop(luaState);
 		int handle = citer->first;
 		const CoolDown::Client::JobStatus& status = citer->second;
 		lua_pushinteger(luaState, handle);
 		lua_gettable(luaState, table_index);
-
+		DumpLuaState(luaState);
 		if( lua_type(luaState, -1) == LUA_TTABLE) {
 			//we have this job info in table, so just update it
 		}
@@ -503,6 +504,7 @@ int CoolClientProxy::GetJobStatusTable(lua_State* luaState){
 		//when we are here, the top of the stack is the table for this job
 		//we just update the variants
 		UpdateJobStatusTable(luaState, status);
+		DumpLuaState(luaState);
 		lua_settable(luaState, table_index);
 		++citer;
 	}
@@ -640,6 +642,7 @@ void CoolClientProxy::DumpLuaState(lua_State* luaState){
 	int top = lua_gettop(luaState);
 	poco_notice(logger_, "********************************************************************************");
 	for(int i = 0; i <= top; ++i){
-		poco_notice_f2(pCoolClient->logger(), "lua state index %d is %s", i, string(luaL_typename(luaState, i)));
+		string type = luaL_typename(luaState, i);
+		poco_notice_f2(pCoolClient->logger(), "lua state index %d is %s", i, type);
 	}
 }
