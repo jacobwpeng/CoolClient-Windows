@@ -1039,6 +1039,15 @@ namespace CoolDown{
                     UInt64 bytes_download_this_second = pInfo->downloadInfo.bytes_download_this_second;
 					status.download_speed_per_second_in_bytes = static_cast<int>(bytes_download_this_second);
 
+					UInt64 bytes_left = status.size - pInfo->downloadInfo.download_total;
+					if( bytes_download_this_second == 0){
+						status.remaing_time_in_seconds = -1;
+					}else{
+						status.remaing_time_in_seconds = static_cast<int>( 
+															(double)bytes_left / bytes_download_this_second
+														);
+					}
+
 
                     string upload_speed, download_speed;
                     format_speed(bytes_upload_this_second, &upload_speed);
