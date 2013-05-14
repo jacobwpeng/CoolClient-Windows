@@ -1014,7 +1014,7 @@ namespace CoolDown{
                         poco_debug_f2(logger(), "Publish '%s' to tracker return %d", fileid, (int)publish_ret);
                     }
                 }
-				info->downloadInfo.download_total = torrent.totalsize();
+				info->downloadInfo.download_total = info->torrentInfo.get_total_size();
                 return this->AddNewJob(info, torrent_path, handle);
             }
 
