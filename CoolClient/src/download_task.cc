@@ -1,3 +1,4 @@
+#define BOOST_DATE_TIME_NO_LIB 1
 #include "download_task.h"
 #include "job_info.h"
 #include "client.pb.h"
@@ -11,6 +12,8 @@
 #include <Poco/SharedMemory.h>
 #include <Poco/Util/Application.h>
 #include <Poco/Bugcheck.h>
+#include <boost/interprocess/file_mapping.hpp>
+#include <boost/interprocess/mapped_region.hpp>
 
 using Poco::Logger;
 using Poco::format;
@@ -140,9 +143,20 @@ namespace CoolDown{
                             file_.path(), fileInfo_.chunk_offset(chunk_pos_), check_sum_, content_check_sum));
             }
 
-            SharedMemory sm(file_, SharedMemory::AM_WRITE);
-            //64bits problem???
-            memcpy(sm.begin() + fileInfo_.chunk_offset(chunk_pos_), content.data(), content.length() );
+			{
+				using namespace boost::interprocess;
+				uint64_t offset = fileInfo_.chunk_offset(chunk_pos_);
+				file_mapping m_file(file_.path().c_str(), read_write);
+				mapped_region region(m_file, read_write, offset, chunk_size);
+				int ret = memcpy_s(region.get_address(), region.get_size(), content.data(), content.length());
+				if( ret != 0 ){
+					poco_warning_f1(logger_, "memcpy_s returns %d.", ret);
+				}
+				//SharedMemory sm(file_, SharedMemory::AM_WRITE);
+				////64bits problem???
+				//memcpy(sm.begin() + fileInfo_.chunk_offset(chunk_pos_), content.data(), content.length() );
+
+			}
 			poco_debug_f2(logger_, "Download task finished, file : %s, offset : %Lu",
 							file_.path(), fileInfo_.chunk_offset(chunk_pos_));
         }
