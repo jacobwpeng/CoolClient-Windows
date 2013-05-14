@@ -263,24 +263,24 @@ namespace CoolDown{
 
 				//then publish the torrent to Resource Server
 				{
-					SockPtr resource_server_sock = this->sockManager_->get_resource_server_sock();
-					poco_assert( resource_server_sock.isNull() == false );
-					string torrent_name = Path(torrent_path).getBaseName();
-					string torrent_content;
-					torrent.SerializeToString(&torrent_content);
-					ostringstream encode_oss;
-					Poco::Base64Encoder encoder(encode_oss);
-					encoder.write(torrent_content.data(), (std::streamsize) torrent_content.size());
-					encoder.close();
-					
-					string encoded_torrent_content = encode_oss.str();
-					int ret = CoolDown::Client::upload(resource_server_sock.get(), encoded_torrent_content, torrent_info.type(), 
-						torrent_name, torrent_info.introduction(), torrent_info.totalsize());
-					if( ret != 0 ){
-						poco_warning_f1(logger(), "in CoolClient::PublishResource, Call CoolDown::Client::upload returns %d",
-										(int)ret);
-						is_completed_publish = false;
-					}
+					//SockPtr resource_server_sock = this->sockManager_->get_resource_server_sock();
+					//poco_assert( resource_server_sock.isNull() == false );
+					//string torrent_name = Path(torrent_path).getBaseName();
+					//string torrent_content;
+					//torrent.SerializeToString(&torrent_content);
+					//ostringstream encode_oss;
+					//Poco::Base64Encoder encoder(encode_oss);
+					//encoder.write(torrent_content.data(), (std::streamsize) torrent_content.size());
+					//encoder.close();
+					//
+					//string encoded_torrent_content = encode_oss.str();
+					//int ret = CoolDown::Client::upload(resource_server_sock.get(), encoded_torrent_content, torrent_info.type(), 
+					//	torrent_name, torrent_info.introduction(), torrent_info.totalsize());
+					//if( ret != 0 ){
+					//	poco_warning_f1(logger(), "in CoolClient::PublishResource, Call CoolDown::Client::upload returns %d",
+					//					(int)ret);
+					//	is_completed_publish = false;
+					//}
 				}
 				return is_completed_publish ? ERROR_OK : ERROR_PUBLISH_NOT_COMPLETE;
 			}
@@ -316,6 +316,11 @@ namespace CoolDown{
 
 			void CoolClient::set_job_status_callback(JobStatusCallback callback){
 				this->status_callback_ = callback;
+			}
+
+			JobStatusMap CoolClient::JobStatuses(){
+				FastMutex::ScopedLock lock_(job_status_mutex_);
+				return this->job_status_;
 			}
 
             retcode_t CoolClient::LoginTracker(const string& tracker_address, int port){

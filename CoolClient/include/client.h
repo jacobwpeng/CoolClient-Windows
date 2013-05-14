@@ -128,6 +128,7 @@ namespace CoolDown{
 					void set_job_status_callback(JobStatusCallback callback);
 					string GetConfig(const string& key) const;
 					void SetConfig(const string& key, const string& value) const;
+					JobStatusMap JobStatuses();
 
                     //communicate with tracker
                     retcode_t LoginTracker(const string& tracker_address, int port = TRACKER_PORT);

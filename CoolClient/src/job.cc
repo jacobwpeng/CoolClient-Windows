@@ -253,14 +253,15 @@ namespace CoolDown{
                             poco_assert( file.isNull() == false );
                             
                             poco_debug_f1(logger_, "available thread : %d", tp_.available() );
-                            while( tp_.used() == tp_.capacity() ){
-                                try{
-									poco_debug(logger_, "Going to wait for idel thread");
-                                    this->available_thread_cond_.wait( this->available_thread_mutex_, COND_WAIT_TIMEOUT);
-                                    poco_debug(logger_, "wake up from wait available_thread_cond_");
-                                }catch(Poco::TimeoutException& e){
-                                    poco_notice(logger_, "wait available_thread_cond_ timeout.");
-                                }
+                            while( tp_.available() == 0 ){
+								continue;
+         //                       try{
+									//poco_debug(logger_, "Going to wait for idel thread");
+         //                           this->available_thread_cond_.wait( this->available_thread_mutex_, 10);
+         //                           poco_debug(logger_, "wake up from wait available_thread_cond_");
+         //                       }catch(Poco::TimeoutException& e){
+         //                           poco_notice(logger_, "wait available_thread_cond_ timeout.");
+         //                       }
                             }
                             tm_.start( new DownloadTask(
                                         *fileInfo, 

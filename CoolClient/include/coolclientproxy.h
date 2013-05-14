@@ -30,6 +30,7 @@ public:
 	static int SelectTorrent(lua_State* luaState);
 	static int AddNewDownload(lua_State* luaState);
 	static int AddNewUpload(lua_State* luaState);
+	static int GetJobStatusTable(lua_State* luaState);
 
 	static int StopMakingTorrent(lua_State* luaState);
 	static int StopClient(lua_State* luaState);
