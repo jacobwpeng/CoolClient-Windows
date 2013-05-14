@@ -106,6 +106,7 @@ namespace CoolDown{
                 ~TorrentInfo();
 				int get_type() const;
 				Int64 get_total_size() const;
+				void set_total_size(Int64 total_size);
                 int get_file_count() const;
                 const file_map_t& get_file_map() const;
                 const TorrentFileInfoPtr& get_one_file_of_same_fileid(const string& fileid);

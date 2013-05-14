@@ -190,13 +190,10 @@ namespace CoolDown{
         TorrentInfo::TorrentInfo(const Torrent::Torrent& torrent)
         :torrent_(torrent), 
         file_count_(torrent_.file().size()){
-			Int64 total_size = 0;
             for(int pos = 0; pos != torrent_.file().size(); ++pos){
                 const Torrent::File& file = torrent_.file().Get(pos);
-				total_size += file.size();
                 fileMap_[file.checksum()].push_back( TorrentFileInfoPtr(new TorrentFileInfo(file) ) );
             }
-			this->total_size_ = total_size;
         }
 
         TorrentInfo::~TorrentInfo(){
@@ -211,6 +208,10 @@ namespace CoolDown{
 		}
 		Int64 TorrentInfo::get_total_size() const{
 			return this->total_size_;
+		}
+
+		void TorrentInfo::set_total_size(Int64 total_size){
+			this->total_size_ = total_size;
 		}
         
         int TorrentInfo::get_file_count() const{
@@ -259,6 +260,7 @@ namespace CoolDown{
         {
 			poco_debug_f1(logger_, "top_path : %s", top_path);
             fileidlist_.reserve( torrent.file().size() );
+			Int64 total_size = 0;
             for(int pos = 0; pos != torrent.file().size(); ++pos){
                 const Torrent::File& file = torrent.file().Get(pos);
                 int chunk_size = file.chunk().size();
@@ -273,6 +275,7 @@ namespace CoolDown{
                 }
 
                 Int64 filesize( file.size() );
+				total_size += filesize;
 
                 poco_debug_f2(logger_, "add file to Job, fileid : '%s', name : '%s'", fileid, filename );
                 downloadInfo.percentage_map[fileid] = 0;
@@ -280,6 +283,8 @@ namespace CoolDown{
                 localFileInfo.add_file(fileid, relative_path, filename, filesize);
                 fileidlist_.push_back(fileid);
             }
+
+			torrentInfo.set_total_size(total_size);
         }
 
         JobInfo::~JobInfo(){

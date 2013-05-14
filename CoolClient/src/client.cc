@@ -960,9 +960,9 @@ namespace CoolDown{
 				JobStatus status;
 				Path tmp(torrent_path);
 				status.name = tmp.getBaseName();
-				status.size = info->torrentInfo.get_total_size();
+				//status.size = info->torrentInfo.get_total_size();
 				status.type = info->torrentInfo.get_type();
-				status.status = JOB_PAUSED;		//for 
+				//status.status = JOB_PAUSED;		//for 
 				FastMutex::ScopedLock lock_(this->job_status_mutex_);
 				job_status_[this_job_index] = status;
                 return ERROR_OK;
@@ -978,7 +978,9 @@ namespace CoolDown{
                 poco_debug_f1(logger(), "in  AddNewDownloadJob, pass unique check of torrent_id : %s", torrent_id);
                 this->RegisterTorrent( torrent_id );
                 SharedPtr<JobInfo> info( new JobInfo( torrent, top_path, needs) );
-                return this->AddNewJob(info, torrent_path, handle);
+                retcode_t ret = this->AddNewJob(info, torrent_path, handle);
+				job_status_[*handle].size = JOB_DOWNLOADING;
+				return ret;
             }
 
             retcode_t CoolClient::AddNewUploadJob(const string& torrent_path, const string& top_path, 
