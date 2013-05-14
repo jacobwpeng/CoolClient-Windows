@@ -3,31 +3,9 @@ function OnPageInit(self)
 	--然后还要载入保存的任务列表
 	
 	local list = self:GetControlObject("listbox")
-	local data = {}
-	data.Name = "音乐"
-	data.Size = 1
-	data.Progress = 90
-	data.Download = 1024*120
-	list:AddItem(data)
-	data.Name = "电影"
-	data.Size = 2
-	data.Progress = 80
-	data.Download = 1024*1024*8
-	list:AddItem(data)
-	data.Name = "游戏"
-	data.Size = 3
-	data.Progress = 70
-	data.Download = 140
-	list:AddItem(data)
-	data.Name = "图书"
-	data.Size = 4
-	data.Progress = 60
-	data.Download = 1024*10
-	list:AddItem(data)
 
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
 	coolClientProxy:RunClientAsync()
-	list:UpdateUI()
 	
 	local timer = SetTimer(function() self:UpdateListBox() end, 1000)
 end
@@ -109,6 +87,8 @@ end
 
 function UpdateListBox(self, jobTable)
 	local listbox = self:GetControlObject("listbox")
+	local downloadSpeed = 0--self:GetControlObject("text.download")
+	local uploadSpeed = 0--self:GetControlObject("text.upload")
 	local listboxAttr = listbox:GetAttribute()
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
 	local jobTable = coolClientProxy:GetJobStatusTable()
@@ -116,9 +96,31 @@ function UpdateListBox(self, jobTable)
 		--XLMessageBox(#jobTable)
 		listbox:ResetContent()
 		for k,v in pairs(jobTable) do
-			--XLMessageBox(#v)
 			listbox:AddItem(v)
+			downloadSpeed = downloadSpeed + v.DownloadSpeed
+			uploadSpeed = uploadSpeed + v.UploadSpeed
 		end
 		listbox:UpdateUI()
+		local KB = 1024
+		local MB = KB*1024
+		local content
+		if downloadSpeed > MB then
+			content = string.format("%.1fMB/s", downloadSpeed/MB)
+		elseif downloadSpeed > KB then
+			content = string.format("%dKB/s", downloadSpeed/KB)
+		else
+			content = string.format("%dB/s", downloadSpeed)
+		end
+		self:GetControlObject("text.download"):GetChildByIndex(0):SetText(content)
+		if uploadSpeed > MB then
+			content = string.format("%.1fMB/s", uploadSpeed/MB)
+		elseif uploadSpeed > KB then
+			content = string.format("%dKB/s", uploadSpeed/KB)
+		else
+			content = string.format("%dB/s", uploadSpeed)
+		end
+		self:GetControlObject("text.upload"):GetChildByIndex(0):SetText(content)
+		--XLMessageBox(content)
 	end
+	
 end

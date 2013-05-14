@@ -1091,9 +1091,10 @@ namespace CoolDown{
                     pInfo->downloadInfo.bytes_download_this_second = 0;
                     pInfo->downloadInfo.download_speed_limit_cond.broadcast();
 		
-					status.percentage = static_cast<int>( 
-								(double)pInfo->downloadInfo.download_total / status.size * 100 
-						);
+					//status.percentage = static_cast<int>( 
+					//			(double)pInfo->downloadInfo.download_total / status.size * 100 
+					//	);
+					status.percentage = ((double)pInfo->downloadInfo.download_total / status.size) * 100;
 
 					int status_code = -1;
 					if( pInfo->downloadInfo.is_stopped ){
@@ -1106,6 +1107,12 @@ namespace CoolDown{
 						status_code = JOB_UPLOADING;
 					}else{
 						status_code = JOB_INACTIVE;
+					}
+
+					if( p.second->is_running() == false ){
+						status_code = JOB_UPLOADING;
+						status.percentage = 100;
+						status.remaing_time_in_seconds = 0;
 					}
 
 					poco_assert(status_code != -1);

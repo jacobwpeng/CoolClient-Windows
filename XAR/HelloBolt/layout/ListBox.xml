@@ -302,16 +302,16 @@
 									<attr>
 										<left>89</left>
 										<top>0</top>
-										<width>300</width>
+										<width>300-56</width>
 										<height>father.height</height>
 										<valign>center</valign>
 									</attr>
 								</obj>
 								<obj id="size" class="TextObject">
 									<attr>
-										<left>389</left>
+										<left>389-56</left>
 										<top>0</top>
-										<width>45</width>
+										<width>45+14</width>
 										<height>father.height</height>
 										<valign>center</valign>
 										<halign>center</halign>
@@ -319,18 +319,18 @@
 								</obj>
 								<obj id="progress" class="Thunder.Progress">
 									<attr>
-										<left>434</left>
+										<left>434-14*3</left>
 										<top>(father.height - 13)/2</top>
 										<width>100</width>
 										<height>13</height>
 										<ShowText>true</ShowText>
 									</attr>
 								</obj>
-								<obj id="retime" class="TextObject">
+								<obj id="time" class="TextObject">
 									<attr>
-										<left>534</left>
+										<left>534-14*3</left>
 										<top>0</top>
-										<width>70</width>
+										<width>70+14</width>
 										<height>father.height</height>
 										<valign>center</valign>
 										<halign>center</halign>
@@ -338,9 +338,9 @@
 								</obj>
 								<obj id="download" class="TextObject">
 									<attr>
-										<left>604</left>
+										<left>604-14*2</left>
 										<top>0</top>
-										<width>45</width>
+										<width>45+14</width>
 										<height>father.height</height>
 										<valign>center</valign>
 										<halign>center</halign>
@@ -348,9 +348,9 @@
 								</obj>
 								<obj id="upload" class="TextObject">
 									<attr>
-										<left>649</left>
+										<left>649-14</left>
 										<top>0</top>
-										<width>45</width>
+										<width>45+14</width>
 										<height>father.height</height>
 										<valign>center</valign>
 										<halign>center</halign>

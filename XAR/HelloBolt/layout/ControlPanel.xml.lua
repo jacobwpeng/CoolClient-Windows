@@ -181,7 +181,7 @@ local function OnBtnNewTaskClick(self)--新建任务
 			end
 		end
 		for key, value in pairs(files) do
-			listbox:AddItem({['Name'] = key, ['Size'] =  value})
+			listbox:AddItem({Name = key, Size =  value})
 		end
 		listbox:UpdateUI()
 		folderName:SetText(name)

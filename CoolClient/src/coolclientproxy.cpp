@@ -612,7 +612,7 @@ void CoolClientProxy::UpdateJobStatusTable(lua_State* luaState, const CoolDown::
 	lua_settable(luaState, -3);
 
 	lua_pushstring(luaState, "Progress");
-	lua_pushinteger(luaState, status.percentage);
+	lua_pushnumber(luaState, status.percentage);
 	lua_settable(luaState, -3);
 
 	lua_pushstring(luaState, "DownloadSpeed");

@@ -34,6 +34,8 @@
 	<bitmap id="system.button.config.move" imagelist="imagelist.system.button" index="12" />
 	<bitmap id="system.button.config.lbuttondown" imagelist="imagelist.system.button" index="13" />
 	
+	<bitmap id="bitmap.mask.mask" path="mask\mask.png" />
+	
 	<texture id="texture.toolbar.tips" image="bitmap\texture.tips.png" type="ThreeInOneH" />
 	<texture id="texture.system.topbkg" image="bitmap\topbkg.png" type="ThreeInOneH" />
 	<texture id="texture.common.wndbkg" image="bitmap\config.panel.bkg.png" type="NineInOne" />
