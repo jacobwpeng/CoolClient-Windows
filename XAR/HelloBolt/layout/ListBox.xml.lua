@@ -139,10 +139,12 @@ local function ListBox_CreateInstanceItem(self)--添加item实例，不同type�
 	
 	attr.ItemTextWidth = 0
 	attr.HScrollBarShow = false
-	for i = attr.BeginItem, #attr.ItemDataTable do
+	for i = 1, #attr.ItemDataTable do
+		--[[
 		if i > (attr.BeginItem + attr.ItemCountInOnePage * 3+3) then
 			break
 		end
+		]]
 
 		local newListBoxItem = xarFactory:CreateUIObject("listbox"..i, attr.ItemType)		
 		local newListBoxItemAttr = newListBoxItem:GetAttribute()
@@ -150,11 +152,11 @@ local function ListBox_CreateInstanceItem(self)--添加item实例，不同type�
 				newListBoxItemAttr.Status = attr.ItemDataTable[i].Status
 				newListBoxItemAttr.Type = attr.ItemDataTable[i].Type
 				newListBoxItemAttr.Name = attr.ItemDataTable[i].Name
-				newListBoxItemAttr.Time = attr.ItemDataTable[i].Time
+				newListBoxItemAttr.Time = attr.ItemDataTable[i].Retime
 				newListBoxItemAttr.Size = attr.ItemDataTable[i].Size
 				newListBoxItemAttr.Progress = attr.ItemDataTable[i].Progress
-				newListBoxItemAttr.Upload = attr.ItemDataTable[i].Upload
-				newListBoxItemAttr.Download = attr.ItemDataTable[i].Download	
+				newListBoxItemAttr.Upload = attr.ItemDataTable[i].UploadSpeed
+				newListBoxItemAttr.Download = attr.ItemDataTable[i].DownloadSpeed	
 			elseif attr.ItemType == "BaseUI.ListBox.ResItem" then
 				newListBoxItemAttr.Type = attr.ItemDataTable[i].Type
 				newListBoxItemAttr.Name = attr.ItemDataTable[i].Name
@@ -876,6 +878,7 @@ function ListBoxItem_OnInitControl(self)
 	    uploadobj:SetText(attr.Upload)
 	end
 	if attr.Download ~= nil and downloadobj then
+		--XLMessageBox(attr.Download)
 		if self:GetClass() == "BaseUI.ListBox.TaskItem" then
 			local KB = 1024
 			local MB = KB*1024

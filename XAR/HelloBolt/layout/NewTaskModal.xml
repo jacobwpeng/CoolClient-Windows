@@ -32,6 +32,85 @@
 							<height>father.height</height>
 						</attr>
 						<children>
+							<obj id="mask" class="MaskObject">
+								<attr>
+									<left>0</left>
+									<top>0</top>
+									<width>father.width</width>
+									<height>father.height</height>
+									<type>bitmap</type>
+									<chanel>r</chanel>
+									<stretchbitmap>1</stretchbitmap>
+									<resid>bitmap.mask.mask</resid>
+									<maskorgx>0</maskorgx>
+									<maskorgy>0</maskorgy>
+									<masksizex>width*3</masksizex>
+									<masksizey>height*3</masksizey>
+								</attr>
+								<children>
+									<obj  class="ImageObject">
+										<attr>
+											<left>0</left>
+											<top>0</top>
+											<width>father.width</width>
+											<height>father.height</height>
+											<inheritmask>1</inheritmask>
+											<maskleft>0</maskleft>
+											<masktop>0</masktop>
+											<maskwidth>width</maskwidth>
+											<maskheight>height</maskheight>
+											<maskblendtype>attenunate</maskblendtype>
+										</attr>
+									</obj>
+								</children>
+							</obj>
+							<obj id="turnoff" class="LayoutObject">
+								<attr>
+									<left>0</left>
+									<top>0</top>
+									<width>father.width</width>
+									<height>father.height</height>
+									<type>bitmap</type>
+									<chanel>r</chanel>
+									<stretchbitmap>1</stretchbitmap>
+									<resid>bitmap.mask.mask</resid>
+									<maskorgx>0</maskorgx>
+									<maskorgy>0</maskorgy>
+									<masksizex>width*3</masksizex>
+									<masksizey>height*3</masksizey>
+								</attr>
+								<children>
+									<obj  class="ImageObject">
+										<attr>
+											<left>0</left>
+											<top>0</top>
+											<width>father.width</width>
+											<height>father.height</height>
+											<inheritmask>1</inheritmask>
+											<maskleft>0</maskleft>
+											<masktop>0</masktop>
+											<maskwidth>width</maskwidth>
+											<maskheight>height</maskheight>
+											<maskblendtype>attenunate</maskblendtype>
+										</attr>
+									</obj>
+									<obj class="FillObject">
+										<attr>
+											<left>0</left>
+											<top>0</top>
+											<width>father.width</width>
+											<height>father.height</height>
+											<visible>0</visible>
+											<filltype>Circle</filltype>
+											<srcpt>59,59</srcpt>
+											<destpt>59,10</destpt>
+											<srccolor>255,0,0,255</srccolor>
+											<destcolor>255,0,0,0</destcolor>
+											<blendtype>Source</blendtype>
+										</attr>
+									</obj>
+								</children>
+							</obj>
 							<obj id="theme.bkg" class="TextureObject">
 								<attr>
 									<left>0</left>
@@ -226,6 +305,9 @@
 													<valign>center</valign>
 													<textcolor>color.newtaskmodal.select</textcolor>
 												</attr>
+												<eventlist>
+													<event name="OnLButtonDown" file="NewTaskModal.xml.lua" func="OnChooseAllClick" />
+												</eventlist>
 											</obj>
 											<obj id="list.bottom.text" class="TextObject">
 												<attr>
@@ -237,6 +319,9 @@
 													<valign>center</valign>
 													<textcolor>color.newtaskmodal.select</textcolor>
 												</attr>
+												<eventlist>
+													<event name="OnLButtonDown" file="NewTaskModal.xml.lua" func="OnChooseOpClick" />
+												</eventlist>
 											</obj>
 										</children>
 									</obj>

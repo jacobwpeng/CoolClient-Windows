@@ -96,7 +96,7 @@ namespace CoolDown{
 				int type;
 				string name;
 				Int64 size;
-				int percentage;
+				double percentage;
 				int remaing_time_in_seconds;
 				int download_speed_per_second_in_bytes;
 				int upload_speed_per_second_in_bytes;
