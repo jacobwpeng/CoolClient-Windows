@@ -115,6 +115,7 @@ namespace CoolDown{
                     poco_trace(logger_, "before receive contents from peer.");
 
                     int expect_bytes = download_quota > nLeft ? nLeft : download_quota;
+					poco_trace_f1(logger_, "Goint to receive %d bytes", expect_bytes);
                     int n = sock_->receiveBytes( static_cast<char*>(recvBuffer.begin()) + nRecv, expect_bytes);
                     poco_debug_f1(logger_, "receive %d bytes from peer.", n);
                     if( n <= 0 ){
