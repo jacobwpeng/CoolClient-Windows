@@ -960,9 +960,9 @@ namespace CoolDown{
 				JobStatus status;
 				Path tmp(torrent_path);
 				status.name = tmp.getBaseName();
-				//status.size = info->torrentInfo.get_total_size();
+				status.size = info->torrentInfo.get_total_size();
 				status.type = info->torrentInfo.get_type();
-				//status.status = JOB_PAUSED;		//for 
+				status.status = JOB_PAUSED;	
 				FastMutex::ScopedLock lock_(this->job_status_mutex_);
 				job_status_[this_job_index] = status;
                 return ERROR_OK;
@@ -979,7 +979,6 @@ namespace CoolDown{
                 this->RegisterTorrent( torrent_id );
                 SharedPtr<JobInfo> info( new JobInfo( torrent, top_path, needs) );
                 retcode_t ret = this->AddNewJob(info, torrent_path, handle);
-				job_status_[*handle].size = JOB_DOWNLOADING;
 				return ret;
             }
 
