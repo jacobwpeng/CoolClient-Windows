@@ -6,6 +6,8 @@
 #include <Poco/SharedMemory.h>
 #include <Poco/Format.h>
 #include <Poco/Exception.h>
+#include <boost/interprocess/file_mapping.hpp>
+#include <boost/interprocess/mapped_region.hpp>
 
 using Poco::Logger;
 using Poco::Util::Application;
@@ -36,8 +38,12 @@ namespace CoolDown{
             poco_trace(logger_, "enter UploadTask::runTask");
             string content;
             {
-                SharedMemory sm(*file_, SharedMemory::AM_READ);
-                content = string( sm.begin() + offset_, chunk_size_ );
+				using namespace boost::interprocess;
+				file_mapping m_file(file_->path().c_str(), read_write);
+				mapped_region region(m_file, read_write, offset_, chunk_size_);
+                /*SharedMemory sm(*file_, SharedMemory::AM_READ);
+                content = string( sm.begin() + offset_, chunk_size_ );*/
+				content = string( (char*)region.get_address(), chunk_size_);
             }
             poco_assert( content.size() == chunk_size_ );
             poco_debug_f2(logger_, "going to send %d bytes to '%s'", chunk_size_, this->peerAddress_);
