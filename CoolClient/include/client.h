@@ -85,6 +85,13 @@ namespace CoolDown{
 			};
 
 			struct JobStatus{
+				JobStatus()
+					:percentage(0),
+					remaing_time_in_seconds(0),
+					download_speed_per_second_in_bytes(0),
+					upload_speed_per_second_in_bytes(0){
+
+				}
 				JobTransportStatus status;				//0 for stopped, 1 for paused, 2 for download active, 3 for upload active, 4 for inactive 
 				int type;
 				string name;

@@ -1092,7 +1092,7 @@ namespace CoolDown{
                     pInfo->downloadInfo.download_speed_limit_cond.broadcast();
 		
 					status.percentage = static_cast<int>( 
-								(double)pInfo->downloadInfo.download_total / status.size * 100 
+								((double)pInfo->downloadInfo.download_total / status.size) * 100 
 						);
 
 					int status_code = -1;
