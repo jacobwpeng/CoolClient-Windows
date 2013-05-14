@@ -473,27 +473,34 @@ int CoolClientProxy::GetJobStatusTable(lua_State* luaState){
 		int this_top = lua_gettop(luaState);
 		int handle = citer->first;
 		const CoolDown::Client::JobStatus& status = citer->second;
+		//lua_pushinteger(luaState, handle);
 		lua_pushinteger(luaState, handle);
 		lua_gettable(luaState, table_index);
-		DumpLuaState(luaState);
+		poco_notice(logger_, "Before judge the type of obj in given index");
+		//DumpLuaState(luaState);
 		if( lua_type(luaState, -1) == LUA_TTABLE) {
 			//we have this job info in table, so just update it
 		}
 		else if( lua_type(luaState, -1) == LUA_TNIL){
+			//DumpLuaState(luaState);
+			lua_pop(luaState, 1);
+			//DumpLuaState(luaState);
 			//we create the job info table
 			lua_createtable(luaState, 0, 8);
+			//DumpLuaState(luaState);
+			int this_table_index = lua_gettop(luaState);
 			//push invariant variables here( eg : Name, Type, Size )
 			lua_pushstring(luaState, "Name");
 			lua_pushstring(luaState, status.name.c_str());
-			lua_settable(luaState, -3);
+			lua_settable(luaState, this_table_index);
 
 			lua_pushstring(luaState, "Type");
 			lua_pushinteger(luaState, (int)status.status);
-			lua_settable(luaState, -3);
+			lua_settable(luaState, this_table_index);
 
 			lua_pushstring(luaState, "Size");
 			lua_pushnumber(luaState, status.size);
-			lua_settable(luaState, -3);
+			lua_settable(luaState, this_table_index);
 
 		}else{
 			poco_warning_f2(logger_, "Unknown type of lua_Status at index : %d, type : %d",
@@ -503,9 +510,15 @@ int CoolClientProxy::GetJobStatusTable(lua_State* luaState){
 		}
 		//when we are here, the top of the stack is the table for this job
 		//we just update the variants
+		//DumpLuaState(luaState);
 		UpdateJobStatusTable(luaState, status);
-		DumpLuaState(luaState);
+		//DumpLuaState(luaState);
+		lua_pushinteger(luaState, handle);
+		lua_insert(luaState, -2);
+		//poco_notice(logger_, "Before set table of one job");
+		//DumpLuaState(luaState);
 		lua_settable(luaState, table_index);
+		lua_settop(luaState, this_top);
 		++citer;
 	}
 	return 1;
@@ -640,7 +653,7 @@ bool CoolClientProxy::MakeTorrentProgressCallback(int current_count, int total_c
 void CoolClientProxy::DumpLuaState(lua_State* luaState){
 	Logger& logger_ = pCoolClient->logger();
 	int top = lua_gettop(luaState);
-	poco_notice(logger_, "********************************************************************************");
+	poco_notice_f1(logger_, "***************************************%d****************************************", top);
 	for(int i = 0; i <= top; ++i){
 		string type = luaL_typename(luaState, i);
 		poco_notice_f2(pCoolClient->logger(), "lua state index %d is %s", i, type);

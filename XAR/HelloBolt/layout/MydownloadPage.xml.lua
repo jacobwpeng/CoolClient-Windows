@@ -29,7 +29,7 @@ function OnPageInit(self)
 	coolClientProxy:RunClientAsync()
 	list:UpdateUI()
 	
-	--local timer = SetTimer(function() self:UpdateListBox() end, 1000)
+	local timer = SetTimer(function() self:UpdateListBox() end, 1000)
 end
 
 function OnCronClick(self)
@@ -113,9 +113,10 @@ function UpdateListBox(self, jobTable)
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
 	local jobTable = coolClientProxy:GetJobStatusTable()
 	if jobTable ~= -1 then
-		XLMessageBox(#jobTable)
+		--XLMessageBox(#jobTable)
 		listbox:ResetContent()
 		for k,v in pairs(jobTable) do
+			--XLMessageBox(#v)
 			listbox:AddItem(v)
 		end
 		listbox:UpdateUI()

@@ -1007,10 +1007,13 @@ namespace CoolDown{
                     }else{
                         same_fileid.insert(fileid);
                         info->downloadInfo.bitmap_map[fileid]->set();
+						info->downloadInfo.percentage_map[fileid] = 100;
+						info->downloadInfo.is_download_paused = true;
                         retcode_t publish_ret = this->PublishResourceToTracker(torrent.trackeraddress(), fileid);
                         poco_debug_f2(logger(), "Publish '%s' to tracker return %d", fileid, (int)publish_ret);
                     }
                 }
+				info->downloadInfo.download_total = torrent.totalsize();
                 return this->AddNewJob(info, torrent_path, handle);
             }
 
@@ -1034,7 +1037,7 @@ namespace CoolDown{
 
 					//Download Speed of this Job
                     UInt64 bytes_download_this_second = pInfo->downloadInfo.bytes_download_this_second;
-					status.upload_speed_per_second_in_bytes = static_cast<int>(bytes_download_this_second);
+					status.download_speed_per_second_in_bytes = static_cast<int>(bytes_download_this_second);
 
 
                     string upload_speed, download_speed;
