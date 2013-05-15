@@ -5,6 +5,7 @@
 #include <Commdlg.h>
 #include <Shlobj.h>
 #include <string>
+#include <set>
 #include <boost/bind.hpp>
 #include <Poco/ThreadPool.h>
 #include <Poco/Logger.h>
@@ -12,6 +13,7 @@
 #include <Poco/Path.h>
 #include <boost/interprocess/shared_memory_object.hpp>
 
+using std::set;
 using std::string;
 using Poco::Int64;
 using CoolDown::Client::MakeTorrentRunnable;
@@ -496,32 +498,61 @@ int CoolClientProxy::GetJobStatusTable(lua_State* luaState){
 	int table_index = lua_gettop(luaState);
 	CoolDown::Client::JobStatusMap job_status;
 	job_status.swap( pCoolClient->JobStatuses() );
-	//const CoolDown::Client::JobStatusMap& job_status = pCoolClient->ConstJobStatuses();
-	int status_count = job_status.size();
+	set<int> already_processed_handles;
+
+	//process the job info that already in the lua table
+	lua_pushnil(luaState);
+	while(lua_next(luaState, table_index) == 0){
+		//now the key is at -2, value is at -1
+
+		//value is a table, so we get the attr Handle from it
+		lua_getfield(luaState, -1, "Handle");
+		//now the Handle is at -1
+		if( lua_isnumber(luaState, -1) ){
+			int handle = lua_tonumber(luaState, -1);
+			already_processed_handles.insert(handle);
+			CoolDown::Client::JobStatusMap::iterator iter = job_status.find(handle);
+
+			if( iter == job_status.end() ){
+				//this job has been removed, so we delete this job info table
+				//notice the 2 is ( handle + table )
+				lua_pop(luaState, 2);
+				//push nil to gc
+				lua_pushnil(luaState);
+			}else{
+				//we still have this job, so pop the handle
+				lua_pop(luaState, 1);
+				//now the job info table is at -1
+				UpdateJobStatusTable(luaState, iter->second);
+			}
+			//the job info(value) or a nil value(for removed job) is at -1, so we must pop it to do the next iteration
+			lua_pop(luaState, 1);
+
+		}else{
+			poco_warning_f1(logger_, "Invalid Handle type : %s", string(lua_typename(luaState, -1)) );
+			lua_pushinteger(luaState, -1);
+			break;
+		}
+	}
+	
+	//make the global job info table is at the top
+	lua_settop(luaState, table_index);
+	//process new added job
 	CoolDown::Client::JobStatusMap::const_iterator citer = job_status.begin();
 	CoolDown::Client::JobStatusMap::const_iterator cend = job_status.end();
-
 	while( citer != cend ){
-		int this_top = lua_gettop(luaState);
-		int handle = citer->first;
-		const CoolDown::Client::JobStatus& status = citer->second;
-		//lua_pushinteger(luaState, handle);
-		lua_pushinteger(luaState, handle);
-		lua_gettable(luaState, table_index);
-		poco_notice(logger_, "Before judge the type of obj in given index");
-		//DumpLuaState(luaState);
-		if( lua_type(luaState, -1) == LUA_TTABLE) {
-			//we have this job info in table, so just update it
-		}
-		else if( lua_type(luaState, -1) == LUA_TNIL){
-			//DumpLuaState(luaState);
-			lua_pop(luaState, 1);
-			//DumpLuaState(luaState);
-			//we create the job info table
-			lua_createtable(luaState, 0, 8);
-			//DumpLuaState(luaState);
+		//pre condition : the global table is at the top of stack
+		//post condition : the global table is still at the top of stack
+		if( already_processed_handles.find(citer->first) == already_processed_handles.end() ){
+			//this job info has not been added to lua table
+			lua_createtable(luaState, 0, 9);
 			int this_table_index = lua_gettop(luaState);
-			//push invariant variables here( eg : Name, Type, Size )
+
+			const CoolDown::Client::JobStatus& status = citer->second;
+			lua_pushstring(luaState, "Handle");
+			lua_pushinteger(luaState, status.handle);
+			lua_settable(luaState, this_table_index);
+
 			lua_pushstring(luaState, "Name");
 			lua_pushstring(luaState, status.name.c_str());
 			lua_settable(luaState, this_table_index);
@@ -534,26 +565,88 @@ int CoolClientProxy::GetJobStatusTable(lua_State* luaState){
 			lua_pushnumber(luaState, status.size);
 			lua_settable(luaState, this_table_index);
 
+			UpdateJobStatusTable(luaState, status);
+			//now the table for this job is still at the top
+			//so we add this table to the global table
+			//first the the length of this table
+			unsigned len = lua_objlen(luaState, table_index);
+			//then push the next key to stack
+			lua_pushinteger(luaState, len + 1);
+			//and set the value
+			//now key is at -1, value is at -2
+			//so we exchange it 
+			lua_insert(luaState, -2);
+			//now key is at -2, value is at -1, so we set table
+			lua_settable(luaState, table_index);
+			//now both the key(handle) and the value(table for this job) is poped, so post condition satisfied
 		}else{
-			poco_warning_f2(logger_, "Unknown type of lua_Status at index : %d, type : %d",
-				handle, lua_type(luaState, -1));
-			lua_pushinteger(luaState, -1);
-			return 1;
+			//we have processed this job
+			continue;
 		}
-		//when we are here, the top of the stack is the table for this job
-		//we just update the variants
-		//DumpLuaState(luaState);
-		UpdateJobStatusTable(luaState, status);
-		//DumpLuaState(luaState);
-		lua_pushinteger(luaState, handle);
-		lua_insert(luaState, -2);
-		//poco_notice(logger_, "Before set table of one job");
-		//DumpLuaState(luaState);
-		lua_settable(luaState, table_index);
-		lua_settop(luaState, this_top);
 		++citer;
 	}
+	lua_settop(luaState, table_index);
 	return 1;
+	//CoolDown::Client::JobStatusMap job_status;
+	//job_status.swap( pCoolClient->JobStatuses() );
+	////const CoolDown::Client::JobStatusMap& job_status = pCoolClient->ConstJobStatuses();
+	//int status_count = job_status.size();
+	//CoolDown::Client::JobStatusMap::const_iterator citer = job_status.begin();
+	//CoolDown::Client::JobStatusMap::const_iterator cend = job_status.end();
+
+	//while( citer != cend ){
+	//	int this_top = lua_gettop(luaState);
+	//	int handle = citer->first;
+	//	const CoolDown::Client::JobStatus& status = citer->second;
+	//	//lua_pushinteger(luaState, handle);
+	//	lua_pushinteger(luaState, handle);
+	//	lua_gettable(luaState, table_index);
+	//	poco_notice(logger_, "Before judge the type of obj in given index");
+	//	//DumpLuaState(luaState);
+	//	if( lua_type(luaState, -1) == LUA_TTABLE) {
+	//		//we have this job info in table, so just update it
+	//	}
+	//	else if( lua_type(luaState, -1) == LUA_TNIL){
+	//		//DumpLuaState(luaState);
+	//		lua_pop(luaState, 1);
+	//		//DumpLuaState(luaState);
+	//		//we create the job info table
+	//		lua_createtable(luaState, 0, 8);
+	//		//DumpLuaState(luaState);
+	//		int this_table_index = lua_gettop(luaState);
+	//		//push invariant variables here( eg : Name, Type, Size )
+	//		lua_pushstring(luaState, "Name");
+	//		lua_pushstring(luaState, status.name.c_str());
+	//		lua_settable(luaState, this_table_index);
+
+	//		lua_pushstring(luaState, "Type");
+	//		lua_pushinteger(luaState, (int)status.status);
+	//		lua_settable(luaState, this_table_index);
+
+	//		lua_pushstring(luaState, "Size");
+	//		lua_pushnumber(luaState, status.size);
+	//		lua_settable(luaState, this_table_index);
+
+	//	}else{
+	//		poco_warning_f2(logger_, "Unknown type of lua_Status at index : %d, type : %d",
+	//			handle, lua_type(luaState, -1));
+	//		lua_pushinteger(luaState, -1);
+	//		return 1;
+	//	}
+	//	//when we are here, the top of the stack is the table for this job
+	//	//we just update the variants
+	//	//DumpLuaState(luaState);
+	//	UpdateJobStatusTable(luaState, status);
+	//	//DumpLuaState(luaState);
+	//	lua_pushinteger(luaState, handle);
+	//	lua_insert(luaState, -2);
+	//	//poco_notice(logger_, "Before set table of one job");
+	//	//DumpLuaState(luaState);
+	//	lua_settable(luaState, table_index);
+	//	lua_settop(luaState, this_top);
+	//	++citer;
+	//}
+	//return 1;
 }
 
 int CoolClientProxy::StopMakingTorrent(lua_State* luaState){

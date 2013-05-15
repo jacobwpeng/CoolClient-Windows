@@ -93,6 +93,7 @@ namespace CoolDown{
 
 				}
 				JobTransportStatus status;				//0 for stopped, 1 for paused, 2 for download active, 3 for upload active, 4 for inactive 
+				int handle;
 				int type;
 				string name;
 				Int64 size;

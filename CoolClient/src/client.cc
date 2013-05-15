@@ -978,6 +978,7 @@ namespace CoolDown{
 				status.size = info->torrentInfo.get_total_size();
 				status.type = info->torrentInfo.get_type();
 				status.status = JOB_PAUSED;	
+				status.handle = this_job_index;
 				FastMutex::ScopedLock lock_(this->job_status_mutex_);
 				job_status_[this_job_index] = status;
                 return ERROR_OK;
