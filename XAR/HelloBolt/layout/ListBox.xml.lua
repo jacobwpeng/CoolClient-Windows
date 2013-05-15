@@ -831,7 +831,17 @@ function ListBoxItem_OnInitControl(self)
 	local GB = MB*1024
 	--XLMessageBox(attr.Name)
 	if attr.Status ~= "" and statusobj then
-	    
+	    if attr.Status == 0 then
+			statusobj:SetResID('bitmap.listbox.taskitem.status.finished')
+		elseif attr.Status == 1 then
+			statusobj:SetResID('bitmap.listbox.taskitem.status.pause')
+		elseif attr.Status == 2 then
+			statusobj:SetResID('bitmap.listbox.taskitem.status.downloading')
+		elseif attr.Status == 3 then
+			statusobj:SetResID('bitmap.listbox.taskitem.status.uploading')
+		elseif attr.Status == 4 then
+			statusobj:SetResID('bitmap.listbox.taskitem.status.stopped')
+		end
 	end
 	if attr.Name ~= nil and nameobj then
 	    nameobj:SetText(attr.Name)

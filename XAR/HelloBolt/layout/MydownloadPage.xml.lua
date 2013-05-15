@@ -85,21 +85,32 @@ function OnListBoxSelectChanged(self,eventname,index)
 	openfolder:SetEnable(true)
 end
 
-function UpdateListBox(self, jobTable)
+function UpdateListBox(self)
 	local listbox = self:GetControlObject("listbox")
+	local statusbar = self:GetControlObject('tasklist.header')	
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	local jobTable = coolClientProxy:GetJobStatusTable()
+	if statusbar then
+		local attr = statusbar:GetAttribute()
+		if attr.SortBy ~= nil and jobTable ~= -1 then
+			statusbar:Sort(jobTable)
+		end
+	end
 	local downloadSpeed = 0--self:GetControlObject("text.download")
 	local uploadSpeed = 0--self:GetControlObject("text.upload")
 	local listboxAttr = listbox:GetAttribute()
-	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
-	local jobTable = coolClientProxy:GetJobStatusTable()
+
 	if jobTable ~= -1 then
 		--XLMessageBox(#jobTable)
 		listbox:ResetContent()
-		for k,v in pairs(jobTable) do
+
+		for k,v in ipairs(jobTable) do
+			--XLMessageBox(v.Size .. ' -> ' .. v.Progress)
 			listbox:AddItem(v)
 			downloadSpeed = downloadSpeed + v.DownloadSpeed
 			uploadSpeed = uploadSpeed + v.UploadSpeed
 		end
+		
 		listbox:UpdateUI()
 		local KB = 1024
 		local MB = KB*1024
@@ -158,12 +169,13 @@ function AddNewDownloadTask(self, path, name, torrent_type, files)
 			listbox:AddItem({Name = key, Size =  value})
 		end
 		listbox:UpdateUI()
+
 		folderName:SetText(name)
 		modalHostWnd:BindUIObjectTree(uiObjectTree)
 		local userData = {path = path, name = name, torrent_type = torrent_type, files = files}
 		modalHostWnd:SetUserData(userData)
 		modalHostWnd:DoModal(mainWnd:GetWndHandle())
-		
+
 		local objtreeManager = XLGetObject("Xunlei.UIEngine.TreeManager")	
 		objtreeManager:DestroyTree("Thunder.NewTaskModal.Instance")
 		hostWndManager:RemoveHostWnd("Thunder.NewTaskModal.Instance")

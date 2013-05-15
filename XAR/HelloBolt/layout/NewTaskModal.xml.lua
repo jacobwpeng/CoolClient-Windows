@@ -7,6 +7,11 @@ function OnCancelClick(self)
 	hostwnd:EndDialog(0)
 end
 
+function OnShowWindow(self)
+	local tree = self:GetBindUIObjectTree()
+	OnChooseAllClick(tree:GetUIObject('savepath'))
+end
+
 function OnNewTaskItemCheck(self, eventName, index, isCheck)
 	local owner = self:GetOwner()
 	local hostwnd = owner:GetBindHostWnd()

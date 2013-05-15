@@ -5,9 +5,9 @@
 		</attr_def>
 		<method_def>
 			<AddItem/>
+			<Sort file = "TasklistStatusBar.xml.lua" func="Sort"/>
 		</method_def>
 		<event_def>
-			
 		</event_def>
 		<objtemplate>
 			<children>

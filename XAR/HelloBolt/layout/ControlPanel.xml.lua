@@ -154,8 +154,12 @@ local function OnBtnNewTaskClick(self)--新建任务
 	local owner = self:GetOwner()
 	self:GetOwnerControl():GetOwnerControl():AddNewDownloadTask(path,name,torrent_type,files)
 end
-
-local function OnBtnDeleteClick(self, index)--删除任务
+local function OnBtnPauseClick(self)
+	local owner = self:GetOwnerControl()
+	local listbox = owner:GetControlObject('listbox')
+	
+end
+local function OnBtnDeleteClick(self)--删除任务
 
 	local templateManager = XLGetObject("Xunlei.UIEngine.TemplateManager")
 	local hostWndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
@@ -228,6 +232,8 @@ function OnBtnClick(self)
 		OnBtnConfigClick(self)
 	elseif id == "btn.newtask" then
 		OnBtnNewTaskClick(self)
+	elseif id == "btn.pause" then
+		OnBtnPauseClick(self)
 	elseif id == "btn.delete" then
 		OnBtnDeleteClick(self)
 	elseif id == "btn.seed" then

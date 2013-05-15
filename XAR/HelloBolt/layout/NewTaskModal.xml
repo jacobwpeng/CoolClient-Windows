@@ -398,6 +398,7 @@
 		</attr>
 		<eventlist>
 			<event name="OnCreate" file="NewTaskModal.xml.lua" func="OnCreate" />
+			<event name="OnShowWindow" file="NewTaskModal.xml.lua" func="OnShowWindow" />
 		</eventlist>		
 	</hostwndtemplate>	
 </xlue>
