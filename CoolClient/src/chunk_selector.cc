@@ -28,10 +28,10 @@ namespace CoolDown{
             BOOST_FOREACH(const string& fileid, jobInfo_.UniqueFileidList() ){
                 TorrentInfo::file_map_t::const_iterator iter = fileMap.find(fileid);
                 poco_assert( iter != fileMap.end() );
-                poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+                poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
                 poco_assert( iter->second.size() != 0 );
-                poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+                poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
                 int chunk_count = iter->second.at(0)->chunk_count();
                 for(int chunk_pos = 0; chunk_pos != chunk_count; ++chunk_pos){

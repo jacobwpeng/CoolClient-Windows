@@ -1,5 +1,6 @@
 #define BOOST_DATE_TIME_NO_LIB 1
 #include "verification.h"
+#include "utilities.h"
 #include <cmath>
 #include <Poco/SharedMemory.h>
 #include <Poco/File.h>
@@ -66,7 +67,8 @@ namespace CoolDown{
 			file_engine_.reset();
 			using namespace boost::interprocess;
 			Int64 file_size = file.getSize();
-			file_mapping m_file(file.path().c_str(), read_only);
+			string gbFilename(UTF82GBK(file.path()));
+			file_mapping m_file( gbFilename.c_str(), read_only);
 			Int64 offset = 0;
 			while( offset + chunk_size < file_size ){
 				mapped_region region(m_file, read_only, offset, chunk_size);

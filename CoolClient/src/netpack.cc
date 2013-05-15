@@ -67,7 +67,7 @@ retcode_t NetPack::receiveFrom(NetPack::SockType& sock){
     retcode_t ret = this->receiveHeaderLength(sock, &headerLength);
     poco_debug_f2(logger_, "NetPack::receiveHeaderLength returns %d, local addr : %s", (int)ret, sock.address().toString());
     poco_assert( headerLength > 0 && headerLength < 1000);
-    poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+    poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
     if( ret != ERROR_OK ){
         poco_warning(logger_, "receiveHeaderLength error!");
         return ret;

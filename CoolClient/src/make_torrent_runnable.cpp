@@ -1,6 +1,7 @@
 #include "make_torrent_runnable.h"
 #include "client.h"
 #include "torrent.pb.h"
+#include "utilities.h"
 #include <exception>
 #include <Poco/Exception.h>
 #include <Poco/Util/Application.h>
@@ -19,7 +20,7 @@ namespace CoolDown{
 			Logger& logger_ = Application::instance().logger();
 			try{
 				Torrent::Torrent torrent;
-				retcode_t ret = pCoolClient_->MakeTorrent(path_, torrent_name_, chunk_size_, torrent_type_, tracker_address_, 
+				retcode_t ret = pCoolClient_->MakeTorrent( path_, torrent_name_, chunk_size_, torrent_type_, tracker_address_, 
 					&torrent, &progress_obj_);
 				poco_debug_f1(logger_, "in MakeTorrentRunnable::run, Call CoolClient::MakeTorrent returns %d", 
 									(int)ret);

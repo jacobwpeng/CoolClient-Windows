@@ -244,7 +244,7 @@ namespace CoolDown{
                                                                                    fileInfo->relative_path(), 
                                                                                    fileInfo->filename())
                                 );
-                        poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+                        poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
                         FilePtr file = jobInfo_.localFileInfo.get_file(fileid);
                         try{
@@ -312,7 +312,7 @@ namespace CoolDown{
             string tracker_address(jobInfo_.torrentInfo.tracker_address());
             poco_debug_f1(logger_, "going to request clients from %s", tracker_address);
             poco_assert( jobInfo_.downloadInfo.percentage_map.find(fileid) != jobInfo_.downloadInfo.percentage_map.end() );
-            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
             int percentage = jobInfo_.downloadInfo.percentage_map[fileid];
             int needCount = 20;
             CoolClient::ClientIdCollection clientidList;
@@ -351,7 +351,7 @@ namespace CoolDown{
             pInfo->set_fileid(fileid);
             pInfo->set_hasfile(1);
             poco_assert( jobInfo_.downloadInfo.percentage_map.find(fileid) != jobInfo_.downloadInfo.percentage_map.end() );
-            poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+            poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
             pInfo->set_percentage(jobInfo_.downloadInfo.percentage_map[fileid]);
             Job::convert_bitmap_to_transport_format(jobInfo_.downloadInfo.bitmap_map[fileid], pInfo);
 
@@ -374,7 +374,7 @@ namespace CoolDown{
             JobInfo::owner_info_map_t& infoMap = jobInfo_.ownerInfoMap;
             JobInfo::owner_info_map_t::iterator iter = infoMap.find(fileid);
             poco_assert( iter != infoMap.end() );
-            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
             //since all clients are in the list, we just update the bitmap of peer client
             FileOwnerInfoPtrList& infoPtrList = iter->second;
@@ -382,11 +382,11 @@ namespace CoolDown{
                                                            FileOwnerInfoPtrSelector(clientid) );
             FileOwnerInfoPtr info;
             poco_assert( infoPtrList.end() != infoIter );
-            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
             info = *infoIter;
             Job::conver_transport_format_bitmap(peer.info(), info->bitmap_ptr);
             poco_assert( peer.info().filebitcount() == info->bitmap_ptr->size() );
-            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
             return ERROR_OK;
         }

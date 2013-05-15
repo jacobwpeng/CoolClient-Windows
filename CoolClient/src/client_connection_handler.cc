@@ -114,7 +114,7 @@ err:
                         poco_trace(logger_, "HandleUploadRequest succeed!");
                         //since the handle func return ERROR_OK, no reason for pTask to be NULL
                         poco_assert( pTask != NULL );
-                        poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+                        poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
                         this->pTask = pTask;
                     }
                     out->set_message(PAYLOAD_UPLOAD_REPLY, ur);

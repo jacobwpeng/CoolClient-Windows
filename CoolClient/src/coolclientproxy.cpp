@@ -39,7 +39,7 @@ namespace{
 		// 显示打开选择文件对话框。
 		if ( GetOpenFileNameA(&ofn) )
 		{
-			return string(szFile);
+			return GBK2UTF8(string(szFile));
 			//显示选择的文件。
 			//MessageBox(NULL,szFile,_T("File Selected"),MB_OK);
 		}else{
@@ -63,7 +63,7 @@ namespace{
 		if( lpItem != NULL )
 		{
 			SHGetPathFromIDListA(lpItem, szDir);
-			return string(szDir);
+			return GBK2UTF8(string(szDir));
 			//MessageBoxA(NULL, szDir, "目录选择成功", MB_OK);
 		}else{
 			return string();
@@ -232,9 +232,38 @@ int CoolClientProxy::GetResourceTorrentById(lua_State* luaState){
 		poco_debug_f2(logger_, "Call CoolClientProxy::GetResourceTorrentById with torrent_id : %d, torrent_name : %s",
 			torrent_id, torrent_name);
 		string local_torrent_path;
-		retcode_t ret = pCoolClient->GetResourceTorrentById(torrent_id, torrent_name, &local_torrent_path);
+		retcode_t ret = pCoolClient->DownloadTorrent(torrent_id, UTF82GBK(torrent_name));
+		//retcode_t ret = pCoolClient->GetResourceTorrentById(torrent_id, UTF82GBK(torrent_name), &local_torrent_path);
 		if( ret != ERROR_OK ){
 			poco_warning_f1(logger_, "pCoolClient->GetResourceTorrentById returns %d", (int)ret);
+			lua_pushinteger(luaState, -1);
+			return 1;
+		}else{
+			string gb_torrent_path = pCoolClient->get_torrent_path(UTF82GBK(torrent_name));
+			Torrent::Torrent torrent;
+			retcode_t parse_ret = pCoolClient->ParseTorrent(gb_torrent_path, &torrent);
+			if( parse_ret != ERROR_OK ){
+				poco_warning_f2(logger_, "in CoolClientProxy::SelectTorrent, cannot parsetorrent of path : %s, ret : %d", 
+					GBK2UTF8(gb_torrent_path), (int)parse_ret);
+				lua_pushinteger(luaState, -1);
+				return 1;
+			}else{
+				int file_count = torrent.file().size();
+				Path p(gb_torrent_path);
+				string name = p.getBaseName();
+				lua_pushstring(luaState, GBK2UTF8(gb_torrent_path).c_str());
+				lua_pushstring(luaState, GBK2UTF8(name).c_str());
+				lua_pushinteger(luaState, torrent.type());
+				lua_createtable(luaState, 0, file_count);
+				for(int pos = 0; pos != file_count; ++pos){
+					const Torrent::File& oneFile = torrent.file(pos);
+					string full_relative_path = oneFile.relativepath() + oneFile.filename();
+					lua_pushstring(luaState, full_relative_path.c_str());
+					lua_pushnumber(luaState, oneFile.size());
+					lua_settable(luaState, -3);
+				}
+				return 4;
+			}
 		}
 	}else{
 		poco_warning(logger_, "Invalid args of CoolClientProxy::GetResourceTorrentById.");
@@ -344,20 +373,20 @@ string CoolClientProxy::GetTorrentNameByResourcePath(const string& resource_path
 
 int CoolClientProxy::SelectTorrent(lua_State* luaState){
 	string torrent_path = OpenFileSelectDialog("");
-	string utf8_torrent_path = GBK2UTF8(torrent_path);
+	string gb_torrent_path = UTF82GBK(torrent_path);
 	Torrent::Torrent torrent;
-	retcode_t parse_ret = pCoolClient->ParseTorrent(utf8_torrent_path, &torrent);
+	retcode_t parse_ret = pCoolClient->ParseTorrent(gb_torrent_path, &torrent);
 	if( parse_ret != ERROR_OK ){
 		poco_warning_f2(logger_, "in CoolClientProxy::SelectTorrent, cannot parsetorrent of path : %s, ret : %d", 
-			utf8_torrent_path, (int)parse_ret);
+			torrent_path, (int)parse_ret);
 		lua_pushinteger(luaState, -1);
 		return 1;
 	}else{
 		int file_count = torrent.file().size();
-		Path p(utf8_torrent_path);
+		Path p(gb_torrent_path);
 		string name = p.getBaseName();
-		lua_pushstring(luaState, utf8_torrent_path.c_str());
-		lua_pushstring(luaState, name.c_str());
+		lua_pushstring(luaState, torrent_path.c_str());
+		lua_pushstring(luaState, GBK2UTF8(name).c_str());
 		lua_pushinteger(luaState, torrent.type());
 		lua_createtable(luaState, 0, file_count);
 		for(int pos = 0; pos != file_count; ++pos){
@@ -378,6 +407,7 @@ int CoolClientProxy::AddNewDownload(lua_State* luaState){
 		&& lua_istable(luaState, 4)			//files selected
 		){
 			string torrent_path = lua_tostring(luaState, 2);
+			string gb_torrent_path( UTF82GBK(torrent_path) );
 			string local_path = lua_tostring(luaState, 3);
 			CoolDown::Client::FileIdentityInfoList needs;
 			poco_trace(logger_, "Before traverse the needs file table");
@@ -404,9 +434,9 @@ int CoolClientProxy::AddNewDownload(lua_State* luaState){
 			}
 			
 			Torrent::Torrent torrent;
-			poco_assert(ERROR_OK == pCoolClient->ParseTorrent(torrent_path, &torrent));
+			poco_assert(ERROR_OK == pCoolClient->ParseTorrent(gb_torrent_path, &torrent));
 			int handle;
-			retcode_t ret = pCoolClient->AddNewDownloadJob(torrent_path, torrent, needs, local_path + Path::separator(), &handle);
+			retcode_t ret = pCoolClient->AddNewDownloadJob(gb_torrent_path, torrent, needs, local_path + Path::separator(), &handle);
 			if( ERROR_OK != ret ){
 				poco_warning_f1(logger_, "in CoolClientProxy::AddNewDownload, CoolClient::AddNewDownloadJob returns %d",
 					(int)ret);
@@ -491,7 +521,7 @@ int CoolClientProxy::GetJobStatusTable(lua_State* luaState){
 			int this_table_index = lua_gettop(luaState);
 			//push invariant variables here( eg : Name, Type, Size )
 			lua_pushstring(luaState, "Name");
-			lua_pushstring(luaState, status.name.c_str());
+			lua_pushstring(luaState, GBK2UTF8(status.name).c_str());
 			lua_settable(luaState, this_table_index);
 
 			lua_pushstring(luaState, "Type");

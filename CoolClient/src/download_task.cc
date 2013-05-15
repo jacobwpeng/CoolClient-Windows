@@ -83,7 +83,7 @@ namespace CoolDown{
             poco_debug(logger_, "Upload Message exchange succeed, now goto the real download.");
             int chunk_size = fileInfo_.chunk_size(chunk_pos_);
             poco_assert( chunk_size != -1 );
-            poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+            poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
             int nRecv = 0;
             int nLeft = chunk_size;
@@ -132,9 +132,9 @@ namespace CoolDown{
             }
             string content(recvBuffer.begin(), recvBuffer.size());
             poco_assert(content.length() == chunk_size );
-            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
             poco_assert(nRecv == chunk_size );
-            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
             string content_check_sum( Verification::get_verification_code(content) );
 

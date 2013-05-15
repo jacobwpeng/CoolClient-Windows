@@ -91,7 +91,9 @@ namespace CoolDown{
                 ServerApplication::initialize(self);
 
 				Logger& logger_ = Logger::get("FileLogger");
+				//logger_.getChannel()->setProperty("rotation", "1 M")
                 setLogger(logger_);
+
 				
                 LOCAL_PORT = (unsigned short) config().getInt("client.message_port", 9025);
 				
@@ -120,10 +122,10 @@ namespace CoolDown{
 						torrent_dir.createDirectories();
 					}
 
-					//retcode_t ret = this->ReloadJobHistory(this->history_file_path_);
-					//if( ret != ERROR_OK ){
-					//	poco_warning_f1(logger(), "ReloadJobHistory returns %d", (int)ret);
-					//}
+					retcode_t ret = this->ReloadJobHistory(this->history_file_path_);
+					if( ret != ERROR_OK ){
+						poco_warning_f1(logger(), "ReloadJobHistory returns %d", (int)ret);
+					}
                 }
                 catch(Exception& e){
                     poco_error_f1(logger(), "Got exception in initialize : %s", msg);
@@ -133,8 +135,8 @@ namespace CoolDown{
             }
 
             void CoolClient::uninitialize(){
-                //this->SaveJobHistory( history_file_path_ );
-				//poco_trace(logger(), "Return from SaveJobHistory");
+                this->SaveJobHistory( history_file_path_ );
+				poco_trace(logger(), "Return from SaveJobHistory");
 				
 				//crash when waiting two threads below.... so we just do not wait them....
 				/*
@@ -306,11 +308,20 @@ namespace CoolDown{
 				int c = decoder.get();
 				while (c != -1) { torrent_content += char(c); c = decoder.get(); }
 
-				Torrent::Torrent torrent;
-				if( false == torrent.ParseFromString(torrent_content) ){
-					poco_warning(logger(), "in CoolClient::DownloadTorrent, cannot ParseFromString");
-					return ERROR_PROTO_PARSE_ERROR;
-				}
+				string torrent_path( get_torrent_path(torrent_name) );
+				std::locale loc = std::locale::global(std::locale(""));
+				ofstream ofs(torrent_path.c_str());
+				std::locale::global(loc);
+				ofs.write(torrent_content.data(), torrent_content.length());
+				ofs.close();
+				return ERROR_OK;
+
+
+				//Torrent::Torrent torrent;
+				//if( false == torrent.ParseFromString(torrent_content) ){
+				//	poco_warning(logger(), "in CoolClient::DownloadTorrent, cannot ParseFromString");
+				//	return ERROR_PROTO_PARSE_ERROR;
+				//}
 				return ERROR_OK;
 			}
 
@@ -470,8 +481,11 @@ namespace CoolDown{
 					poco_warning_f1(logger(), "CoolDown::Client::download returns %d", ret);
 					return ERROR_UNKNOWN;
 				}
+
 				string torrent_path( get_torrent_path(torrent_name) );
+				std::locale loc = std::locale::global(std::locale(""));
 				ofstream ofs(torrent_path.c_str());
+				std::locale::global(loc);
 				ofs << torrent_content;
 				ofs.close();
 				local_torrent_path->swap(torrent_path);
@@ -479,7 +493,8 @@ namespace CoolDown{
 			}
 
 			SockPtr CoolClient::GetResourceServerSock(){
-				SockPtr res = this->sockManager_->get_resource_server_sock();
+
+				SockPtr res(this->sockManager_->get_resource_server_sock());
 				if( res.isNull() ){
 					if( ERROR_OK != this->ConnectResourceServer(this->resource_server_ip_) ){
 						//cannot connect to resource server now
@@ -545,14 +560,16 @@ namespace CoolDown{
                 poco_notice_f4(logger(), "%s, chunk_size : %d, type : %d, tracker_address : %s", 
                         pathmsg, chunk_size, type, tracker_address);
 
-                File f(path);
+                File f( path );
                 string top_path = Path(f.path()).parent().toString();
                 if( !f.exists() ){
                     return ERROR_FILE_NOT_EXISTS;
                 }
-				string torrent_file_path = get_torrent_path(torrent_filename);
+				string torrent_file_path = get_torrent_path( UTF82GBK(torrent_filename) );
 
+				std::locale loc = std::locale::global(std::locale(""));
 				ofstream ofs( torrent_file_path.c_str(), ofstream::binary);
+				std::locale::global(loc);
 				if( !ofs ){
 					return ERROR_FILE_CANNOT_CREATE;
 				}
@@ -678,11 +695,11 @@ namespace CoolDown{
                 string peer_clientid( peer.clientid() );
                 poco_trace_f1(logger(), "assert if connect to '%s'", peer_clientid);
                 poco_assert( sockManager_->is_connected(peer_clientid) );
-                poco_trace_f2(logger(), "pass assert at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+                poco_trace_f2(logger(), "pass assert at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
                 LocalSockManager::SockPtr sock( sockManager_->get_idle_client_sock(peer_clientid) );
                 poco_assert( sock.isNull() == false );
-                poco_trace_f2(logger(), "pass assert at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+                poco_trace_f2(logger(), "pass assert at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
                 //use guard to return_sock automatically 
                 typedef shared_ptr<LocalSockManager::SockPtr> SockGuard;
@@ -1168,7 +1185,10 @@ namespace CoolDown{
 			}
 
             retcode_t CoolClient::ParseTorrent(const Path& torrent_file_path, Torrent::Torrent* pTorrent){
+				std::locale loc = std::locale::global(std::locale(""));
 				ifstream ifs( torrent_file_path.toString().c_str(), ifstream::binary);
+				std::locale::global(loc);
+
                 if( !ifs ){
                     poco_debug_f1(logger(), "Cannot open %s in ParseTorrent.", torrent_file_path.toString());
                     return ERROR_FILE_NOT_EXISTS;

@@ -15,8 +15,12 @@
 #include <string>
 #include <Shlwapi.h>
 
+#include <boost/interprocess/shared_memory_object.hpp>
+
 
 using namespace std;
+
+#define COOLCLIENT_UNIQUE_ID  "AD4S5FQ4E58F5A1FDS231FCA56D1C56AD1S5F4Q8EW94FQA5WE15F56WAEF1A3S2F"
 
 const WCHAR* GetResDir()
 {
@@ -117,6 +121,22 @@ void test_dialog(){
 	// 打开文件打开对话框，如果选中文件，则NewGame
 }
 
+bool test_unique(){
+	//using namespace boost::interprocess;
+	//try{
+	//	static shared_memory_object shm_obj
+	//		(create_only                  //only create
+	//		,COOLCLIENT_UNIQUE_ID         //name
+	//		,read_only                   //read-write mode
+	//		);
+	//	return true;
+	//}catch(...){
+	//	return false;
+	//}
+	return true;
+
+}
+
 
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
@@ -126,7 +146,11 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 {
 	// TODO: 在此放置代码。
 
-	test_dialog();
+	bool isUnique = test_unique();
+	if( isUnique == false ){
+		MessageBoxA(NULL, "只允许创建一个CoolClient实例!", NULL, MB_OK);
+		return -1;
+	}
 	if(!InitXLUE())
 	{
 		MessageBoxW(NULL,L"初始化XLUE 失败!",L"错误",MB_OK);

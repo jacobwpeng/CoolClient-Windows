@@ -167,14 +167,14 @@ namespace CoolDown{
             iter->second = IDLE;
             FastMutex::ScopedLock cond_lock(condition_map_mutex_);
             poco_assert( condition_map_.find(clientid) != condition_map_.end() );
-            poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+            poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
             condition_map_[clientid]->signal();
         }
 
         LocalSockManager::ConditionPtr LocalSockManager::get_sock_idel_condition(const string& clientid){
             FastMutex::ScopedLock cond_lock(condition_map_mutex_);
             poco_assert( condition_map_.find(clientid) != condition_map_.end() );
-            poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), __LINE__ - 1);
+            poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
             return condition_map_[clientid];
         }
 
