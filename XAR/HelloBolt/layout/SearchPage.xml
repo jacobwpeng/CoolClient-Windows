@@ -35,6 +35,9 @@
 								<width>350</width>
 								<height>32</height>
 							</attr>
+							<eventlist>
+								<event name="OnKeyEnterDown" file="SearchPage.xml.lua" func="OnKeyEnterDown" />
+							</eventlist>
 						</obj>
 						<obj id="searchbtn" class="Thunder.ImageButton.Ctrl">
 							<attr>
@@ -161,6 +164,9 @@
 								<height>32</height>
 								<HasBtn>true</HasBtn>
 							</attr>
+							<eventlist>
+								<event name="OnKeyEnterDown" file="SearchPage.xml.lua" func="OnKeyEnterDown" />
+							</eventlist>
 						</obj>								
 						<obj id="searchbtn" class="Thunder.ImageButton.Ctrl">
 							<attr>

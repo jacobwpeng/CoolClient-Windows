@@ -370,3 +370,12 @@ function OnResItemSave(self, eventName, index)
 	XLMessageBox(path)
 	downloadpage:AddNewDownloadTask(path,name,torrent_type,files)
 end
+
+function OnKeyEnterDown(self,eventName)
+	if self:GetOwnerControl():GetClass() == "SearchPage" then
+		OnSearchPageSearchBtnClick(self:GetOwnerControl():GetControlObject('searchbtn'))
+	else
+		OnResultPageSearchBtnClick(self:GetOwnerControl():GetControlObject('searchbtn'))
+	end
+	--XLMessageBox('enterdown')
+end

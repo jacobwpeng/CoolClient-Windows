@@ -62,9 +62,14 @@ function OnOKClick(self)
 	local ret = coolClientProxy:AddNewDownload(torrentpath, savepath, userData.SelectedFiles)
 	if ret == -1 then
 		--添加下载失败
+		hostwnd:EndDialog(0)
 		return
 	else
 		hostwnd:EndDialog(0)
+		local treeManager = XLGetObject("Xunlei.UIEngine.TreeManager")                    
+		local tree = treeManager:GetUIObjectTree("MainObjectTree")
+		local tabctrl= tree:GetUIObject("tabbkg")
+		tabctrl:ActivePage("MydownloadPage")
 		return
 	end
 	local treeManager = XLGetObject("Xunlei.UIEngine.TreeManager")				
@@ -113,6 +118,7 @@ function OnOKClick(self)
 		ani:Resume()
 		turnoffani = ani
 	end
+	
 	--[[
 	if not maskani then
 		local obj1 = maskobj
