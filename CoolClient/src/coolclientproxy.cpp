@@ -229,6 +229,7 @@ int CoolClientProxy::GetResourceTorrentById(lua_State* luaState){
 	if( lua_isnumber(luaState, 2) && lua_isstring(luaState, 3) ){
 		int torrent_id = lua_tointeger(luaState, 2);
 		string torrent_name = lua_tostring(luaState, 3);
+		torrent_name += ".cd";
 		poco_debug_f2(logger_, "Call CoolClientProxy::GetResourceTorrentById with torrent_id : %d, torrent_name : %s",
 			torrent_id, torrent_name);
 		string local_torrent_path;
