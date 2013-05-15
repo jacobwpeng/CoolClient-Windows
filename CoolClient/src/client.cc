@@ -91,7 +91,7 @@ namespace CoolDown{
                 ServerApplication::initialize(self);
 
 				Logger& logger_ = Logger::get("FileLogger");
-				//logger_.getChannel()->setProperty("rotation", "1 M")
+				logger_.getChannel()->setProperty("rotation", "10 minutes");
                 setLogger(logger_);
 
 				
@@ -1051,11 +1051,13 @@ namespace CoolDown{
                     JobInfoPtr pInfo = p.second->MutableJobInfo();
 					//Upload Speed of this job
                     UInt64 bytes_upload_this_second = pInfo->downloadInfo.bytes_upload_this_second;
-					status.upload_speed_per_second_in_bytes = static_cast<int>(bytes_upload_this_second);
+					status.upload_speed_per_second_in_bytes = status.upload_speed_per_second_in_bytes * 0.8
+																+ 0.2 * static_cast<int>(bytes_upload_this_second);
 
 					//Download Speed of this Job
                     UInt64 bytes_download_this_second = pInfo->downloadInfo.bytes_download_this_second;
-					status.download_speed_per_second_in_bytes = static_cast<int>(bytes_download_this_second);
+					status.download_speed_per_second_in_bytes = status.download_speed_per_second_in_bytes * 0.8 
+																+ 0.2 * static_cast<int>(bytes_download_this_second);
 
 					UInt64 bytes_left = status.size - pInfo->downloadInfo.download_total;
 					if( bytes_download_this_second == 0){
@@ -1126,7 +1128,8 @@ namespace CoolDown{
 						status_code = JOB_INACTIVE;
 					}
 
-					if( p.second->is_running() == false ){
+					if( p.second->is_running() == false 
+									&& pInfo->downloadInfo.download_total == pInfo->torrentInfo.get_total_size()){
 						status_code = JOB_UPLOADING;
 						status.percentage = 100;
 						status.remaing_time_in_seconds = 0;
