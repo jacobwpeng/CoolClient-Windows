@@ -20,8 +20,6 @@
 
 using namespace std;
 
-#define COOLCLIENT_UNIQUE_ID  "AD4S5FQ4E58F5A1FDS231FCA56D1C56AD1S5F4Q8EW94FQA5WE15F56WAEF1A3S2F"
-
 const WCHAR* GetResDir()
 {
 	static WCHAR wszModulePath[MAX_PATH];
@@ -122,18 +120,18 @@ void test_dialog(){
 }
 
 bool test_unique(){
-	//using namespace boost::interprocess;
-	//try{
-	//	static shared_memory_object shm_obj
-	//		(create_only                  //only create
-	//		,COOLCLIENT_UNIQUE_ID         //name
-	//		,read_only                   //read-write mode
-	//		);
-	//	return true;
-	//}catch(...){
-	//	return false;
-	//}
-	return true;
+	using namespace boost::interprocess;
+	try{
+		static shared_memory_object shm_obj
+			(create_only                  //only create
+			,COOLCLIENT_UNIQUE_ID         //name
+			,read_only                   //read-write mode
+			);
+		return true;
+	}catch(...){
+		return false;
+	}
+	//return true;
 
 }
 
@@ -180,6 +178,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	}
 
 	UninitXLUE();
+
 
 	return (int) msg.wParam;
 }

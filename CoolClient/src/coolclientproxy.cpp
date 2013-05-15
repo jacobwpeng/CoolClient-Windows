@@ -10,6 +10,7 @@
 #include <Poco/Logger.h>
 #include <Poco/Types.h>
 #include <Poco/Path.h>
+#include <boost/interprocess/shared_memory_object.hpp>
 
 using std::string;
 using Poco::Int64;
@@ -566,6 +567,8 @@ int CoolClientProxy::StopClient(lua_State* luaState){
 	poco_trace(logger_, "Call CoolClientProxy::StopClient");
 	pCoolClient->StopClient();
 	while( pCoolClient->exiting() == false);
+	using namespace boost::interprocess;
+	shared_memory_object::remove(COOLCLIENT_UNIQUE_ID);
 	return 0;
 }
 
