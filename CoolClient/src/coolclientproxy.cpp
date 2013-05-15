@@ -502,7 +502,7 @@ int CoolClientProxy::GetJobStatusTable(lua_State* luaState){
 
 	//process the job info that already in the lua table
 	lua_pushnil(luaState);
-	while(lua_next(luaState, table_index) == 0){
+	while(lua_next(luaState, table_index) != 0){
 		//now the key is at -2, value is at -1
 
 		//value is a table, so we get the attr Handle from it
@@ -581,7 +581,6 @@ int CoolClientProxy::GetJobStatusTable(lua_State* luaState){
 			//now both the key(handle) and the value(table for this job) is poped, so post condition satisfied
 		}else{
 			//we have processed this job
-			continue;
 		}
 		++citer;
 	}
