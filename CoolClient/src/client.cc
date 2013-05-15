@@ -31,8 +31,6 @@
 #include <Poco/Net/NetException.h>
 #include <Poco/Thread.h>
 #include <Poco/RunnableAdapter.h>
-#include <Poco/UTF8Encoding.h>
-#include <Poco/Windows1252Encoding.h>
 #include <Poco/TextConverter.h>
 #include <Poco/Base64Encoder.h>
 #include <Poco/Base64Decoder.h>
@@ -187,7 +185,7 @@ namespace CoolDown{
                 this->report_progress_thread_.start( reportProgressRunnable );
 
 				{
-					Torrent::Torrent torrent;
+					//Torrent::Torrent torrent;
 					//this->ParseTorrent("E:\\repos\\CoolClient-Windows\\CoolClient\\Torrents\\dependences.rar.cd", &torrent);
 					//retcode_t ret = ERROR_OK;
 					//ret = this->DownloadTorrent(46, "");
