@@ -184,6 +184,7 @@ function OnResultPageSearchBtnClick(self)--结果页面的搜索按钮
 	attr.SearchParam.KeyWords = edit:GetText()
 	attr.CurPage = 1
 	attr.LastPage = 1
+	listbox:ResetContent()
 	--更新listbox数据
 	
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
@@ -360,5 +361,12 @@ end
 function OnResItemSave(self, eventName, index)
 	--XLMessageBox(index)
 	local attr = self:GetAttribute()
-	--XLMessageBox(attr.ItemDataTable[index+1].Name.."id:"..attr.ItemDataTable[index+1].TorrentId)
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	--XLMessageBox(index)
+	local path,name,torrent_type,files = coolClientProxy:GetResourceTorrentById(tonumber(attr.ItemDataTable[index].TorrentId), attr.ItemDataTable[index].Name)
+	local treeManager = XLGetObject("Xunlei.UIEngine.TreeManager")				
+	local tree = treeManager:GetUIObjectTree("MainObjectTree")
+	local downloadpage = tree:GetUIObject("tabbkg"):GetControlObject("MydownloadPage")
+	XLMessageBox(path)
+	downloadpage:AddNewDownloadTask(path,name,torrent_type,files)
 end

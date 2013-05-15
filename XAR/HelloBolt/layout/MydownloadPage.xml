@@ -5,6 +5,7 @@
 		</attr_def>
 		<method_def>
 			<UpdateListBox file="MydownloadPage.xml.lua" func="UpdateListBox" />
+			<AddNewDownloadTask file="MydownloadPage.xml.lua" func="AddNewDownloadTask" />
 		</method_def>
 		<event_def>
 			

@@ -206,6 +206,7 @@
 													<valign>center</valign>
 													<halign>center</halign>
 													<image>bitmap.newtaskmodal.folder.normal</image>
+													<zorder>1000</zorder>
 												</attr>
 											</obj>
 										</children>

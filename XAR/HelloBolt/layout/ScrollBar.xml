@@ -75,13 +75,13 @@
 			</attr>
 		
 			<attr name="WheelSpeed" type="int">
-				<default>20</default>
+				<default>10</default>
 			</attr>
 			<attr name="NavigationSpeed" type="int">
 				<default>15</default>
 			</attr>
 			<attr name="NavigationAcceleration" type="float">
-				<default>10</default>
+				<default>8</default>
 			</attr>
 			<attr name="PageSize" type="int">
 				<default>20</default>

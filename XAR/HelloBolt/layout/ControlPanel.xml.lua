@@ -151,49 +151,8 @@ end
 local function OnBtnNewTaskClick(self)--新建任务
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
 	local path, name, torrent_type, files = coolClientProxy:SelectTorrent()
-	
-	if path == -1 then
-		--不是种子文件
-		XLMessageBox("path  = -1")
-	else
-		--XLMessageBox(path)
-		--XLMessageBox(name)
-		--XLMessageBox(string.format("path:%s name:%s type:%s"),type(path),type(name),type(torrent_type))
-		local templateManager = XLGetObject("Xunlei.UIEngine.TemplateManager")
-		local hostWndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
-		local mainWnd = hostWndManager:GetHostWnd("MainFrame")
-		local modalHostWndTemplate = templateManager:GetTemplate("Thunder.NewTaskModal","HostWndTemplate")
-		local modalHostWnd = modalHostWndTemplate:CreateInstance("Thunder.NewTaskModal.Instance")
-		local objectTreeTemplate = templateManager:GetTemplate("Thunder.NewTaskModal","ObjectTreeTemplate")
-		local uiObjectTree = objectTreeTemplate:CreateInstance("Thunder.NewTaskModal.Instance")
-		local folderName = uiObjectTree:GetUIObject("foldername")
-		local typeobj = uiObjectTree:GetUIObject("type")
-		local listbox = uiObjectTree:GetUIObject("listbox")
-		if torrent_type and typeobj then
-			if torrent_type == 1 then
-				typeobj:SetResID("bitmap.listbox.taskitem.type.movie")
-			elseif torrent_type == 2 then
-				typeobj:SetResID("bitmap.listbox.taskitem.type.music")
-			elseif torrent_type == 4 then
-				typeobj:SetResID("bitmap.listbox.taskitem.type.game")
-			elseif torrent_type == 8 then
-				typeobj:SetResID("bitmap.listbox.taskitem.type.book")
-			end
-		end
-		for key, value in pairs(files) do
-			listbox:AddItem({Name = key, Size =  value})
-		end
-		listbox:UpdateUI()
-		folderName:SetText(name)
-		modalHostWnd:BindUIObjectTree(uiObjectTree)
-		local userData = {path = path, name = name, torrent_type = torrent_type, files = files}
-		modalHostWnd:SetUserData(userData)
-		modalHostWnd:DoModal(mainWnd:GetWndHandle())
-		
-		local objtreeManager = XLGetObject("Xunlei.UIEngine.TreeManager")	
-		objtreeManager:DestroyTree("Thunder.NewTaskModal.Instance")
-		hostWndManager:RemoveHostWnd("Thunder.NewTaskModal.Instance")
-	end
+	local owner = self:GetOwner()
+	self:GetOwnerControl():GetOwnerControl():AddNewDownloadTask(path,name,torrent_type,files)
 end
 
 local function OnBtnDeleteClick(self, index)--删除任务

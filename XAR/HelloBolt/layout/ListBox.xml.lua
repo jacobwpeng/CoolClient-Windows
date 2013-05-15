@@ -93,7 +93,7 @@ local function ListBox_ItemOnSelect(self, name, index)
 		end
 	end
 	attr.CurSel = index + attr.BeginItem - 1
-	owner:FireExtEvent("OnSelectChanged", index)	
+	owner:FireExtEvent("OnSelectChanged", index + 1)	
 	--XLMessageBox(owner:GetClass())
 end
 
@@ -140,11 +140,9 @@ local function ListBox_CreateInstanceItem(self)--添加item实例，不同type�
 	attr.ItemTextWidth = 0
 	attr.HScrollBarShow = false
 	for i = 1, #attr.ItemDataTable do
-		--[[
 		if i > (attr.BeginItem + attr.ItemCountInOnePage * 3+3) then
-			break
+			--break
 		end
-		]]
 
 		local newListBoxItem = xarFactory:CreateUIObject("listbox"..i, attr.ItemType)		
 		local newListBoxItemAttr = newListBoxItem:GetAttribute()
@@ -164,6 +162,7 @@ local function ListBox_CreateInstanceItem(self)--添加item实例，不同type�
 				newListBoxItemAttr.Size = attr.ItemDataTable[i].Size
 				newListBoxItemAttr.Upload = attr.ItemDataTable[i].Upload
 				newListBoxItemAttr.Download = attr.ItemDataTable[i].Download
+				newListBoxItemAttr.TorrentId = attr.ItemDataTable[i].TorrentId
 			elseif attr.ItemType == "BaseUI.ListBox.NewTaskItem" then
 				if intIndex%2 ~= 0 then
 					newListBoxItemAttr.BkgNormalTextureID = "texture.newataskmodal.bkg.odd"
@@ -173,8 +172,7 @@ local function ListBox_CreateInstanceItem(self)--添加item实例，不同type�
 				newListBoxItemAttr.Name = attr.ItemDataTable[i].Name
 				newListBoxItemAttr.Size = attr.ItemDataTable[i].Size
 		end
-		--XLMessageBox(attr.ItemDataTable[i].Name.."i:"..i)
-		newListBoxItemAttr.Index = intIndex + 1	
+		newListBoxItemAttr.Index = intIndex
 					
 		local ctrlLeft, ctrlTop, cltrRight, ctrlBottom = bkgWndobj:GetObjPos()
 		bkgWndobj:AddChild(newListBoxItem)
@@ -828,6 +826,9 @@ function ListBoxItem_OnInitControl(self)
 	local uploadobj = self:GetControlObject("upload")
 	local downloadobj = self:GetControlObject("download")
 	local ctrlObj = self:GetControlObject("ctrl")
+	local KB = 1024
+	local MB = KB*1024
+	local GB = MB*1024
 	--XLMessageBox(attr.Name)
 	if attr.Status ~= "" and statusobj then
 	    
@@ -853,12 +854,23 @@ function ListBoxItem_OnInitControl(self)
 		i,j = string.find(attr.Time, "|.*")
 		timeobj:SetText(string.sub(attr.Time, i+1, j))
 	elseif attr.Time and dateobj == nil then
-		timeobj:SetText(attr.Time)
+		local minute = 60
+		local hour = minute*60
+		local content 
+		if attr.Time == -1 then
+			content = "--"
+		else
+			if attr.Time > hour then
+				content = string.format("%d小时%d分",math.floor(attr.Time/hour),attr.Time%hour)
+			elseif attr.Time > minute then
+				content = string.format("%d分%d秒",math.floor(attr.Time/minute),attr.Time%minute)
+			else
+				content = string.format("%d秒",attr.Time)
+			end		
+		end
+		timeobj:SetText(content)
 	end
 	if attr.Size ~= nil and sizeobj then
-		local KB = 1024
-		local MB = KB*1024
-		local GB = MB*1024
 		local content
 		if attr.Size > GB then
 			content = string.format("%.2f GB", attr.Size/GB)
@@ -875,13 +887,23 @@ function ListBoxItem_OnInitControl(self)
 		progressobj:SetProgress(attr.Progress)
 	end
 	if attr.Upload ~= nil and uploadobj then
-	    uploadobj:SetText(attr.Upload)
+		if self:GetClass() == "BaseUI.ListBox.TaskItem" then
+			local content
+			if attr.Upload > MB then
+				content = string.format("%.1fMB/s", attr.Upload/MB)
+			elseif attr.Upload > KB then
+				content = string.format("%dKB/s", attr.Upload/KB)
+			else
+				content = string.format("%dB/s", attr.Upload)
+			end
+			uploadobj:SetText(content)
+		else
+			uploadobj:SetText(attr.Upload)
+		end
 	end
 	if attr.Download ~= nil and downloadobj then
 		--XLMessageBox(attr.Download)
 		if self:GetClass() == "BaseUI.ListBox.TaskItem" then
-			local KB = 1024
-			local MB = KB*1024
 			local content
 			if attr.Download > MB then
 				content = string.format("%.1fMB/s", attr.Download/MB)
@@ -910,16 +932,16 @@ end
 
 function ListBoxItem_OnLButtonDown(self)
     local attr = self:GetAttribute()
+	self:SetCaptureMouse(true)
     ListBoxItem_UpdateRes(self,"down")
-	
-    self:SetCaptureMouse(true)
+    
 end
 
 function ListBoxItem_OnLButtonUp(self)
     local attr = self:GetAttribute()
-    if attr.NowState== "down" then
+    if attr.NowState == "down" then
 		attr.bSelect = true
-		self:FireExtEvent("OnSelect", attr.Index)
+		AsynCall(function() self:FireExtEvent("OnSelect", attr.Index) end)
     end
     self:SetCaptureMouse(false)
 end
@@ -955,7 +977,7 @@ end
 function OnResItemSave(self)
 	local ctrl = self:GetOwnerControl()
 	local attr = ctrl:GetAttribute()
-	ctrl:GetOwnerControl():FireExtEvent("OnResItemSave", attr.Index)
+	ctrl:GetOwnerControl():FireExtEvent("OnResItemSave", attr.Index+1)
 end
 
 function ListBoxItem_OnMouseWheel(self,x,y,distance)
@@ -966,6 +988,5 @@ end
 function OnNewTaskItemCheck(self, eventName, isCheck)
 	local attr = self:GetOwnerControl():GetAttribute()
 	local owner = self:GetOwnerControl():GetOwnerControl()
-	owner:FireExtEvent("OnNewTaskItemCheck",attr.Index, isCheck)
-	--XLMessageBox("itemcheck")
+	owner:FireExtEvent("OnNewTaskItemCheck",attr.Index+1, isCheck)
 end
