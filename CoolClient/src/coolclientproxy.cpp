@@ -595,6 +595,56 @@ int CoolClientProxy::TestTable(lua_State* luaState){
 
 }
 
+int CoolClientProxy::PauseJob(lua_State* luaState){
+	if( lua_isnumber(luaState, -1) ){
+		int job_handle = lua_tointeger(luaState, -1);
+		retcode_t ret = pCoolClient->PauseJob(job_handle);
+		if( ret != ERROR_OK ){
+			lua_pushinteger(luaState, -1);
+			return 1;
+		}
+		return 0;
+
+	}else{
+		poco_warning(logger_, "Invalid args of CoolClientProxy::PauseJob");
+		DumpLuaState(luaState);
+		return 0;
+	}
+}
+
+int CoolClientProxy::ResumeJob(lua_State* luaState){
+	if( lua_isnumber(luaState, -1) ){
+		int job_handle = lua_tointeger(luaState, -1);
+		retcode_t ret = pCoolClient->ResumeJob(job_handle);
+		if( ret != ERROR_OK ){
+			lua_pushinteger(luaState, -1);
+			return 1;
+		}
+		return 0;
+
+	}else{
+		poco_warning(logger_, "Invalid args of CoolClientProxy::ResumeJob");
+		DumpLuaState(luaState);
+		return 0;
+	}
+}
+int CoolClientProxy::StopJob(lua_State* luaState){
+	if( lua_isnumber(luaState, -1) ){
+		int job_handle = lua_tointeger(luaState, -1);
+		retcode_t ret = pCoolClient->StopJob(job_handle);
+		if( ret != ERROR_OK ){
+			lua_pushinteger(luaState, -1);
+			return 1;
+		}
+		return 0;
+
+	}else{
+		poco_warning(logger_, "Invalid args of CoolClientProxy::StopJob");
+		DumpLuaState(luaState);
+		return 0;
+	}
+}
+
 static XLLRTGlobalAPI CoolClientProxyMemberFunctions[] = {
 
 	//{"CreateInstance",CoolClientProxy::CreateInstance},
