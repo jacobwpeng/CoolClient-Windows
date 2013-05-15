@@ -522,7 +522,7 @@ int CoolClientProxy::GetJobStatusTable(lua_State* luaState){
 			int this_table_index = lua_gettop(luaState);
 			//push invariant variables here( eg : Name, Type, Size )
 			lua_pushstring(luaState, "Name");
-			lua_pushstring(luaState, GBK2UTF8(status.name).c_str());
+			lua_pushstring(luaState, status.name.c_str());
 			lua_settable(luaState, this_table_index);
 
 			lua_pushstring(luaState, "Type");
