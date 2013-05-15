@@ -861,7 +861,7 @@ function ListBoxItem_OnInitControl(self)
 			content = "--"
 		else
 			if attr.Time > hour then
-				content = string.format("%d小时%d分",math.floor(attr.Time/hour),attr.Time%hour)
+				content = string.format("%d小时%d分",math.floor(attr.Time/hour),math.floor(attr.Time%hour/minute))
 			elseif attr.Time > minute then
 				content = string.format("%d分%d秒",math.floor(attr.Time/minute),attr.Time%minute)
 			else

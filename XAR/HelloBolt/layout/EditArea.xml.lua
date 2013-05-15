@@ -41,7 +41,10 @@ function GetText(self)
 	return edit:GetText()
 end
 
-function OnKeyDown(self)
+function OnKeyDown(self,char,repeatCount,flags)
+	if char == 13 then
+		self:GetOwnerControl():FireExtEvent('OnKeyEnterDown')
+	end
 	local isFocus = self:GetFocus()
 	local ctrl = self:GetOwnerControl()
 	if isFocus then
