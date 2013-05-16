@@ -34,6 +34,7 @@
 #include <Poco/TextConverter.h>
 #include <Poco/Base64Encoder.h>
 #include <Poco/Base64Decoder.h>
+#include <Poco/FileChannel.h>
 
 
 
@@ -89,7 +90,12 @@ namespace CoolDown{
                 ServerApplication::initialize(self);
 
 				Logger& logger_ = Logger::get("FileLogger");
-				logger_.getChannel()->setProperty("rotation", "10 minutes");
+				Poco::FileChannel* pChannel = dynamic_cast<Poco::FileChannel*>(logger_.getChannel());
+				if( pChannel ){
+					//we read the logging config file and this is A file logger
+					pChannel->setProperty("rotation", "10 minutes");
+				}
+				//logger_.getChannel()->setProperty("rotation", "10 minutes");
                 setLogger(logger_);
 
 				
