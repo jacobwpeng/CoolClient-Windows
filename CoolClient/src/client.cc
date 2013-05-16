@@ -980,7 +980,7 @@ namespace CoolDown{
 
 				JobStatus status;
 				Path tmp(torrent_path);
-				status.name = tmp.getBaseName();
+				status.name = GBK2UTF8(tmp.getBaseName());
 				status.size = info->torrentInfo.get_total_size();
 				status.type = info->torrentInfo.get_type();
 				status.status = JOB_PAUSED;	
