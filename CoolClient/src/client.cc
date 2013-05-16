@@ -1063,7 +1063,7 @@ namespace CoolDown{
 						status.remaing_time_in_seconds = -1;
 					}else{
 						status.remaing_time_in_seconds = static_cast<int>( 
-															(double)bytes_left / bytes_download_this_second
+															(double)bytes_left / status.download_speed_per_second_in_bytes
 														);
 					}
 
