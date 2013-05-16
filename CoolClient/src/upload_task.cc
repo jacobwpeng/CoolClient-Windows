@@ -45,6 +45,7 @@ namespace CoolDown{
                 content = string( sm.begin() + offset_, chunk_size_ );*/
 				content = string( (char*)region.get_address(), chunk_size_);
             }
+			poco_trace(logger_, "Got content by mapped_region.");
             poco_assert( content.size() == chunk_size_ );
             poco_debug_f2(logger_, "going to send %d bytes to '%s'", chunk_size_, this->peerAddress_);
             int nSend = 0;

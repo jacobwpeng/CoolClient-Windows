@@ -11,6 +11,7 @@
 #include <Poco/Logger.h>
 #include <Poco/Types.h>
 #include <Poco/Path.h>
+#include <Poco/Random.h>
 #include <boost/interprocess/shared_memory_object.hpp>
 
 using std::set;
@@ -18,7 +19,9 @@ using std::string;
 using Poco::Int64;
 using CoolDown::Client::MakeTorrentRunnable;
 
+static Poco::Random rand_gen;
 namespace{
+	
 	string OpenFileSelectDialog(const string& init_path){
 		OPENFILENAMEA ofn;      // 公共对话框结构。
 		CHAR szFile[MAX_PATH]; // 保存获取文件名称的缓冲区。          
@@ -91,6 +94,8 @@ CoolClientProxy* __stdcall CoolClientProxy::Instance(void*){
 
 
 int CoolClientProxy::RunClientAsync(lua_State* luaState){
+	//seed the Random generator
+	rand_gen.seed();
 	//just run once, so no resource/memroy leak
 	ClientRunnable* backgroudClient = new ClientRunnable(CoolClientProxy::pCoolClient);
 	Poco::Thread* pThread = new Poco::Thread;
@@ -181,8 +186,9 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 			int fileid(oneRecord.fileid());
 			Int64 file_size(oneRecord.size());
 			int file_type(oneRecord.type());
-			int download_total = 9999;
-			int upload_total = 1;
+
+			int download_total = rand_gen.next(20);
+			int upload_total = rand_gen.next(10);
 		
 			int nNowTop = lua_gettop(luaState);
 			lua_rawgeti(luaState, LUA_REGISTRYINDEX, functionRef);
