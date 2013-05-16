@@ -737,6 +737,23 @@ int CoolClientProxy::StopJob(lua_State* luaState){
 	}
 }
 
+int CoolClientProxy::RemoveJob(lua_State* luaState){
+	if( lua_isnumber(luaState, -1) ){
+		int job_handle = lua_tointeger(luaState, -1);
+		retcode_t ret = pCoolClient->RemoveJob(job_handle);
+		if( ret != ERROR_OK ){
+			lua_pushinteger(luaState, -1);
+			return 1;
+		}
+		return 0;
+
+	}else{
+		poco_warning(logger_, "Invalid args of CoolClientProxy::RemoveJob");
+		DumpLuaState(luaState);
+		return 0;
+	}
+}
+
 static XLLRTGlobalAPI CoolClientProxyMemberFunctions[] = {
 
 	//{"CreateInstance",CoolClientProxy::CreateInstance},
@@ -751,6 +768,10 @@ static XLLRTGlobalAPI CoolClientProxyMemberFunctions[] = {
 	{"ChoosePath", CoolClientProxy::ChoosePath},
 	{"MakeTorrentAndPublish", CoolClientProxy::MakeTorrentAndPublish},
 	{"GetJobStatusTable", CoolClientProxy::GetJobStatusTable},
+	{"RemoveJob", CoolClientProxy::RemoveJob},
+	{"StopJob", CoolClientProxy::StopJob},
+	{"ResumeJob", CoolClientProxy::ResumeJob},
+	{"PauseJob", CoolClientProxy::PauseJob},
 	{NULL,NULL}
 };
 

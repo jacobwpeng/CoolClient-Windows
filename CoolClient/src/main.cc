@@ -22,7 +22,7 @@
 using namespace std;
 
 // The one and only CLimitSingleInstance object.
-CLimitSingleInstance g_SingleInstanceObj("Global\\{05CA3573-B449-4e0b-83F5-7FD612E378E9}");
+CLimitSingleInstance g_SingleInstanceObj(COOLCLIENT_UNIQUE_ID);
 
 
 const WCHAR* GetResDir()

@@ -12,6 +12,7 @@
 #include <Poco/TaskNotification.h>
 #include <Poco/SharedPtr.h>
 #include <Poco/ThreadPool.h>
+#include <Poco/Timestamp.h>
 
 using Poco::Logger;
 using Poco::Runnable;
@@ -22,6 +23,7 @@ using Poco::TaskFinishedNotification;
 using Poco::TaskFailedNotification;
 using Poco::SharedPtr;
 using Poco::ThreadPool;
+using Poco::Timestamp;
 
 namespace ClientProto{
     class FileInfo;
@@ -73,6 +75,7 @@ namespace CoolDown{
                 ThreadPool tp_;
                 TaskManager tm_;
                 Logger& logger_;
+				Timestamp last_time_request_clients;
         };
     }
 }

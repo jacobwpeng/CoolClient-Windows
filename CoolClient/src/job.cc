@@ -190,6 +190,12 @@ namespace CoolDown{
                         break;
                     }else if( chunk_info->status == NOOWNER ){
                         poco_notice(logger_, "all chunk left in queue are of no owners.");
+						Timestamp now;
+						if( last_time_request_clients - now < 1e5){
+							Poco::Thread::sleep(500);
+						}else{
+							last_time_request_clients = now;
+						}
                         this->reinit_file_owner_info(chunk_info->fileid);
                     }else{
                     }

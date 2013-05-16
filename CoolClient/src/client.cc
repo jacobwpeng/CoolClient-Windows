@@ -1100,8 +1100,10 @@ namespace CoolDown{
 						}
 					}
 
+					/*
                     poco_notice_f3(logger(), "Job handle : %d, upload speed : %s, download speed : %s",
                             handle, upload_speed, download_speed);
+							*/
 
                     pInfo->downloadInfo.upload_total += bytes_upload_this_second;
                     pInfo->downloadInfo.download_total += bytes_download_this_second;
