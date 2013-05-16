@@ -389,6 +389,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\unique_instance.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\upload_task.h"
 				>
 			</File>

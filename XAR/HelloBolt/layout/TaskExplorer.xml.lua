@@ -128,10 +128,18 @@ function OnLButtonDown(self)
 	local ownerAttr = self:GetOwnerControl():GetAttribute()
 	local selfAttr = self:GetAttribute()
 	local id = self:GetID()
+	local downloadpage = self:GetOwnerControl():GetOwnerControl()
+	local attr = downloadpage:GetAttribute()
 	
 	if id == "item.search" then
 		ItemSearchSelected(self)
-		return 
+		return
+	elseif id == "item.finished" and ownerAttr.CurrentChosen ~= id then
+		attr.TaskShowType = finished
+		downloadpage:UpdateListBox()
+	elseif id == 'item.download' and ownerAttr.CurrentChosen ~= id then
+		attr.TaskShowType = downloading
+		downloadpage:UpdateListBox()
 	end
 	
 	if ownerAttr.CurrentChosen ~= id then

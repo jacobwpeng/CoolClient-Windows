@@ -1,4 +1,5 @@
 #include "coolclientproxy.h"
+#include "unique_instance.h"
 #include <windows.h>
 #include <Commdlg.h>
 #include <Shlobj.h>
@@ -19,6 +20,10 @@
 
 
 using namespace std;
+
+// The one and only CLimitSingleInstance object.
+CLimitSingleInstance g_SingleInstanceObj("Global\\{05CA3573-B449-4e0b-83F5-7FD612E378E9}");
+
 
 const WCHAR* GetResDir()
 {
@@ -120,17 +125,21 @@ void test_dialog(){
 }
 
 bool test_unique(){
-	using namespace boost::interprocess;
-	try{
-		static shared_memory_object shm_obj
-			(create_only                  //only create
-			,COOLCLIENT_UNIQUE_ID         //name
-			,read_only                   //read-write mode
-			);
-		return true;
-	}catch(...){
+	if(g_SingleInstanceObj.IsAnotherInstanceRunning()){
 		return false;
 	}
+	return true;
+	//using namespace boost::interprocess;
+	//try{
+	//	static shared_memory_object shm_obj
+	//		(create_only                  //only create
+	//		,COOLCLIENT_UNIQUE_ID         //name
+	//		,read_only                   //read-write mode
+	//		);
+	//	return true;
+	//}catch(...){
+	//	return false;
+	//}
 	//return true;
 
 }

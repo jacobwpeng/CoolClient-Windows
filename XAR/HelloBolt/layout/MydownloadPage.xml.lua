@@ -100,17 +100,30 @@ function UpdateListBox(self)
 	local uploadSpeed = 0--self:GetControlObject("text.upload")
 	local listboxAttr = listbox:GetAttribute()
 
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	local jobTable = coolClientProxy:GetJobStatusTable()
+	local attr = self:GetAttribute()
 	if jobTable ~= -1 then
 		--XLMessageBox(#jobTable)
 		listbox:ResetContent()
-
-		for k,v in ipairs(jobTable) do
-			--XLMessageBox(v.Size .. ' -> ' .. v.Progress)
-			listbox:AddItem(v)
-			downloadSpeed = downloadSpeed + v.DownloadSpeed
-			uploadSpeed = uploadSpeed + v.UploadSpeed
+		if attr.TaskShowType == 'finished' then
+			for k,v in pairs(jobTable) do
+				if v.Status == 0 then
+					listbox:AddItem(v)
+				end
+				downloadSpeed = downloadSpeed + v.DownloadSpeed
+				uploadSpeed = uploadSpeed + v.UploadSpeed
+			end
+		elseif attr.TaskShowType == 'downloading' then
+			for k,v in pairs(jobTable) do
+				if v.Status == 1 then
+					listbox:AddItem(v)
+				end
+				downloadSpeed = downloadSpeed + v.DownloadSpeed
+				uploadSpeed = uploadSpeed + v.UploadSpeed
+			end
 		end
-		
+
 		listbox:UpdateUI()
 		local KB = 1024
 		local MB = KB*1024
