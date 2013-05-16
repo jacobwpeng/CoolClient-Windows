@@ -147,6 +147,7 @@ local function ListBox_CreateInstanceItem(self)--添加item实例，不同type�
 		local newListBoxItem = xarFactory:CreateUIObject("listbox"..i, attr.ItemType)		
 		local newListBoxItemAttr = newListBoxItem:GetAttribute()
 		if attr.ItemType == "BaseUI.ListBox.TaskItem" then
+				newListBoxItemAttr.Handle = attr.ItemDataTable[i].Handle
 				newListBoxItemAttr.Status = attr.ItemDataTable[i].Status
 				newListBoxItemAttr.Type = attr.ItemDataTable[i].Type
 				newListBoxItemAttr.Name = attr.ItemDataTable[i].Name

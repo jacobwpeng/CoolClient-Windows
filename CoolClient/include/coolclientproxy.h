@@ -4,7 +4,7 @@
 #define COOLCLIENT_PROXY_LUA_CLASS "CoolDown.CoolClient.Proxy.Class"
 #define COOLCLIENT_PROXY_LUA_OBJ "CoolDown.CoolClient.Proxy"
 #define JOB_STATUS_TABLE_NAME "JobStatusTable"
-#define COOLCLIENT_UNIQUE_ID  "AD4S5FQ4E58F5A1FDS231FCA56D1C5WJENCVN"
+#define COOLCLIENT_UNIQUE_ID  "AD4S5FQ4E58F5A1FDS231FC56D1C5W"
 
 #include "client.h"
 #include <Windows.h>
