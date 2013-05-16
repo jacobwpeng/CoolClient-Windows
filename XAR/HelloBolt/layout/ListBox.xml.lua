@@ -92,7 +92,7 @@ local function ListBox_ItemOnSelect(self, name, index)
 			end
 		end
 	end
-	attr.CurSel = index + attr.BeginItem - 1
+	attr.CurSel = index + attr.BeginItem 
 	owner:FireExtEvent("OnSelectChanged", index + 1)	
 	--XLMessageBox(owner:GetClass())
 end

@@ -123,7 +123,6 @@ function OnMouseLeave(self, x, y)
 			seqAnim:Resume()
 		end
 	end
-	return 0,true,true
 end
 function OnLButtonDown(self)
 	local owner = self:GetOwnerControl()
@@ -154,10 +153,31 @@ local function OnBtnNewTaskClick(self)--新建任务
 	local owner = self:GetOwner()
 	self:GetOwnerControl():GetOwnerControl():AddNewDownloadTask(path,name,torrent_type,files)
 end
-local function OnBtnPauseClick(self)
-	local owner = self:GetOwnerControl()
+local function OnBtnStartClick(self)--开始任务
+	local owner = self:GetOwnerControl():GetOwnerControl()
 	local listbox = owner:GetControlObject('listbox')
-	
+	local attr = listbox:GetAttribute()
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	if listbox:GetCurSel() ~= nil and listbox:GetCurSel() ~= -1 then
+		if coolClientProxy:ResumeJob(attr.ItemDataTable[listbox:GetCurSel()].Handle) == -1 then
+			XLMessageBox('resume job error')
+		else
+			self:SetEnable(false)
+		end
+	end
+end
+local function OnBtnPauseClick(self)--暂停任务
+	local owner = self:GetOwnerControl():GetOwnerControl()
+	local listbox = owner:GetControlObject('listbox')
+	local attr = listbox:GetAttribute()
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	if listbox:GetCurSel() ~= nil and listbox:GetCurSel() ~= -1 then
+		if coolClientProxy:PauseJob(attr.ItemDataTable[listbox:GetCurSel()].Handle) == -1 then
+			XLMessageBox('pause job error')
+		else
+			self:SetEnable(false)
+		end
+	end
 end
 local function OnBtnDeleteClick(self)--删除任务
 
@@ -232,6 +252,8 @@ function OnBtnClick(self)
 		OnBtnConfigClick(self)
 	elseif id == "btn.newtask" then
 		OnBtnNewTaskClick(self)
+	elseif id == "btn.start" then
+		OnBtnStartClick(self)
 	elseif id == "btn.pause" then
 		OnBtnPauseClick(self)
 	elseif id == "btn.delete" then

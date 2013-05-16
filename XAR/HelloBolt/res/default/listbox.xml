@@ -17,7 +17,7 @@
 		<bitmap id="bitmap.listbox.taskitem.status.na" imagelist="imagelist.listbox.taskitem.status" index="4"/>
 		<bitmap id="bitmap.listbox.taskitem.status.uploading" imagelist="imagelist.listbox.taskitem.status" index="5"/>
 		<bitmap id="bitmap.listbox.taskitem.status.waiting" imagelist="imagelist.listbox.taskitem.status" index="6"/>
-		<bitmap id="bitmap.listbox.taskitem.status.notreg" imagelist="imagelist.listbox.taskitem.status" index="7"/>
+		<bitmap id="bitmap.listbox.taskitem.status.stopped" imagelist="imagelist.listbox.taskitem.status" index="7"/>
 		
 		<bitmap id="bitmap.listbox.resitem.open" image="listbox\CloudstorageAddin.bitmap.imagebutton.png"/>
 		<!--资源类型-->

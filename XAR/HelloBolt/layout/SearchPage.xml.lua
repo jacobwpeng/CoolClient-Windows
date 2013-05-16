@@ -367,7 +367,6 @@ function OnResItemSave(self, eventName, index)
 	local treeManager = XLGetObject("Xunlei.UIEngine.TreeManager")				
 	local tree = treeManager:GetUIObjectTree("MainObjectTree")
 	local downloadpage = tree:GetUIObject("tabbkg"):GetControlObject("MydownloadPage")
-	XLMessageBox(path)
 	downloadpage:AddNewDownloadTask(path,name,torrent_type,files)
 end
 

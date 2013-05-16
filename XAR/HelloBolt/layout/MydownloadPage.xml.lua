@@ -3,7 +3,6 @@ function OnPageInit(self)
 	--然后还要载入保存的任务列表
 	
 	local list = self:GetControlObject("listbox")
-
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
 	coolClientProxy:RunClientAsync()
 	
@@ -105,6 +104,7 @@ function UpdateListBox(self)
 	local attr = self:GetAttribute()
 	if jobTable ~= -1 then
 		--XLMessageBox(#jobTable)
+		local curSelIndex = listbox:GetCurSel()
 		listbox:ResetContent()
 		if attr.TaskShowType == 'finished' then
 			for k,v in pairs(jobTable) do
@@ -116,14 +116,20 @@ function UpdateListBox(self)
 			end
 		elseif attr.TaskShowType == 'downloading' then
 			for k,v in pairs(jobTable) do
-				if v.Status == 1 then
+				if v.Status == 2 then
 					listbox:AddItem(v)
 				end
 				downloadSpeed = downloadSpeed + v.DownloadSpeed
 				uploadSpeed = uploadSpeed + v.UploadSpeed
 			end
+		elseif attr.TaskShowType == 'all' then
+			for k,v in pairs(jobTable) do
+				listbox:AddItem(v)
+				downloadSpeed = downloadSpeed + v.DownloadSpeed
+				uploadSpeed = uploadSpeed + v.UploadSpeed
+			end
 		end
-
+		--XLMessageBox(curSelIndex)
 		listbox:UpdateUI()
 		local KB = 1024
 		local MB = KB*1024

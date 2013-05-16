@@ -120,6 +120,8 @@
 			</eventlist>
 		</objtemplate>
 	</control>
+	
+	
 	<control class="Thunder.ControlPanel.Btn">
 		<attr_def>
 			<attr name="BtnName" type="string" />

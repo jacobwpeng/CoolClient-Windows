@@ -63,17 +63,17 @@ function OnOKClick(self)
 	local savepath = owner:GetUIObject("savepath"):GetText()
 	local torrentpath = userData.path
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
-
+	local treeManager = XLGetObject("Xunlei.UIEngine.TreeManager")                    
+	local tree = treeManager:GetUIObjectTree("MainObjectTree")
+	local tabctrl= tree:GetUIObject("tabbkg")
 	local ret = coolClientProxy:AddNewDownload(torrentpath, savepath, userData.SelectedFiles)
+	
 	if ret == -1 then
 		--添加下载失败
 		hostwnd:EndDialog(0)
 		return
 	else
 		hostwnd:EndDialog(0)
-		local treeManager = XLGetObject("Xunlei.UIEngine.TreeManager")                    
-		local tree = treeManager:GetUIObjectTree("MainObjectTree")
-		local tabctrl= tree:GetUIObject("tabbkg")
 		tabctrl:ActivePage("MydownloadPage")
 		return
 	end
@@ -92,6 +92,8 @@ function OnOKClick(self)
 	local turnoffobj = owner:GetUIObject("turnoff")
 	render:RenderObject(root,theBitmap)
 	root:SetVisible(false,true)
+	
+	--[[
 	if not turnoffani then
 		local ani = XLGetObject("Xunlei.UIEngine.AnimationFactory"):CreateAnimation("TurnObjectAnimation")
 		turnoffobj:SetVisible(true,true)
@@ -124,7 +126,6 @@ function OnOKClick(self)
 		turnoffani = ani
 	end
 	
-	--[[
 	if not maskani then
 		local obj1 = maskobj
 		obj1:SetVisible(true,true)

@@ -134,11 +134,14 @@ function OnLButtonDown(self)
 	if id == "item.search" then
 		ItemSearchSelected(self)
 		return
+	elseif id == "item.all" then
+		attr.TaskShowType = 'all'
+		downloadpage:UpdateListBox()
 	elseif id == "item.finished" and ownerAttr.CurrentChosen ~= id then
-		attr.TaskShowType = finished
+		attr.TaskShowType = 'finished'
 		downloadpage:UpdateListBox()
 	elseif id == 'item.download' and ownerAttr.CurrentChosen ~= id then
-		attr.TaskShowType = downloading
+		attr.TaskShowType = 'downloading'
 		downloadpage:UpdateListBox()
 	end
 	
