@@ -266,6 +266,7 @@ namespace CoolDown{
                     JobMap removed_jobs_;
                     FastMutex mutex_;
 					FastMutex job_status_mutex_;
+					//FastMutex report_progress_mutex_;
 
                     ThreadPool jobThreads_;
 
