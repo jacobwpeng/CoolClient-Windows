@@ -111,6 +111,15 @@
 								<BtnStatus>normal</BtnStatus>
 							</attr>
 						</obj>
+						<obj id="testtxt" class="TextObject">
+							<attr>
+								<left>96 + 38*7</left>
+								<top></top>
+								<width>100</width>
+								<height>42</height>
+								<valign>center</valign>
+							</attr>
+						</obj>
 					</children>
 				</obj>
 			</children>
@@ -162,7 +171,8 @@
 					</eventlist>
 				</obj>
 			</children>
-			<eventlist>
+			<eventlist>						
+
 				<event name="OnInitControl" file="ControlPanel.xml.lua" func="OnBtnInit" />	
 				<event name="OnClick" file="ControlPanel.xml.lua" func="OnBtnClick" />
 				<event name="OnEnableChange" file="ControlPanel.xml.lua" func="OnBtnEnableChange" />

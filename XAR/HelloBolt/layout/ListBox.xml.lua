@@ -155,7 +155,11 @@ local function ListBox_CreateInstanceItem(self)--添加item实例，不同type�
 				newListBoxItemAttr.Size = attr.ItemDataTable[i].Size
 				newListBoxItemAttr.Progress = attr.ItemDataTable[i].Progress
 				newListBoxItemAttr.Upload = attr.ItemDataTable[i].UploadSpeed
-				newListBoxItemAttr.Download = attr.ItemDataTable[i].DownloadSpeed	
+				if attr.ItemDataTable[i].Progress == 100 then
+					newListBoxItemAttr.Download = 0
+				else
+					newListBoxItemAttr.Download = attr.ItemDataTable[i].DownloadSpeed
+				end
 			elseif attr.ItemType == "BaseUI.ListBox.ResItem" then
 				newListBoxItemAttr.Type = attr.ItemDataTable[i].Type
 				newListBoxItemAttr.Name = attr.ItemDataTable[i].Name

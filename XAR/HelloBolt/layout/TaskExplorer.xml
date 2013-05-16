@@ -1,7 +1,7 @@
 <xlue>
 	<control class="Thunder.TaskExplorer">
 		<attr_def>
-			<attr name="CurrentChosen" type="string"><default>item.download</default></attr>
+			<attr name="CurrentChosen" type="string"><default>item.all</default></attr>
 		</attr_def>
 		<method_def>
 			<SetActiveBtn/>

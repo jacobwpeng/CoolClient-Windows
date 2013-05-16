@@ -94,7 +94,7 @@ function OnItemInit(self)
 	local attr = self:GetAttribute()
 	icon:SetResID(attr.IconNormal)
 	text:SetText(attr.Text)
-	if self:GetID() == "item.download" then
+	if self:GetID() == "item.all" then
 		attr.Status = "active"
 		--self:FireExtEvent("OnStatusChange")
 		local bkg = self:GetControlObject("bkg")
@@ -142,6 +142,12 @@ function OnLButtonDown(self)
 		downloadpage:UpdateListBox()
 	elseif id == 'item.download' and ownerAttr.CurrentChosen ~= id then
 		attr.TaskShowType = 'downloading'
+		downloadpage:UpdateListBox()
+	elseif id == 'item.activetask' and ownerAttr.CurrentChosen ~= id then
+		attr.TaskShowType = 'active'
+		downloadpage:UpdateListBox()
+	elseif id == 'item.stoppedtask' and ownerAttr.CurrentChosen ~= id then
+		attr.TaskShowType = 'stopped'
 		downloadpage:UpdateListBox()
 	end
 	

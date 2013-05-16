@@ -65,7 +65,8 @@ function OnOKClick(self)
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
 	local treeManager = XLGetObject("Xunlei.UIEngine.TreeManager")                    
 	local tree = treeManager:GetUIObjectTree("MainObjectTree")
-	local tabctrl= tree:GetUIObject("tabbkg")
+	local tabctrl = tree:GetUIObject("tabbkg")
+	local tabheader = tree:GetUIObject('tabHeader')
 	local ret = coolClientProxy:AddNewDownload(torrentpath, savepath, userData.SelectedFiles)
 	
 	if ret == -1 then
@@ -74,7 +75,8 @@ function OnOKClick(self)
 		return
 	else
 		hostwnd:EndDialog(0)
-		tabctrl:ActivePage("MydownloadPage")
+		tabheader:SetActiveTab("MydownloadPage",true)
+		--tabctrl:ActivePage("MydownloadPage")
 		return
 	end
 	local treeManager = XLGetObject("Xunlei.UIEngine.TreeManager")				

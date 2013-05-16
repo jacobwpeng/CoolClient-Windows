@@ -5,7 +5,7 @@ function OnPageInit(self)
 	local list = self:GetControlObject("listbox")
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
 	coolClientProxy:RunClientAsync()
-	
+	self:GetAttribute().TaskShowType = 'all'
 	local timer = SetTimer(function() self:UpdateListBox() end, 1000)
 end
 
@@ -106,9 +106,15 @@ function UpdateListBox(self)
 		--XLMessageBox(#jobTable)
 		local curSelIndex = listbox:GetCurSel()
 		listbox:ResetContent()
-		if attr.TaskShowType == 'finished' then
+		if attr.TaskShowType == 'all' then
 			for k,v in pairs(jobTable) do
-				if v.Status == 0 then
+				listbox:AddItem(v)
+				downloadSpeed = downloadSpeed + v.DownloadSpeed
+				uploadSpeed = uploadSpeed + v.UploadSpeed
+			end
+		elseif attr.TaskShowType == 'finished' then
+			for k,v in pairs(jobTable) do
+				if v.Progress == 100 then
 					listbox:AddItem(v)
 				end
 				downloadSpeed = downloadSpeed + v.DownloadSpeed
@@ -122,9 +128,19 @@ function UpdateListBox(self)
 				downloadSpeed = downloadSpeed + v.DownloadSpeed
 				uploadSpeed = uploadSpeed + v.UploadSpeed
 			end
-		elseif attr.TaskShowType == 'all' then
+		elseif attr.TaskShowType == 'active' then
 			for k,v in pairs(jobTable) do
-				listbox:AddItem(v)
+				if v.Status == 2 or v.Status == 3 then
+					listbox:AddItem(v)
+				end
+				downloadSpeed = downloadSpeed + v.DownloadSpeed
+				uploadSpeed = uploadSpeed + v.UploadSpeed
+			end
+		elseif attr.TaskShowType == 'stopped' then
+			for k,v in pairs(jobTable) do
+				if v.Status == 0 then
+					listbox:AddItem(v)
+				end
 				downloadSpeed = downloadSpeed + v.DownloadSpeed
 				uploadSpeed = uploadSpeed + v.UploadSpeed
 			end

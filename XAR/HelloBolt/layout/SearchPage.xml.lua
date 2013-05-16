@@ -356,6 +356,7 @@ function OnSkipPageClick(self)
 	else
 		totalCount:SetText("测试 当前/总数 1-10/23")
 	end
+	listbox:UpdateUI()
 end
 
 function OnResItemSave(self, eventName, index)

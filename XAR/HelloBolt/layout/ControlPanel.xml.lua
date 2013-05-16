@@ -79,49 +79,58 @@ function DeleteBtn()
 end
 
 function OnMouseEnter(self, x, y)
-	local attr = self:GetOwnerControl():GetAttribute()
+	local objTree = self:GetOwner()
+	local owner = self:GetOwnerControl()
+	local attr = owner:GetAttribute()
 	--local attr = self:GetAttribute()
 	local objTree = self:GetOwner()
 	local img = self:GetOwnerControl():GetControlObject("btn.img")
 	local aniFactory = XLGetObject("Xunlei.UIEngine.AnimationFactory")
 	
 	--XLMessageBox(attr.AniImagelistID)
-	if attr.BtnStatus=="normal" then
-		if aniFactory then
-			local seqAnim = aniFactory:CreateAnimation("SeqFrameAnimation")
-			seqAnim:BindImageObj(img)
-			seqAnim:SetResID(attr.AniImagelistID)
-			seqAnim:SetTotalTime(500)
-			local cookie = seqAnim:AttachListener(true,function (self,oldState,newState)
-				end)
-			objTree:AddAnimation(seqAnim)
-			seqAnim:Resume()
-		else
-			XLMessageBox("anifailed")
+	if owner:GetEnable() then
+		if attr.BtnStatus == "normal" then
+			if aniFactory then
+				local seqAnim = aniFactory:CreateAnimation("SeqFrameAnimation")
+				seqAnim:BindImageObj(img)
+				seqAnim:SetResID(attr.AniImagelistID)
+				seqAnim:SetTotalTime(500)
+				local cookie = seqAnim:AttachListener(true,function (self,oldState,newState)
+					end)
+				objTree:AddAnimation(seqAnim)
+				seqAnim:Resume()
+			else
+				XLMessageBox("anifailed")
+			end
 		end
 	else
-		--XLMessageBox("btndisabled")
+		attr.BtnStatus = 'disabled'
 	end
 end
 
 function OnMouseLeave(self, x, y)
-	local attr = self:GetOwnerControl():GetAttribute()
-    local objTree = self:GetOwner()
+	local objTree = self:GetOwner()
+	local owner = self:GetOwnerControl()
+	local attr = owner:GetAttribute()
 	local img = self:GetOwnerControl():GetControlObject("btn.img")
 	--local left, top, right, bottom = image:GetObjPos()
 	local aniFactory = XLGetObject("Xunlei.UIEngine.AnimationFactory")
-	if attr.BtnStatus=="normal" then
-		if aniFactory then
-			local seqAnim = aniFactory:CreateAnimation("SeqFrameAnimation")
-			seqAnim:BindImageObj(img)
-			seqAnim:SetResID(attr.AniImagelistID)
-			seqAnim:SetTotalTime(500)
-			seqAnim:SetReverse(true)
-			local cookie = seqAnim:AttachListener(true,function (self,oldState,newState)
-				end)
-			objTree:AddAnimation(seqAnim)
-			seqAnim:Resume()
+	if owner:GetEnable() then
+		if attr.BtnStatus=="normal" then
+			if aniFactory then
+				local seqAnim = aniFactory:CreateAnimation("SeqFrameAnimation")
+				seqAnim:BindImageObj(img)
+				seqAnim:SetResID(attr.AniImagelistID)
+				seqAnim:SetTotalTime(500)
+				seqAnim:SetReverse(true)
+				local cookie = seqAnim:AttachListener(true,function (self,oldState,newState)
+					end)
+				objTree:AddAnimation(seqAnim)
+				seqAnim:Resume()
+			end
 		end
+	else
+		attr.BtnStatus = 'disabled'
 	end
 end
 function OnLButtonDown(self)
