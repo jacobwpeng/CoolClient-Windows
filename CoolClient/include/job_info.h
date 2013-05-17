@@ -174,8 +174,11 @@ namespace CoolDown{
             atomic_uint64_t download_total;
 
             Condition download_speed_limit_cond;
+			
             Condition upload_speed_limit_cond;
             Condition download_pause_cond;
+			FastMutex download_pause_mutex;
+
             Condition job_stopped_cond;
             Condition job_finished_cond;
 

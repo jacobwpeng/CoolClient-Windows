@@ -344,6 +344,7 @@ namespace CoolDown{
                     poco_warning_f3(logger(), "Cannot connect tracker, ret : %d, addr : %s, port : %d.", (int)ret, tracker_address, port);
                     return ret;
                 }
+				FastMutex::ScopedLock lock_(this->tracker_sock_mutex_);
                 LocalSockManager::SockPtr sock( sockManager_->get_tracker_sock( format("%s:%d", tracker_address, port)) );
                 poco_assert( sock.isNull() == false );
 
@@ -358,6 +359,7 @@ namespace CoolDown{
 
             retcode_t CoolClient::LogoutTracker(const string& tracker_ip, int port){
 				const string& tracker_addr( format("%s:%d", tracker_ip, port) );
+				FastMutex::ScopedLock lock_(this->tracker_sock_mutex_);
                 LocalSockManager::SockPtr sock( sockManager_->get_tracker_sock( tracker_addr) );
                 if( sock.isNull() ){
                     return ERROR_NET_CONNECT;
@@ -375,6 +377,7 @@ namespace CoolDown{
 			}
 
             retcode_t CoolClient::PublishResourceToTracker(const string& tracker_address, const string& fileid){
+				FastMutex::ScopedLock lock_(this->tracker_sock_mutex_);
                 LocalSockManager::SockPtr sock( sockManager_->get_tracker_sock(tracker_address) );
                 if( sock.isNull() ){
                     return ERROR_NET_NOT_CONNECTED;
@@ -389,6 +392,7 @@ namespace CoolDown{
             }
 
             retcode_t CoolClient::ReportProgress(const string& tracker_address, const string& fileid, int percentage){
+				FastMutex::ScopedLock lock_(this->tracker_sock_mutex_);
                 LocalSockManager::SockPtr sock( sockManager_->get_tracker_sock(tracker_address) );
                 if( sock.isNull() ){
                     return ERROR_NET_CONNECT;
@@ -407,7 +411,8 @@ namespace CoolDown{
                 poco_assert( pInfoList != NULL );
                 poco_assert( currentPercentage >= 0 );
                 poco_assert( needCount > 0 );
-
+				
+				FastMutex::ScopedLock lock_(this->tracker_sock_mutex_);
                 LocalSockManager::SockPtr sock( sockManager_->get_tracker_sock(tracker_address ));
                 if( sock.isNull() ){
                     return ERROR_NET_CONNECT;
@@ -960,8 +965,8 @@ namespace CoolDown{
                 if( ret != ERROR_OK ){
                     return ret;
                 }
-
-				
+			
+				this->StartJob(handle);
                 return ERROR_OK;
             }
 
@@ -1064,11 +1069,15 @@ namespace CoolDown{
 					status.download_speed_per_second_in_bytes = status.download_speed_per_second_in_bytes * 0.8 
 																+ 0.2 * static_cast<int>(bytes_download_this_second);
 
+					if( pInfo->downloadInfo.is_download_paused ){
+						status.download_speed_per_second_in_bytes = 0;
+					}
+
 					UInt64 bytes_left = status.size - pInfo->downloadInfo.download_total;
-					if( bytes_download_this_second == 0){
-						status.remaing_time_in_seconds = -1;
+					if( status.download_speed_per_second_in_bytes == 0){
+						status.remaining_time_in_seconds = -1;
 					}else{
-						status.remaing_time_in_seconds = static_cast<int>( 
+						status.remaining_time_in_seconds = static_cast<int>( 
 															(double)bytes_left / status.download_speed_per_second_in_bytes
 														);
 					}
@@ -1136,14 +1145,14 @@ namespace CoolDown{
 					}
 
 					if( pInfo->downloadInfo.download_total == pInfo->torrentInfo.get_total_size()){
-						if( bytes_upload_this_second != 0 ){
+						if( status.upload_speed_per_second_in_bytes != 0 ){
 							status_code = JOB_UPLOADING;
 						}else{
 							status_code = JOB_INACTIVE;
 						}
 						
 						status.percentage = 100;
-						status.remaing_time_in_seconds = 0;
+						status.remaining_time_in_seconds = 0;
 					}
 
 					poco_assert(status_code != -1);
