@@ -180,9 +180,11 @@ namespace CoolDown{
                 //File file(jobInfo_.localFileInfo.local_file)
                 //see if the download has been paused
                 if( jobInfo_.downloadInfo.is_download_paused ){
-                    FastMutex mutex;
+                    //FastMutex mutex;
                     poco_debug(logger_, "download paused, going to wait the download_pause_cond.");
-                    jobInfo_.downloadInfo.download_pause_cond.wait(mutex, COND_WAIT_TIMEOUT);
+                    jobInfo_.downloadInfo.download_pause_cond.wait(
+						jobInfo_.downloadInfo.download_pause_mutex, 
+						COND_WAIT_TIMEOUT);
                 }else{
                     ChunkInfoPtr chunk_info = cs_.get_chunk();
                     if( chunk_info.isNull() ){

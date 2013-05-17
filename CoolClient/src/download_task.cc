@@ -99,8 +99,8 @@ namespace CoolDown{
 
                 if( downloadInfo_.is_download_paused ){
                     poco_notice(logger_, "going to wait download_pause_cond in DownloadTask::runTask");
-                    FastMutex mutex;
-                    downloadInfo_.download_pause_cond.wait(mutex);
+                    //FastMutex mutex;
+                    downloadInfo_.download_pause_cond.wait(downloadInfo_.download_pause_mutex);
                     continue;
                 }
                 if( downloadInfo_.bytes_download_this_second > downloadInfo_.download_speed_limit ){

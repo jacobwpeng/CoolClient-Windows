@@ -1064,11 +1064,15 @@ namespace CoolDown{
 					status.download_speed_per_second_in_bytes = status.download_speed_per_second_in_bytes * 0.8 
 																+ 0.2 * static_cast<int>(bytes_download_this_second);
 
+					if( pInfo->downloadInfo.is_download_paused ){
+						status.download_speed_per_second_in_bytes = 0;
+					}
+
 					UInt64 bytes_left = status.size - pInfo->downloadInfo.download_total;
-					if( bytes_download_this_second == 0){
-						status.remaing_time_in_seconds = -1;
+					if( status.download_speed_per_second_in_bytes == 0){
+						status.remaining_time_in_seconds = -1;
 					}else{
-						status.remaing_time_in_seconds = static_cast<int>( 
+						status.remaining_time_in_seconds = static_cast<int>( 
 															(double)bytes_left / status.download_speed_per_second_in_bytes
 														);
 					}
@@ -1136,14 +1140,14 @@ namespace CoolDown{
 					}
 
 					if( pInfo->downloadInfo.download_total == pInfo->torrentInfo.get_total_size()){
-						if( bytes_upload_this_second != 0 ){
+						if( status.upload_speed_per_second_in_bytes != 0 ){
 							status_code = JOB_UPLOADING;
 						}else{
 							status_code = JOB_INACTIVE;
 						}
 						
 						status.percentage = 100;
-						status.remaing_time_in_seconds = 0;
+						status.remaining_time_in_seconds = 0;
 					}
 
 					poco_assert(status_code != -1);

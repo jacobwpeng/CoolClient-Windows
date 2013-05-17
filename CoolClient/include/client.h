@@ -87,7 +87,7 @@ namespace CoolDown{
 			struct JobStatus{
 				JobStatus()
 					:percentage(0),
-					remaing_time_in_seconds(0),
+					remaining_time_in_seconds(0),
 					download_speed_per_second_in_bytes(0),
 					upload_speed_per_second_in_bytes(0){
 
@@ -98,7 +98,7 @@ namespace CoolDown{
 				string name;
 				Int64 size;
 				double percentage;
-				int remaing_time_in_seconds;
+				int remaining_time_in_seconds;
 				int download_speed_per_second_in_bytes;
 				int upload_speed_per_second_in_bytes;
 			};

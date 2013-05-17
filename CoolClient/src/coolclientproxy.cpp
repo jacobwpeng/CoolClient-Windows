@@ -564,7 +564,7 @@ int CoolClientProxy::GetJobStatusTable(lua_State* luaState){
 			lua_settable(luaState, this_table_index);
 
 			lua_pushstring(luaState, "Type");
-			lua_pushinteger(luaState, (int)status.status);
+			lua_pushinteger(luaState, (int)status.type);
 			lua_settable(luaState, this_table_index);
 
 			lua_pushstring(luaState, "Size");
@@ -827,7 +827,7 @@ void CoolClientProxy::UpdateJobStatusTable(lua_State* luaState, const CoolDown::
 	lua_settable(luaState, -3);
 
 	lua_pushstring(luaState, "Retime");
-	lua_pushnumber(luaState, status.remaing_time_in_seconds);
+	lua_pushnumber(luaState, status.remaining_time_in_seconds);
 	lua_settable(luaState, -3);
 
 	poco_assert(lua_type(luaState, -1) == LUA_TTABLE);
