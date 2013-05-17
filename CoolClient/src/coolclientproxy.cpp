@@ -811,6 +811,10 @@ int CoolClientProxy::OpenDownloadPath(lua_State* luaState){
 			ShellExecuteA(NULL, NULL, "explorer", ("/select, " + local_path).c_str(), NULL, SW_SHOW);
 			return 0;
 		}
+	}else{
+		poco_warning(logger_, "Invalid args of CoolClientProxy::OpenDownloadPath");
+		DumpLuaState(luaState);
+		return 0;
 	}
 }
 
@@ -834,6 +838,7 @@ static XLLRTGlobalAPI CoolClientProxyMemberFunctions[] = {
 	{"PauseJob", CoolClientProxy::PauseJob},
 	{"SetConfig", CoolClientProxy::SetConfig},
 	{"GetConfig", CoolClientProxy::GetConfig},
+	{"OpenDownloadPath", CoolClientProxy::OpenDownloadPath},
 	{NULL,NULL}
 };
 
