@@ -1135,9 +1135,13 @@ namespace CoolDown{
 						status_code = JOB_INACTIVE;
 					}
 
-					if( p.second->is_running() == false 
-									&& pInfo->downloadInfo.download_total == pInfo->torrentInfo.get_total_size()){
-						status_code = JOB_UPLOADING;
+					if( pInfo->downloadInfo.download_total == pInfo->torrentInfo.get_total_size()){
+						if( bytes_upload_this_second != 0 ){
+							status_code = JOB_UPLOADING;
+						}else{
+							status_code = JOB_INACTIVE;
+						}
+						
 						status.percentage = 100;
 						status.remaing_time_in_seconds = 0;
 					}
