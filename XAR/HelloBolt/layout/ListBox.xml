@@ -295,7 +295,6 @@
 										<height>50</height>
 										<halign>center</halign>
 										<valign>center</valign>
-										<image>bitmap.listbox.taskitem.type.music</image>
 									</attr>
 								</obj>
 								<obj id="name" class="TextObject">

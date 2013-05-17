@@ -851,6 +851,7 @@ function ListBoxItem_OnInitControl(self)
 	if attr.Name ~= nil and nameobj then
 	    nameobj:SetText(attr.Name)
 	end
+	--XLMessageBox(string.format("status:%d  type:%d"),attr.Status,attr.Type)
 	if attr.Type and typeobj then
 		if attr.Type == 1 then
 			typeobj:SetResID("bitmap.listbox.taskitem.type.movie")

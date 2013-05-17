@@ -69,6 +69,7 @@ end
 --listbox选中发生变化，这里用来更新按钮之类的 index从1开始
 function OnListBoxSelectChanged(self,eventname,index)
 	--XLMessageBox(self:GetItemByIndex(index):GetClass())
+	local attr = self:GetAttribute()
 	local page = self:GetOwnerControl()
 	local panel = page:GetControlObject("controlPanel")
 	
@@ -77,11 +78,22 @@ function OnListBoxSelectChanged(self,eventname,index)
 	local delete = panel:GetControlObject("btn.delete")
 	local openfolder = panel:GetControlObject("btn.openfolder")
 	
-	--
-	start:SetEnable(true)
-	pause:SetEnable(true)
 	delete:SetEnable(true)
 	openfolder:SetEnable(true)
+	--
+	if attr.ItemDataTable[index].Status == 1 then
+		start:SetEnable(true)
+		pause:SetEnable(false)
+	elseif attr.ItemDataTable[index].Status == 2 then
+		start:SetEnable(false)
+		pause:SetEnable(true)
+	elseif attr.ItemDataTable[index].Status == 3 then
+		start:SetEnable(false)
+		pause:SetEnable(false)
+	elseif attr.ItemDataTable[index].Status == 4 then
+		start:SetEnable(false)
+		pause:SetEnable(false)
+	end
 end
 
 function UpdateListBox(self)
@@ -89,6 +101,7 @@ function UpdateListBox(self)
 	local statusbar = self:GetControlObject('tasklist.header')	
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
 	local jobTable = coolClientProxy:GetJobStatusTable()
+	
 	if statusbar then
 		local attr = statusbar:GetAttribute()
 		if attr.SortBy ~= nil and jobTable ~= -1 then

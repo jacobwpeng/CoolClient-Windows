@@ -92,17 +92,6 @@
 										<Text>停止任务</Text>
 									</attr>
 								</obj>
-								<obj id="item.trash" class="TaskExplorer.Item">
-									<attr>
-										<left></left>
-										<top>6 + 27*6</top>
-										<width>father.width</width>
-										<height>26</height>
-										<IconNormal>bitmap.mainwnd.taskexplorer.icon.trash.normal</IconNormal>
-										<IconActive>bitmap.mainwnd.taskexplorer.icon.trash.active</IconActive>
-										<Text>垃圾箱</Text>
-									</attr>
-								</obj>
 							</children>
 						</obj>
 					</children>

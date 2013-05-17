@@ -88,7 +88,7 @@ function OnMouseEnter(self, x, y)
 	local aniFactory = XLGetObject("Xunlei.UIEngine.AnimationFactory")
 	
 	--XLMessageBox(attr.AniImagelistID)
-	if owner:GetEnable() then
+	if attr.Enable ~= 0 then
 		if attr.BtnStatus == "normal" then
 			if aniFactory then
 				local seqAnim = aniFactory:CreateAnimation("SeqFrameAnimation")
@@ -103,8 +103,6 @@ function OnMouseEnter(self, x, y)
 				XLMessageBox("anifailed")
 			end
 		end
-	else
-		attr.BtnStatus = 'disabled'
 	end
 end
 
@@ -124,13 +122,14 @@ function OnMouseLeave(self, x, y)
 				seqAnim:SetTotalTime(500)
 				seqAnim:SetReverse(true)
 				local cookie = seqAnim:AttachListener(true,function (self,oldState,newState)
+					if owner:GetEnable() == false then
+						img:SetResID(attr.DisabledResID)
+					end
 					end)
 				objTree:AddAnimation(seqAnim)
 				seqAnim:Resume()
 			end
 		end
-	else
-		attr.BtnStatus = 'disabled'
 	end
 end
 function OnLButtonDown(self)
@@ -171,7 +170,7 @@ local function OnBtnStartClick(self)--开始任务
 		if coolClientProxy:ResumeJob(attr.ItemDataTable[listbox:GetCurSel()].Handle) == -1 then
 			XLMessageBox('resume job error')
 		else
-			self:SetEnable(false)
+		
 		end
 	end
 end
@@ -184,7 +183,6 @@ local function OnBtnPauseClick(self)--暂停任务
 		if coolClientProxy:PauseJob(attr.ItemDataTable[listbox:GetCurSel()].Handle) == -1 then
 			XLMessageBox('pause job error')
 		else
-			self:SetEnable(false)
 		end
 	end
 end
@@ -283,7 +281,6 @@ function UpdateUI(self)
 	elseif attr.BtnStatus == "disabled" then
 		img:SetResID(attr.DisabledResID)
 	elseif attr.BtnStatus == "hover" then
-		
 	end
 end
 
