@@ -34,6 +34,7 @@
 #include <Poco/TextConverter.h>
 #include <Poco/Base64Encoder.h>
 #include <Poco/Base64Decoder.h>
+#include <Poco/FileChannel.h>
 
 
 
@@ -89,7 +90,12 @@ namespace CoolDown{
                 ServerApplication::initialize(self);
 
 				Logger& logger_ = Logger::get("FileLogger");
-				logger_.getChannel()->setProperty("rotation", "10 minutes");
+				Poco::FileChannel* pChannel = dynamic_cast<Poco::FileChannel*>(logger_.getChannel());
+				if( pChannel ){
+					//we read the logging config file and this is A file logger
+					pChannel->setProperty("rotation", "10 minutes");
+				}
+				//logger_.getChannel()->setProperty("rotation", "10 minutes");
                 setLogger(logger_);
 
 				
@@ -974,7 +980,7 @@ namespace CoolDown{
 
 				JobStatus status;
 				Path tmp(torrent_path);
-				status.name = tmp.getBaseName();
+				status.name = GBK2UTF8(tmp.getBaseName());
 				status.size = info->torrentInfo.get_total_size();
 				status.type = info->torrentInfo.get_type();
 				status.status = JOB_PAUSED;	
@@ -1129,9 +1135,13 @@ namespace CoolDown{
 						status_code = JOB_INACTIVE;
 					}
 
-					if( p.second->is_running() == false 
-									&& pInfo->downloadInfo.download_total == pInfo->torrentInfo.get_total_size()){
-						status_code = JOB_UPLOADING;
+					if( pInfo->downloadInfo.download_total == pInfo->torrentInfo.get_total_size()){
+						if( bytes_upload_this_second != 0 ){
+							status_code = JOB_UPLOADING;
+						}else{
+							status_code = JOB_INACTIVE;
+						}
+						
 						status.percentage = 100;
 						status.remaing_time_in_seconds = 0;
 					}
