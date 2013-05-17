@@ -374,6 +374,24 @@ namespace CoolDown{
 				}
 			}
 
+			void CoolClient::ResetConfig(){
+				this->current_setting_ = this->default_setting_;
+			}
+
+			string CoolClient::GetLocalPath(int handle){
+				JobPtr pJob = this->GetJobByHandle(handle);
+				if( pJob.isNull() ){
+					return "";
+				}else{
+					string top_path = pJob->MutableJobInfo()->localFileInfo.top_path();
+					string file_relative_path = this->torrent_path_map_[handle];
+					Path p(file_relative_path);
+					string torrent_file_name = p.getFileName();
+					string file_name = torrent_file_name.substr(0, torrent_file_name.find_last_of("."));
+					return format("%s%s", top_path, file_name);
+				}
+			}
+
 			JobStatusMap CoolClient::JobStatuses(){
 				FastMutex::ScopedLock lock_(job_status_mutex_);
 				return this->job_status_;

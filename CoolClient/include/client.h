@@ -138,6 +138,8 @@ namespace CoolDown{
 					void set_job_status_callback(JobStatusCallback callback);
 					string GetConfig(const string& key) const;
 					int SetConfig(const string& key, const string& value);
+					void ResetConfig();
+					string GetLocalPath(int handle);
 					JobStatusMap JobStatuses();
 
                     //communicate with tracker
