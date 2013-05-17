@@ -521,8 +521,11 @@ int CoolClientProxy::GetJobStatusTable(lua_State* luaState){
 			CoolDown::Client::JobStatusMap::iterator iter = job_status.find(handle);
 
 			if( iter == job_status.end() ){
-				//this job has been removed, so we delete this job info table
-				lua_pop(luaState, 1);
+				//this job has been removed, so we delete this job info table and the handle
+				lua_pop(luaState, 2);
+				//now the key is at -1, so we dup it
+				lua_pushvalue(luaState, -1);
+				DumpLuaState(luaState);
 				//push nil to gc
 				lua_pushnil(luaState);
 				//then set the table
@@ -533,6 +536,7 @@ int CoolClientProxy::GetJobStatusTable(lua_State* luaState){
 				//now the job info table is at -1
 				UpdateJobStatusTable(luaState, iter->second);
 				//the job info(value) is at -1, so we must pop it to do the next iteration
+				lua_pop(luaState, 1);
 			}
 
 		}else{
