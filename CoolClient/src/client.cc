@@ -38,6 +38,7 @@
 
 
 
+
 using std::set;
 using std::find;
 using std::ifstream;
@@ -52,6 +53,7 @@ using Poco::Net::SocketReactor;
 using Poco::Net::SocketAcceptor;
 using Poco::Thread;
 using Poco::RunnableAdapter;
+
 
 using namespace TrackerProto;
 using namespace ClientProto;
@@ -81,14 +83,15 @@ namespace CoolDown{
 
             CoolClient::CoolClient()
             :jobThreads_("JobThread"),
-            uploadManager_(logger()){
+            uploadManager_(logger()),
+			pUserConfig_(new PropertyFileConfiguration){
 				
             }
 
             void CoolClient::initialize(Application& self){
                 loadConfiguration();
-                ServerApplication::initialize(self);
-
+				ServerApplication::initialize(self);
+                
 				Logger& logger_ = Logger::get("FileLogger");
 				Poco::FileChannel* pChannel = dynamic_cast<Poco::FileChannel*>(logger_.getChannel());
 				if( pChannel ){
@@ -105,21 +108,38 @@ namespace CoolDown{
                 string default_history_file_path = format("%s%c%s", Path::current(), Path::separator(), string("coolclient.history") );
                 string default_local_torrent_dir_path = format("%s%s", Path::current(),
 																string("Torrents"));
-
-				this->history_file_path_ = config().getString("client.history_path", default_history_file_path);
-				this->local_torrent_dir_path_ = config().getString("client.local_torrent_dir", default_local_torrent_dir_path);
-                this->exiting_ = false;
                 this->init_error_ = false;
 				job_index_ = 1;
                 string msg;
 			
                 try{
-                    
-                    sockManager_.assign( new LocalSockManager );
-                    if( sockManager_.isNull() ){
-                        msg = "Cannot create LocalSockManager.";
-                        throw Exception(msg);
-                    }
+					{
+						//load default settings
+						default_setting_["AutoStartDownloading"] = "1";
+						default_setting_["DefaultTorrentPath"] = default_local_torrent_dir_path;
+						default_setting_["MaxParallelTask"] = "5";
+						default_setting_["MaxDownloadSpeed"] = "512";
+						default_setting_["MaxUploadSpeed"] = "512";
+						default_setting_["DefaultDownloadPath"] = "E:\\download";
+						default_setting_["DownloadNotificationSound"] = "1";
+					}
+					this->user_config_path_ = "userconfig.proerties";
+					this->history_file_path_ = config().getString("client.history_path", default_history_file_path);
+					this->local_torrent_dir_path_ = config().getString("DefaultTorrentPath", default_setting_["DefaultTorrentPath"]);
+					this->exiting_ = false;
+					current_setting_ = default_setting_;
+
+					File configFile( this->user_config_path_ );
+					if( configFile.exists() ){
+						pUserConfig_->load(this->user_config_path_);
+					}
+					config().add(pUserConfig_, -100);
+
+					sockManager_.assign( new LocalSockManager );
+					if( sockManager_.isNull() ){
+						msg = "Cannot create LocalSockManager.";
+						throw Exception(msg);
+					}
 
 					File torrent_dir(local_torrent_dir_path_);
 					if( torrent_dir.exists() == false){
@@ -130,15 +150,20 @@ namespace CoolDown{
 					if( ret != ERROR_OK ){
 						poco_warning_f1(logger(), "ReloadJobHistory returns %d", (int)ret);
 					}
+
                 }
                 catch(Exception& e){
                     poco_error_f1(logger(), "Got exception in initialize : %s", msg);
 					poco_error_f1(logger(), "%s", e.displayText());
                     this->init_error_ = true;
                 }
+
+				
+
             }
 
             void CoolClient::uninitialize(){
+				this->SaveUserConfig();
                 this->SaveJobHistory( history_file_path_ );
 				poco_trace(logger(), "Return from SaveJobHistory");
 				
@@ -329,8 +354,24 @@ namespace CoolDown{
 				return ERROR_OK;
 			}
 
-			void CoolClient::set_job_status_callback(JobStatusCallback callback){
-				this->status_callback_ = callback;
+			//void CoolClient::set_job_status_callback(JobStatusCallback callback){
+			//	this->status_callback_ = callback;
+			//}
+
+			string CoolClient::GetConfig(const string& key) const{
+				SettingMap::const_iterator iter = current_setting_.find(key);
+				if( iter != current_setting_.end() ){
+					return iter->second;
+				}
+				return "";
+			}
+			int CoolClient::SetConfig(const string& key, const string& value){
+				if( default_setting_.find(key) == default_setting_.end() ){
+					return -1;
+				}else{
+					current_setting_[key] = value;
+					return 0;
+				}
 			}
 
 			JobStatusMap CoolClient::JobStatuses(){
@@ -858,6 +899,20 @@ namespace CoolDown{
                 poco_debug_f1(logger(),"register torrent_id : %s", torrent_id);
                 this->torrent_ids_.insert( torrent_id );
             }
+
+			void CoolClient::SaveUserConfig(){
+				SettingMap::const_iterator iter = current_setting_.begin();
+				while( iter != current_setting_.end() ){
+					try{
+						pUserConfig_->setString(iter->first, iter->second);
+					}catch(Poco::Exception& e){
+						poco_warning_f1(logger(), "in CoolClient::SaveUserConfig, Got exception : %s", e.displayText());
+					}
+					
+					++iter;
+				}
+				pUserConfig_->save(user_config_path_);
+			}
 
             retcode_t CoolClient::SaveJobHistory(const string& filename){
 				ofstream ofs(filename.c_str(), ofstream::binary);

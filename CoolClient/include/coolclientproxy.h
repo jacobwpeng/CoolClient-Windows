@@ -36,6 +36,8 @@ public:
 	static int ResumeJob(lua_State* luaState);
 	static int StopJob(lua_State* luaState);
 	static int RemoveJob(lua_State* luaState);
+	static int SetConfig(lua_State* luaState);
+	static int GetConfig(lua_State* luaState);
 
 	static int StopMakingTorrent(lua_State* luaState);
 	static int StopClient(lua_State* luaState);

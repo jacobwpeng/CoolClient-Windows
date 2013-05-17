@@ -23,6 +23,7 @@
 #include <Poco/Condition.h>
 #include <Poco/Mutex.h>
 #include <Poco/SharedPtr.h>
+#include <Poco/Util/PropertyFileConfiguration.h>
 #include <google/protobuf/message.h>
 using google::protobuf::Message;
 
@@ -45,6 +46,7 @@ using Poco::TimerCallback;
 using Poco::Condition;
 using Poco::FastMutex;
 using Poco::SharedPtr;
+using Poco::Util::PropertyFileConfiguration;
 
 namespace Torrent{
     class Torrent;
@@ -135,7 +137,7 @@ namespace CoolDown{
 					retcode_t DownloadTorrent(int id, const string& torrent_name);
 					void set_job_status_callback(JobStatusCallback callback);
 					string GetConfig(const string& key) const;
-					void SetConfig(const string& key, const string& value) const;
+					int SetConfig(const string& key, const string& value);
 					JobStatusMap JobStatuses();
 
                     //communicate with tracker
@@ -222,6 +224,7 @@ namespace CoolDown{
                     const Message& msg, int payload_type, SharedPtr<ReplyMessageType>* out);
 
                     void list_dir_recursive(const File& file, FileList* pList);
+					void SaveUserConfig();
 
                     //no lock job ops
                     retcode_t PauseJobWithoutLock(int handle);
@@ -230,6 +233,8 @@ namespace CoolDown{
 
 					//network setting
                     int LOCAL_PORT;
+					Poco::AutoPtr<PropertyFileConfiguration> pUserConfig_;
+					string user_config_path_;
 					string resource_server_ip_;
 					string tracker_addr_;
 
@@ -260,7 +265,10 @@ namespace CoolDown{
                     progress_info_list_t progress_info_to_report_;
 
                     typedef map<int, JobPtr> JobMap;
+					typedef map<string, string> SettingMap;
 					
+					SettingMap default_setting_;
+					SettingMap current_setting_;
                     //guard by mutex_;
                     JobMap jobs_;
 					JobStatusMap job_status_;

@@ -760,6 +760,40 @@ int CoolClientProxy::RemoveJob(lua_State* luaState){
 	}
 }
 
+int CoolClientProxy::SetConfig(lua_State* luaState){
+	if( lua_isstring(luaState, 2)		//config key
+		&& lua_isstring(luaState, 3)	//config value
+		){
+		string key = lua_tostring(luaState, 2);
+		string value = lua_tostring(luaState, 3);
+		int ret = pCoolClient->SetConfig(key, value);
+		if( ret == -1 ){
+			lua_settop(luaState, 1);
+			lua_pushinteger(luaState, -1);
+			return 1;
+		}else{
+			return 0;
+		}
+
+	}else{
+		poco_warning(logger_, "Invalid args of CoolClientProxy::SetConfig");
+		DumpLuaState(luaState);
+		return 0;
+	}
+}
+
+int CoolClientProxy::GetConfig(lua_State* luaState){
+	if( lua_isstring(luaState, 2) ){
+		string key = lua_tostring(luaState, 2);
+		string value = pCoolClient->GetConfig(key);
+		lua_pushstring(luaState, value.c_str());
+	}else{
+		poco_warning(logger_, "Invalid args of CoolClientProxy::SetConfig");
+		DumpLuaState(luaState);
+		return 0;
+	}
+}
+
 static XLLRTGlobalAPI CoolClientProxyMemberFunctions[] = {
 
 	//{"CreateInstance",CoolClientProxy::CreateInstance},
@@ -778,6 +812,8 @@ static XLLRTGlobalAPI CoolClientProxyMemberFunctions[] = {
 	{"StopJob", CoolClientProxy::StopJob},
 	{"ResumeJob", CoolClientProxy::ResumeJob},
 	{"PauseJob", CoolClientProxy::PauseJob},
+	{"SetConfig", CoolClientProxy::SetConfig},
+	{"GetConfig", CoolClientProxy::GetConfig},
 	{NULL,NULL}
 };
 
