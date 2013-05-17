@@ -522,18 +522,18 @@ int CoolClientProxy::GetJobStatusTable(lua_State* luaState){
 
 			if( iter == job_status.end() ){
 				//this job has been removed, so we delete this job info table
-				//notice the 2 is ( handle + table )
-				lua_pop(luaState, 2);
+				lua_pop(luaState, 1);
 				//push nil to gc
 				lua_pushnil(luaState);
+				//then set the table
+				lua_settable(luaState, table_index);
 			}else{
 				//we still have this job, so pop the handle
 				lua_pop(luaState, 1);
 				//now the job info table is at -1
 				UpdateJobStatusTable(luaState, iter->second);
+				//the job info(value) is at -1, so we must pop it to do the next iteration
 			}
-			//the job info(value) or a nil value(for removed job) is at -1, so we must pop it to do the next iteration
-			lua_pop(luaState, 1);
 
 		}else{
 			poco_warning_f1(logger_, "Invalid Handle type : %s", string(lua_typename(luaState, -1)) );
