@@ -119,21 +119,10 @@
 										<valign>center</valign>
 									</attr>
 								</obj>
-								<obj id="runwithos" class="Thunder.CheckBox">
-									<attr>
-										<left>130</left>
-										<top>0</top>
-										<width>120</width>
-										<height>24</height>
-										<taborder>5</taborder>
-										<Text>开机自动启动</Text>
-										<TextColor>color.configpage.normal</TextColor>
-									</attr>
-								</obj>
 								<obj id="startasadd" class="Thunder.CheckBox">
 									<attr>
 										<left>130</left>
-										<top>27</top>
+										<top>0</top>
 										<width>120</width>
 										<height>24</height>
 										<taborder>5</taborder>
@@ -144,7 +133,7 @@
 								<obj id="torrentfolder" class="LayoutObject">
 									<attr>
 										<left>130</left>
-										<top>27*2</top>
+										<top>35</top>
 										<width>father.width - 130</width>
 										<height>54</height>
 									</attr>

@@ -79,7 +79,6 @@ function OnConfigResetConfirm(self)
 			maxuploadspeed = "1024", savefolder = "C:\\downloads\\", beepasfinished = true, alertasfinished = true }
 	--userData.Config = defaultConfig
 	
-	local runwithos = self:GetControlObject("runwithos")
 	local startasadd = self:GetControlObject("startasadd")
 	local torrentfolder = self:GetControlObject("torrentfolder.input")
 	local maxdownloadtask = self:GetControlObject("maxdownloadtask.input")
@@ -91,7 +90,6 @@ function OnConfigResetConfirm(self)
 	
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
 	
-	runwithos:SetCheck(true)
 	startasadd:SetCheck(true)
 	torrentfolder:SetText(coolClientProxy:GetConfig('DefaultTorrentPath'))
 	maxdownloadtask:SetText(5)
@@ -106,7 +104,6 @@ end
 
 function GetNewConfig(self)
 	local newConfig = {}
-	local runwithos = self:GetControlObject("runwithos")
 	local AutoStartDownloading = self:GetControlObject("startasadd")
 	local DefaultTorrentPath = self:GetControlObject("torrentfolder.input")
 	local MaxParallelTask = self:GetControlObject("maxdownloadtask.input")
@@ -117,9 +114,9 @@ function GetNewConfig(self)
 	
 	--newConfig.runwithos = runwithos:GetCheck()
 	if AutoStartDownloading:GetCheck() then
-		newConfig.AutoStartDownloading = 1
+		newConfig.AutoStartDownloading = tostring(1)
 	else
-		newConfig.AutoStartDownloading = 0
+		newConfig.AutoStartDownloading = tostring(0)
 	end
 	newConfig.DefaultTorrentPath = DefaultTorrentPath:GetText()
 	newConfig.MaxParallelTask = MaxParallelTask:GetText()
@@ -127,9 +124,9 @@ function GetNewConfig(self)
 	newConfig.MaxUploadSpeed = MaxUploadSpeed:GetText()
 	newConfig.DefaultDownloadPath = savefolder:GetText()
 	if DownloadNotificationSound:GetCheck() then
-		newConfig.DownloadNotificationSound = 1
+		newConfig.DownloadNotificationSound = tostring(1)
 	else
-		newConfig.DownloadNotificationSound = 0
+		newConfig.DownloadNotificationSound = tostring(0)
 	end
 	
 	return newConfig

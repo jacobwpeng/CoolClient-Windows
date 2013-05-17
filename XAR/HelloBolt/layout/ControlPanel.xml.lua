@@ -208,7 +208,13 @@ local function OnBtnDeleteClick(self)--删除任务
 
 	--XLMessageBox(#attr.ItemDataTable.." cursel:"..listbox:GetCurSel())
 end
-
+local function OnBtnOpenFolderClick(self)
+	local owner = self:GetOwnerControl():GetOwnerControl()
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	local listbox = owner:GetControlObject('listbox')
+	local attr = listbox:GetAttribute()
+	coolClientProxy:OpenDownloadPath(attr.ItemDataTable[listbox:GetCurSel()].Handle)
+end
 local function OnBtnSeedClick(self)--制作种子的对话框
 	local templateManager = XLGetObject("Xunlei.UIEngine.TemplateManager")
 	local hostWndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
@@ -233,9 +239,13 @@ end
 
 function OnDeleteTaskConfirm(self)
 	local listbox = self:GetOwnerControl():GetControlObject("listbox")
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
 	local attr = listbox:GetAttribute()
-	listbox:DeleteString(listbox:GetCurSel())
-	listbox:UpdateUI()
+	local treeManager = XLGetObject("Xunlei.UIEngine.TreeManager")                   
+	local tree = treeManager:GetUIObjectTree("MainObjectTree")
+	local downloadpage= tree:GetUIObject("tabbkg"):GetControlObject("MydownloadPage")
+	coolClientProxy:RemoveJob(attr.ItemDataTable[listbox:GetCurSel()].Handle)
+	downloadpage:UpdateListBox()
 end
 
 local function OnBtnConfigClick(self)--进入设置
@@ -267,6 +277,8 @@ function OnBtnClick(self)
 		OnBtnDeleteClick(self)
 	elseif id == "btn.seed" then
 		OnBtnSeedClick(self)
+	elseif id == 'btn.openfolder' then
+		OnBtnOpenFolderClick(self)
 	end
 end
 
