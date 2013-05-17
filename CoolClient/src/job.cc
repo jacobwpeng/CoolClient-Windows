@@ -180,11 +180,12 @@ namespace CoolDown{
                 //File file(jobInfo_.localFileInfo.local_file)
                 //see if the download has been paused
                 if( jobInfo_.downloadInfo.is_download_paused ){
+					int i = 0;
                     //FastMutex mutex;
-                    poco_debug(logger_, "download paused, going to wait the download_pause_cond.");
-                    jobInfo_.downloadInfo.download_pause_cond.wait(
-						jobInfo_.downloadInfo.download_pause_mutex, 
-						COND_WAIT_TIMEOUT);
+      //              poco_debug(logger_, "download paused, going to wait the download_pause_cond.");
+      //              jobInfo_.downloadInfo.download_pause_cond.wait(
+						//jobInfo_.downloadInfo.download_pause_mutex, 
+						//COND_WAIT_TIMEOUT);
                 }else{
                     ChunkInfoPtr chunk_info = cs_.get_chunk();
                     if( chunk_info.isNull() ){
@@ -262,15 +263,17 @@ namespace CoolDown{
                             
                             poco_debug_f1(logger_, "available thread : %d", tp_.available() );
                             while( tp_.available() == 0 ){
-								continue;
-         //                       try{
-									//poco_debug(logger_, "Going to wait for idel thread");
-         //                           this->available_thread_cond_.wait( this->available_thread_mutex_, 10);
-         //                           poco_debug(logger_, "wake up from wait available_thread_cond_");
-         //                       }catch(Poco::TimeoutException& e){
-         //                           poco_notice(logger_, "wait available_thread_cond_ timeout.");
-         //                       }
+								if( jobInfo_.downloadInfo.is_download_paused == false ){
+									continue;
+								}else{
+									poco_debug(logger_, "break from tp_.available() == 0");
+									break;
+								}
                             }
+							if( jobInfo_.downloadInfo.is_download_paused ){
+								//break from available thread
+								throw Poco::Exception("Before start new download start, got download paused");
+							}
                             tm_.start( new DownloadTask(
                                         *fileInfo, 
                                         jobInfo_.downloadInfo, 
