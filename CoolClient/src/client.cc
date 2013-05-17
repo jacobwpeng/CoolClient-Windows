@@ -954,8 +954,8 @@ namespace CoolDown{
                 if( ret != ERROR_OK ){
                     return ret;
                 }
-
-				
+			
+				this->StartJob(handle);
                 return ERROR_OK;
             }
 
