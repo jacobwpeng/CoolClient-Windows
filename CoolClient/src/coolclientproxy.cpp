@@ -2,6 +2,7 @@
 #include "utilities.h"
 #include "job_info.h"
 #include "make_torrent_runnable.h"
+#include <Shellapi.h>
 #include <Commdlg.h>
 #include <Shlobj.h>
 #include <string>
@@ -792,6 +793,24 @@ int CoolClientProxy::GetConfig(lua_State* luaState){
 		poco_warning(logger_, "Invalid args of CoolClientProxy::SetConfig");
 		DumpLuaState(luaState);
 		return 0;
+	}
+}
+
+int CoolClientProxy::ResetConfig(lua_State* luaState){
+	pCoolClient->ResetConfig();
+	return 0;
+}
+
+int CoolClientProxy::OpenDownloadPath(lua_State* luaState){
+	if( lua_isnumber(luaState, 2) ){
+		int handle = lua_tointeger(luaState, 2);
+		string local_path = pCoolClient->GetLocalPath(handle);
+		if( local_path.empty() ){
+			return 0;
+		}else{
+			ShellExecuteA(NULL, NULL, "explorer", ("/select, " + local_path).c_str(), NULL, SW_SHOW);
+			return 0;
+		}
 	}
 }
 
