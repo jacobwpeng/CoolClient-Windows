@@ -111,7 +111,8 @@ namespace CoolDown{
                 this->init_error_ = false;
 				job_index_ = 1;
                 string msg;
-			
+				
+				StringList key_list;
                 try{
 					{
 						//load default settings
@@ -122,6 +123,14 @@ namespace CoolDown{
 						default_setting_["MaxUploadSpeed"] = "512";
 						default_setting_["DefaultDownloadPath"] = "E:\\download";
 						default_setting_["DownloadNotificationSound"] = "1";
+						key_list.push_back("AutoStartDownloading");
+						key_list.push_back("DefaultTorrentPath");
+						key_list.push_back("MaxParallelTask");
+						key_list.push_back("MaxDownloadSpeed");
+						key_list.push_back("MaxUploadSpeed");
+						key_list.push_back("DefaultDownloadPath");
+						key_list.push_back("DownloadNotificationSound");
+
 					}
 					this->user_config_path_ = "userconfig.proerties";
 					this->history_file_path_ = config().getString("client.history_path", default_history_file_path);
@@ -132,8 +141,14 @@ namespace CoolDown{
 					File configFile( this->user_config_path_ );
 					if( configFile.exists() ){
 						pUserConfig_->load(this->user_config_path_);
+						config().add(pUserConfig_, -100);
+
+						for(int pos = 0; pos != key_list.size(); ++pos){
+							const string& key(key_list[pos]); 
+							current_setting_[key] = config().getString(key, default_setting_[key]);
+						}
 					}
-					config().add(pUserConfig_, -100);
+					
 
 					sockManager_.assign( new LocalSockManager );
 					if( sockManager_.isNull() ){
