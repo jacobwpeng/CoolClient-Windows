@@ -35,6 +35,7 @@
 #include <Poco/Base64Encoder.h>
 #include <Poco/Base64Decoder.h>
 #include <Poco/FileChannel.h>
+#include <Poco/String.h>
 
 
 
@@ -937,7 +938,11 @@ namespace CoolDown{
 				SettingMap::const_iterator iter = current_setting_.begin();
 				while( iter != current_setting_.end() ){
 					try{
-						pUserConfig_->setString(iter->first, iter->second);
+						string value = Poco::replace(iter->second, "\\", "\\\\");
+						//Poco::replaceInPlace(value, "\\t", "\\\\t");
+						//Poco::replaceInPlace(value, "\\n", "\\\\n");
+						//Poco::replaceInPlace(value, "\\f", "\\\\f");
+						pUserConfig_->setString(iter->first, value);
 					}catch(Poco::Exception& e){
 						poco_warning_f1(logger(), "in CoolClient::SaveUserConfig, Got exception : %s", e.displayText());
 					}
