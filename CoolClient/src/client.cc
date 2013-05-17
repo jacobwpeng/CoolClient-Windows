@@ -344,6 +344,7 @@ namespace CoolDown{
                     poco_warning_f3(logger(), "Cannot connect tracker, ret : %d, addr : %s, port : %d.", (int)ret, tracker_address, port);
                     return ret;
                 }
+				FastMutex::ScopedLock lock_(this->tracker_sock_mutex_);
                 LocalSockManager::SockPtr sock( sockManager_->get_tracker_sock( format("%s:%d", tracker_address, port)) );
                 poco_assert( sock.isNull() == false );
 
@@ -358,6 +359,7 @@ namespace CoolDown{
 
             retcode_t CoolClient::LogoutTracker(const string& tracker_ip, int port){
 				const string& tracker_addr( format("%s:%d", tracker_ip, port) );
+				FastMutex::ScopedLock lock_(this->tracker_sock_mutex_);
                 LocalSockManager::SockPtr sock( sockManager_->get_tracker_sock( tracker_addr) );
                 if( sock.isNull() ){
                     return ERROR_NET_CONNECT;
@@ -375,6 +377,7 @@ namespace CoolDown{
 			}
 
             retcode_t CoolClient::PublishResourceToTracker(const string& tracker_address, const string& fileid){
+				FastMutex::ScopedLock lock_(this->tracker_sock_mutex_);
                 LocalSockManager::SockPtr sock( sockManager_->get_tracker_sock(tracker_address) );
                 if( sock.isNull() ){
                     return ERROR_NET_NOT_CONNECTED;
@@ -389,6 +392,7 @@ namespace CoolDown{
             }
 
             retcode_t CoolClient::ReportProgress(const string& tracker_address, const string& fileid, int percentage){
+				FastMutex::ScopedLock lock_(this->tracker_sock_mutex_);
                 LocalSockManager::SockPtr sock( sockManager_->get_tracker_sock(tracker_address) );
                 if( sock.isNull() ){
                     return ERROR_NET_CONNECT;
@@ -407,7 +411,8 @@ namespace CoolDown{
                 poco_assert( pInfoList != NULL );
                 poco_assert( currentPercentage >= 0 );
                 poco_assert( needCount > 0 );
-
+				
+				FastMutex::ScopedLock lock_(this->tracker_sock_mutex_);
                 LocalSockManager::SockPtr sock( sockManager_->get_tracker_sock(tracker_address ));
                 if( sock.isNull() ){
                     return ERROR_NET_CONNECT;

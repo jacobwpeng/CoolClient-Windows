@@ -141,13 +141,13 @@ namespace CoolDown{
                     //communicate with tracker
                     retcode_t LoginTracker(const string& tracker_address, int port = TRACKER_PORT);
                     retcode_t LogoutTracker(const string& tracker_address, int port = TRACKER_PORT);
-					retcode_t ConnectResourceServer(const string& resource_server_address, int port = RESOURCE_SERVER_PORT);
                     retcode_t PublishResourceToTracker(const string& tracker_address, const string& fileid);
                     retcode_t ReportProgress(const string& tracker_address, const string& fileid, int percentage);
                     retcode_t RequestClients(const string& tracker_address, const string& fileid, int currentPercentage, 
                                           int needCount, const ClientIdCollection& clientids, FileOwnerInfoPtrList* pInfoList);
 
 					//conmunicate with resource server
+					retcode_t ConnectResourceServer(const string& resource_server_address, int port = RESOURCE_SERVER_PORT);
 					retcode_t SearchResource(const string& keywords, int type, int record_start, int record_end, InfoList* pInfo);
 					retcode_t SearchResourceCount(const string& keywords, int type, int* pCount);
 					retcode_t GetResourceTorrentById(int torrent_id, const string& torrent_name, string* local_torrent_path);
@@ -250,6 +250,7 @@ namespace CoolDown{
 
 
                     FastMutex progress_info_mutex_;
+					FastMutex tracker_sock_mutex_;
                     struct ProgressInfo{
                         string tracker_address;
                         string fileid;
