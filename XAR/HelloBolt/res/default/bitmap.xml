@@ -21,6 +21,7 @@
 	<bitmap id="bitmap.tab.config" image="bitmap\tab.icon.config.png"/>
 	
 	<bitmap id="bitmap.menu.icon.exit" imagelist="imagelist.menu.icon" index="7" />
+	<bitmap id="bitmap.menu.icon.config" imagelist="imagelist.menu.icon" index="4" />
 	<bitmap id="system.button.close.normal" imagelist="imagelist.system.button" index="30" />
 	<bitmap id="system.button.close.move" imagelist="imagelist.system.button" index="28" />
 	<bitmap id="system.button.close.lbuttondown" imagelist="imagelist.system.button" index="29" />

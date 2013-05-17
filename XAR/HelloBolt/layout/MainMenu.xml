@@ -87,15 +87,18 @@
 						<alpha>200</alpha>
 					</attr>
 				</obj>
-				<obj id="menu.item.quit" class="Thunder.Menu.Item">
+				<obj id="menu.item.config" class="Thunder.Menu.Item">
 					<attr>
 						<left>3</left>
 						<top>3</top>
 						<width>father.width-6</width>
 						<height>20</height>
-						<Text>退出</Text>
-						<Icon>bitmap.menu.icon.exit</Icon>
+						<Text>设置</Text>
+						<Icon>bitmap.menu.icon.config</Icon>
 					</attr>
+					<eventlist>
+						<event name="OnMenuItemClick" file="MainMenu.xml.lua" func="OnMainMenuConfigClick" />
+					</eventlist>
 				</obj>
 				<obj id="menu.item.exit" class="Thunder.Menu.Item">
 					<attr>
@@ -106,6 +109,9 @@
 						<Text>退出</Text>
 						<Icon>bitmap.menu.icon.exit</Icon>
 					</attr>
+					<eventlist>
+						<event name="OnMenuItemClick" file="MainMenu.xml.lua" func="OnMainMenuExitClick" />
+					</eventlist>
 				</obj>
 			</children>
 			<eventlist>

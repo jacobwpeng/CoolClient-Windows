@@ -93,6 +93,9 @@ function OnSystemMaximumButtonLButtonUp(self, x, y, flags)
 	local bkg = self:GetControlObject("button.bkg")
 	local attr = self:GetAttribute()	
 	bkg:SetResID(attr.NormalBkg)
+	local hostwndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
+	local hostwnd = hostwndManager:GetHostWnd("MainFrame")
+	hostwnd:Max() 
 end
 
 --用来实现最小化按钮的相关事件

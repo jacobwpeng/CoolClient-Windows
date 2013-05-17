@@ -34,7 +34,7 @@ function OnOKClick(self)
 		seedtype = 1
 	elseif btnGroup:GetSelectedButtonID() == "music" then
 		seedtype = 2 
-	elseif btnGroup:GetSelectedButtonID() == "music" then
+	elseif btnGroup:GetSelectedButtonID() == "game" then
 		seedtype = 4
 	else 
 		seedtype = 8

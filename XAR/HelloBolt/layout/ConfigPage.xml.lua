@@ -1,5 +1,23 @@
 function OnPageInit(self)
 	self:SetObjPos(0,0,"father.width","father.height")
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	local runwithos = self:GetControlObject("runwithos")
+	local AutoStartDownloading = self:GetControlObject("startasadd")
+	local DefaultTorrentPath = self:GetControlObject("torrentfolder.input")
+	local MaxParallelTask = self:GetControlObject("maxdownloadtask.input")
+	local MaxDownloadSpeed = self:GetControlObject("maxdownloadspeed.input")
+	local MaxUploadSpeed = self:GetControlObject("maxuploadspeed.input")
+	local DefaultDownloadPath = self:GetControlObject("savefolder.input")
+	local DownloadNotificationSound = self:GetControlObject("beepasfinished")
+	local alertasfinished = self:GetControlObject("alertasfinished") 
+	
+	AutoStartDownloading:SetCheck(coolClientProxy:GetConfig('AutoStartDownloading'))
+	DefaultTorrentPath:SetText(coolClientProxy:GetConfig('DefaultTorrentPath'))
+	MaxParallelTask:SetText(coolClientProxy:GetConfig('MaxParallelTask'))
+	MaxDownloadSpeed:SetText(coolClientProxy:GetConfig('MaxDownloadSpeed'))
+	MaxUploadSpeed:SetText(coolClientProxy:GetConfig('MaxUploadSpeed'))
+	DefaultDownloadPath:SetText(coolClientProxy:GetConfig('DefaultDownloadPath'))
+	DownloadNotificationSound:SetCheck(coolClientProxy:GetConfig('DownloadNotificationSound'))
 end
 
 --弹出确认对话框，是否还原默认设置
@@ -53,7 +71,7 @@ function ConfigChangeAni(self,text)
 end
 
 --还原默认设置
-function ConfigReset(self)
+function OnConfigResetConfirm(self)
 	local hostwndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
 	local hostwnd = hostwndManager:GetHostWnd("MainFrame")
 	local userData = hostwnd:GetUserData()
@@ -71,15 +89,16 @@ function ConfigReset(self)
 	local beepasfinished = self:GetControlObject("beepasfinished")
 	local alertasfinished = self:GetControlObject("alertasfinished")
 	
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	
 	runwithos:SetCheck(true)
 	startasadd:SetCheck(true)
-	torrentfolder:SetText("C:\\cd\\")
-	maxdownloadtask:SetText(10)
-	maxdownloadspeed:SetText(0)
-	maxuploadspeed:SetText(1024)
-	savefolder:SetText("C:\\downloads\\")
+	torrentfolder:SetText(coolClientProxy:GetConfig('DefaultTorrentPath'))
+	maxdownloadtask:SetText(5)
+	maxdownloadspeed:SetText(512)
+	maxuploadspeed:SetText(512)
+	savefolder:SetText("E:\\download\\")
 	beepasfinished:SetCheck(true)
-	alertasfinished:SetCheck(true)
 	
 	self:ConfigChangeAni("已恢复默认设置")
 	--XLMessageBox("succ")
@@ -88,24 +107,30 @@ end
 function GetNewConfig(self)
 	local newConfig = {}
 	local runwithos = self:GetControlObject("runwithos")
-	local startasadd = self:GetControlObject("startasadd")
-	local torrentfolder = self:GetControlObject("torrentfolder.input")
-	local maxdownloadtask = self:GetControlObject("maxdownloadtask.input")
-	local maxdownloadspeed = self:GetControlObject("maxdownloadspeed.input")
-	local maxuploadspeed = self:GetControlObject("maxuploadspeed.input")
+	local AutoStartDownloading = self:GetControlObject("startasadd")
+	local DefaultTorrentPath = self:GetControlObject("torrentfolder.input")
+	local MaxParallelTask = self:GetControlObject("maxdownloadtask.input")
+	local MaxDownloadSpeed = self:GetControlObject("maxdownloadspeed.input")
+	local MaxUploadSpeed = self:GetControlObject("maxuploadspeed.input")
 	local savefolder = self:GetControlObject("savefolder.input")
-	local beepasfinished = self:GetControlObject("beepasfinished")
-	local alertasfinished = self:GetControlObject("alertasfinished") 
+	local DownloadNotificationSound = self:GetControlObject("beepasfinished")
 	
-	newConfig.runwithos = runwithos:GetCheck()
-	newConfig.startasadd = startasadd:GetCheck()
-	newConfig.torrentfolder = torrentfolder:GetText()
-	newConfig.maxdownloadtask = maxdownloadtask:GetText()
-	newConfig.maxdownloadspeed = maxdownloadspeed:GetText()
-	newConfig.maxuploadspeed = maxuploadspeed:GetText()
-	newConfig.savefolder = savefolder:GetText()
-	newConfig.beepasfinished = beepasfinished:GetCheck()
-	newConfig.alertasfinished = alertasfinished:GetCheck()
+	--newConfig.runwithos = runwithos:GetCheck()
+	if AutoStartDownloading:GetCheck() then
+		newConfig.AutoStartDownloading = 1
+	else
+		newConfig.AutoStartDownloading = 0
+	end
+	newConfig.DefaultTorrentPath = DefaultTorrentPath:GetText()
+	newConfig.MaxParallelTask = MaxParallelTask:GetText()
+	newConfig.MaxDownloadSpeed = MaxDownloadSpeed:GetText()
+	newConfig.MaxUploadSpeed = MaxUploadSpeed:GetText()
+	newConfig.DefaultDownloadPath = savefolder:GetText()
+	if DownloadNotificationSound:GetCheck() then
+		newConfig.DownloadNotificationSound = 1
+	else
+		newConfig.DownloadNotificationSound = 0
+	end
 	
 	return newConfig
 end
@@ -113,21 +138,58 @@ end
 function OnAppplyClick(self)
 	local owner = self:GetOwnerControl()
 	local hostwndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
-	local hostwnd = hostwndManager:GetHostWnd("MainFrame")
-	local userData = hostwnd:GetUserData()
-	userData.Config = owner:GetNewConfig()
-	
+	local config = owner:GetNewConfig()
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	for k,v in pairs(config) do
+		coolClientProxy:SetConfig(k,v)
+	end
 	owner:ConfigChangeAni("设置已保存")
 end
 
 function OnCloseClick(self)
-	--先检查设置是否发生变动
-	--[[
-		local isChanged = check()
-		if isChanged then
-			DoModal()
-		else
-			Close()
+	local owner = self:GetOwnerControl()
+	local newConfig = owner:GetNewConfig()
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	local hostwndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
+	local hostwnd = hostwndManager:GetHostWnd("MainFrame")
+	local userData = hostwnd:GetUserData()
+	local treeManager = XLGetObject("Xunlei.UIEngine.TreeManager")                   
+	local tree = treeManager:GetUIObjectTree("MainObjectTree")
+	local tabheader = tree:GetUIObject("tabHeader")
+	
+	for k,v in pairs(newConfig) do
+		if v ~= coolClientProxy:GetConfig(k) then
+			local templateManager = XLGetObject("Xunlei.UIEngine.TemplateManager")
+			local hostWndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
+			local mainWnd = hostWndManager:GetHostWnd("MainFrame")
+			local modalHostWndTemplate = templateManager:GetTemplate("Thunder.MessageBox","HostWndTemplate")
+			local modalHostWnd = modalHostWndTemplate:CreateInstance("Thunder.MessageBox.Instance")
+			local objectTreeTemplate = templateManager:GetTemplate("Thunder.MessageBox","ObjectTreeTemplate")
+			local uiObjectTree = objectTreeTemplate:CreateInstance("Thunder.MessageBox.Instance")
+			modalHostWnd:BindUIObjectTree(uiObjectTree)
+
+			local userData = {Title = "设置中心", Icon="bitmap.confirmmodal.warning", Content="提示:是否保存设置变更？", 
+			Object = owner, EventName = "OnCloseAndSaveConfirm"}
+			modalHostWnd:SetUserData(userData)
+			modalHostWnd:DoModal(mainWnd:GetWndHandle())
+
+			local objtreeManager = XLGetObject("Xunlei.UIEngine.TreeManager")	
+			objtreeManager:DestroyTree("Thunder.MessageBox.Instance")
+			hostWndManager:RemoveHostWnd("Thunder.MessageBox.Instance")
+			break
 		end
-	]]
+	end
+	userData.ConfigPage = false
+	AsynCall(function() tabheader:RemoveTabItem('ConfigPage',"MydownloadPage") end)
+end
+
+function OnCloseAndSaveConfirm(self)
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	local hostwndManager = XLGetObject("Xunlei.UIEngine.HostWndManager")
+	local hostwnd = hostwndManager:GetHostWnd("MainFrame")
+	local userData = hostwnd:GetUserData()
+	local config = self:GetNewConfig()
+	for k,v in pairs(config) do
+		coolClientProxy:SetConfig(k,v)
+	end
 end

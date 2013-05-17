@@ -21,6 +21,7 @@
 					<width>father.width</width>
 					<height>father.height</height>
 					<texture>texture.common.wndbkg</texture>
+					
 				</attr>
 				<children>
 					<obj id="body" class="TextureObject">
@@ -29,7 +30,7 @@
 							<top>2</top>
 							<width>father.width - 4</width>
 							<height>father.height - 4</height>
-							<texture>texture.theme.default.bkg</texture>
+							<texture>texture.theme.default.bkg11</texture>
 						</attr>
 						<children>
 							<obj id="caption" class="CaptionObject">
@@ -91,9 +92,6 @@
 								</eventlist>
 							</obj>
 						</children>
-						<eventlist>
-							
-						</eventlist>
 					</obj>
 				</children>
 			</obj>

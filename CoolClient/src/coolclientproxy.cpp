@@ -787,6 +787,7 @@ int CoolClientProxy::GetConfig(lua_State* luaState){
 		string key = lua_tostring(luaState, 2);
 		string value = pCoolClient->GetConfig(key);
 		lua_pushstring(luaState, value.c_str());
+		return 1;
 	}else{
 		poco_warning(logger_, "Invalid args of CoolClientProxy::SetConfig");
 		DumpLuaState(luaState);

@@ -313,7 +313,7 @@
 								<left>255</left>
 								<top>father.height - 24</top>
 								<width>30</width>
-								<height>24</height>
+								<height>22</height>
 								<Text>确定</Text>
 							</attr>
 							<eventlist>

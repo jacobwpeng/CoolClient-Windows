@@ -11,6 +11,7 @@
 		</method_def>
 		<event_def>
 			<OnConfigResetConfirm/>
+			<OnCloseAndSaveConfirm/>
 		</event_def>
 		<objtemplate>
 			<children>
@@ -432,17 +433,6 @@
 										<TextColor>color.configpage.normal</TextColor>
 									</attr>
 								</obj>
-								<obj id="alertasfinished" class="Thunder.CheckBox">
-									<attr>
-										<left>130</left>
-										<top>27</top>
-										<width>150</width>
-										<height>24</height>
-										<taborder>5</taborder>
-										<Text>下载完成后提示窗口</Text>
-										<TextColor>color.configpage.normal</TextColor>
-									</attr>
-								</obj>
 							</children>
 						</obj>
 					</children>
@@ -450,7 +440,8 @@
 			</children>
 			<eventlist>
 				<event name="OnInitControl" file="ConfigPage.xml.lua" func="OnPageInit" />
-				<event name="OnConfigResetConfirm" file="ConfigPage.xml.lua" func="ConfigReset" />
+				<event name="OnConfigResetConfirm" file="ConfigPage.xml.lua" func="OnConfigResetConfirm" />
+				<event name="OnCloseAndSaveConfirm" file="ConfigPage.xml.lua" func="OnCloseAndSaveConfirm" />
 			</eventlist>
 		</objtemplate>
 	</control>
