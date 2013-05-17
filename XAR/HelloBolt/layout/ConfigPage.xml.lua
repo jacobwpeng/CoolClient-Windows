@@ -190,3 +190,15 @@ function OnCloseAndSaveConfirm(self)
 		coolClientProxy:SetConfig(k,v)
 	end
 end
+
+function ChooseTorrentPath(self)
+	local path = self:GetFather()
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	coolClientProxy:ChoosePath(2, path:GetText(), function(str) path:SetText(str) end)
+end
+
+function ChooseDownloadPath(self)
+	local path = self:GetFather()
+	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
+	coolClientProxy:ChoosePath(2, path:GetText(), function(str) path:SetText(str) end)
+end

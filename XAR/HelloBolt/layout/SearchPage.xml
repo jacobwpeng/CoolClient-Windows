@@ -30,9 +30,9 @@
 						</obj>
 						<obj id="inputarea" class="Thunder.InputArea">
 							<attr>
-								<left>(father.width - 350 - 65)/2</left>
+								<left>(father.width - 380 - 65)/2</left>
 								<top>170</top>
-								<width>350</width>
+								<width>380</width>
 								<height>32</height>
 							</attr>
 							<eventlist>

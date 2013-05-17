@@ -152,6 +152,7 @@
 												<top>24</top>
 												<width>300</width>
 												<height>30</height>
+												<HasBtn>true</HasBtn>
 											</attr>
 											<children>
 												<obj id="choosepath" class="BaseUI.TextureButton">
@@ -177,6 +178,9 @@
 															</attr>
 														</obj>
 													</children>
+													<eventlist>
+														<event name="OnClick" file="ConfigPage.xml.lua" func="ChooseTorrentPath" />
+													</eventlist>
 												</obj>
 											</children>
 										</obj>
@@ -348,6 +352,7 @@
 												<top>24</top>
 												<width>300</width>
 												<height>30</height>
+												<HasBtn>true</HasBtn>
 											</attr>
 											<children>
 												<obj id="choosepath" class="BaseUI.TextureButton">
@@ -373,6 +378,9 @@
 															</attr>
 														</obj>
 													</children>
+													<eventlist>
+														<event name="OnClick" file="ConfigPage.xml.lua" func="ChooseDownloadPath" />
+													</eventlist>
 												</obj>
 											</children>
 										</obj>
