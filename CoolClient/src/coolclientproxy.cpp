@@ -818,6 +818,19 @@ int CoolClientProxy::OpenDownloadPath(lua_State* luaState){
 	}
 }
 
+int CoolClientProxy::SelectPath(lua_State* luaState){
+	if( lua_isstring(luaState, 2) ){
+		string init_path = lua_tostring(luaState, 2);
+		string new_path = OpenDirSelectDialog(init_path);
+		lua_pushstring(luaState, new_path.c_str());
+		return 1;
+	}else{
+		poco_warning(logger_, "Invalid args of CoolClientProxy::SelectPath");
+		DumpLuaState(luaState);
+		return 0;
+	}
+}
+
 static XLLRTGlobalAPI CoolClientProxyMemberFunctions[] = {
 
 	//{"CreateInstance",CoolClientProxy::CreateInstance},
@@ -839,6 +852,7 @@ static XLLRTGlobalAPI CoolClientProxyMemberFunctions[] = {
 	{"SetConfig", CoolClientProxy::SetConfig},
 	{"GetConfig", CoolClientProxy::GetConfig},
 	{"OpenDownloadPath", CoolClientProxy::OpenDownloadPath},
+	{"SelectPath", CoolClientProxy::SelectPath},
 	{NULL,NULL}
 };
 

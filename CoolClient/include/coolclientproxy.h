@@ -40,6 +40,7 @@ public:
 	static int GetConfig(lua_State* luaState);
 	static int ResetConfig(lua_State* luaState);
 	static int OpenDownloadPath(lua_State* luaState);
+	static int SelectPath(lua_State* luaState);
 
 	static int StopMakingTorrent(lua_State* luaState);
 	static int StopClient(lua_State* luaState);
