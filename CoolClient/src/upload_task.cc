@@ -1,6 +1,7 @@
 #include "upload_task.h"
 #include "job_info.h"
 #include "verification.h"
+#include "utilities.h"
 #include <Poco/Logger.h>
 #include <Poco/Util/Application.h>
 #include <Poco/SharedMemory.h>
@@ -39,7 +40,7 @@ namespace CoolDown{
             string content;
             {
 				using namespace boost::interprocess;
-				file_mapping m_file(file_->path().c_str(), read_write);
+				file_mapping m_file( UTF82GBK(file_->path()).c_str(), read_write);
 				mapped_region region(m_file, read_write, offset_, chunk_size_);
                 /*SharedMemory sm(*file_, SharedMemory::AM_READ);
                 content = string( sm.begin() + offset_, chunk_size_ );*/
