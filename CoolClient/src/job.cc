@@ -345,7 +345,8 @@ namespace CoolDown{
             if( iter != infoMap.end() ){
                 FileOwnerInfoPtrList& infoPtrList = iter->second;
                 for(int i = 0; i != infoPtrList.size(); ++i){
-                    clientidList.push_back(infoPtrList[i]->clientid);
+					//disable this feature
+                    //clientidList.push_back(infoPtrList[i]->clientid);
                 }
             }else{
                 infoMap[fileid] = FileOwnerInfoPtrList();
