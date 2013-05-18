@@ -24,7 +24,7 @@ namespace CoolDown{
 					&torrent, &progress_obj_);
 				poco_debug_f1(logger_, "in MakeTorrentRunnable::run, Call CoolClient::MakeTorrent returns %d", 
 									(int)ret);
-				ret = pCoolClient_->PublishResource(torrent_name_, torrent);
+				ret = pCoolClient_->PublishResource(GBK2UTF8(torrent_name_), torrent);
 				poco_debug_f1(logger_, "in MakeTorrentRunnable::run, Call CoolClient::PublishResource returns %d", 
 					(int)ret);
 				string torrent_path = pCoolClient_->get_torrent_path(torrent_name_);
