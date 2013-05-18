@@ -818,6 +818,8 @@ namespace CoolDown{
                 if( pJob.isNull() ){
                     return ERROR_JOB_NOT_EXISTS;
                 }
+				string torrent_id = pJob->MutableJobInfo()->torrentInfo.torrentid();
+				torrent_ids_.erase(torrent_id);
                 pJob->MutableJobInfo()->downloadInfo.is_job_removed = true;
                 pJob->MutableJobInfo()->downloadInfo.download_pause_cond.broadcast();
                 pJob->MutableJobInfo()->downloadInfo.download_speed_limit_cond.broadcast();
@@ -1178,7 +1180,7 @@ namespace CoolDown{
 					}
 
 					if( pInfo->downloadInfo.download_total == pInfo->torrentInfo.get_total_size()){
-						if( status.upload_speed_per_second_in_bytes != 0 ){
+ 						if( status.upload_speed_per_second_in_bytes != 0 ){
 							status_code = JOB_UPLOADING;
 						}else{
 							status_code = JOB_INACTIVE;
