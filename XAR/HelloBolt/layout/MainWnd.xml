@@ -184,6 +184,15 @@
 										</obj>
 									</children>
 								</obj>
+								<obj id="logo" class="ImageObject">
+									<attr>
+										<left></left>
+										<top></top>
+										<width>58</width>
+										<height>58</height>
+										<image>bitmap.mainwnd.logo</image>
+									</attr>
+								</obj>
 								<obj id="tabctrl" class="LayoutObject">
 									<attr>
 										<left>58</left>

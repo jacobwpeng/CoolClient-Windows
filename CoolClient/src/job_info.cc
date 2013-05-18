@@ -52,8 +52,8 @@ namespace CoolDown{
             FastMutex::ScopedLock lock(mutex_);
             Logger& logger_ = Application::instance().logger();
             try{
-				poco_debug_f1(logger_, "top_path_ : %s", top_path_);
-                poco_debug_f4(logger_, "Call add_file with fileid '%s', relative_path : '%s', filename : '%s', filesize : '%Ld'",
+				poco_information_f1(logger_, "top_path_ : %s", top_path_);
+                poco_information_f4(logger_, "Call add_file with fileid '%s', relative_path : '%s', filename : '%s', filesize : '%Ld'",
                         fileid, relative_path, filename, filesize);
                 //make sure we don't add a file twice
                 //map<string, FilePtr>::iterator iter = files.find(fileid);
@@ -73,7 +73,7 @@ namespace CoolDown{
                 dir.createDirectories();
 
                 files[fileid] = FilePtr( new File(filepath) );
-                poco_debug_f1(logger_, "in LocalFileInfo::add_file, filepath : %s", filepath);
+                poco_information_f1(logger_, "in LocalFileInfo::add_file, filepath : %s", filepath);
 
                 if( files[fileid]->exists() == false ){
                     bool create_file = files[fileid]->createFile();
@@ -85,7 +85,7 @@ namespace CoolDown{
                     }
 
                 }else{
-                    //poco_debug_f3(logger_, "file already exists, fileid '%s', relative_path '%s', filename '%s'",
+                    //poco_information_f3(logger_, "file already exists, fileid '%s', relative_path '%s', filename '%s'",
                     //        fileid, relative_path, filename);
                 }
             }catch(Exception& e){
@@ -260,7 +260,7 @@ namespace CoolDown{
          localFileInfo(top_path),
          torrentInfo(torrent)
         {
-			poco_debug_f1(logger_, "top_path : %s", top_path);
+			poco_information_f1(logger_, "top_path : %s", top_path);
             fileidlist_.reserve( torrent.file().size() );
 			Int64 total_size = 0;
             for(int pos = 0; pos != torrent.file().size(); ++pos){
@@ -279,7 +279,7 @@ namespace CoolDown{
                 Int64 filesize( file.size() );
 				total_size += filesize;
 
-                poco_debug_f2(logger_, "add file to Job, fileid : '%s', name : '%s'", fileid, filename );
+                poco_information_f2(logger_, "add file to Job, fileid : '%s', name : '%s'", fileid, filename );
                 downloadInfo.percentage_map[fileid] = 0;
                 downloadInfo.bitmap_map[fileid] = new file_bitmap_t( chunk_size, 0 );
                 localFileInfo.add_file(fileid, relative_path, filename, filesize);

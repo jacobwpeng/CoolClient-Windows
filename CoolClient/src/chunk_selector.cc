@@ -28,10 +28,10 @@ namespace CoolDown{
             BOOST_FOREACH(const string& fileid, jobInfo_.UniqueFileidList() ){
                 TorrentInfo::file_map_t::const_iterator iter = fileMap.find(fileid);
                 poco_assert( iter != fileMap.end() );
-                poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
+                poco_information_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
                 poco_assert( iter->second.size() != 0 );
-                poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
+                poco_information_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
                 int chunk_count = iter->second.at(0)->chunk_count();
                 for(int chunk_pos = 0; chunk_pos != chunk_count; ++chunk_pos){
@@ -44,7 +44,7 @@ namespace CoolDown{
                         info->fileid = iter->first;
                         get_priority(info, 0);
                         chunk_queue_.push(info);
-                        poco_debug_f1(logger_, "new chunk of file '%s' has been added to chunk_queue_", info->fileid);
+                        poco_information_f1(logger_, "new chunk of file '%s' has been added to chunk_queue_", info->fileid);
                     }
                 }
                 
@@ -55,13 +55,14 @@ namespace CoolDown{
             JobInfo::owner_info_map_t& infoMap = jobInfo_.ownerInfoMap;
             poco_assert( infoMap.find(info->fileid) != infoMap.end() );
             const FileOwnerInfoPtrList& infoList = infoMap[ info->fileid ];
-            poco_debug_f2(logger_, "%d clients owns file '%s' ", (int)infoList.size(), info->fileid);
+            poco_information_f2(logger_, "%d clients owns file '%s' ", (int)infoList.size(), info->fileid);
 
             info->clientLists.clear();
             info->priority = 0;
 
             BOOST_FOREACH(FileOwnerInfoPtr p, infoList){
                 
+				file_bitmap_ptr bitmap = p->bitmap_ptr;
 				if( p->bitmap_ptr.isNull() || p->bitmap_ptr->size() < info->chunk_num ){
 					poco_error_f2(logger_, "in ChunkSelector::get_priority, Null bitmap from client(%s:%d)",
 						p->ip, p->message_port);

@@ -19,6 +19,7 @@
 	<bitmap id="bitmap.tab.mydownload" image="bitmap\tab.icon.mydownload.png"/>
 	<bitmap id="bitmap.tab.search" image="bitmap\tab.icon.search.png"/>
 	<bitmap id="bitmap.tab.config" image="bitmap\tab.icon.config.png"/>
+	<bitmap id="bitmap.mainwnd.logo" path="bitmap\logo_bird_58.png"/>
 	
 	<bitmap id="bitmap.menu.icon.exit" imagelist="imagelist.menu.icon" index="7" />
 	<bitmap id="bitmap.menu.icon.config" imagelist="imagelist.menu.icon" index="4" />

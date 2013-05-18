@@ -26,7 +26,7 @@ namespace CoolDown{
         void NetTaskManager::onTaskFinished(TaskFinishedNotification* pNf){
             UploadTask* pTask = dynamic_cast<UploadTask*>( pNf->task() );
             poco_assert( pTask != NULL );
-            poco_debug_f1(logger_, "UploadTask Finished! %s", pTask->DebugString());
+            poco_information_f1(logger_, "UploadTask Finished! %s", pTask->DebugString());
         }
 
         void NetTaskManager::onTaskFailed(TaskFailedNotification* pNf){

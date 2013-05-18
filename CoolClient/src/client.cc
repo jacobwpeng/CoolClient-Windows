@@ -209,7 +209,7 @@ namespace CoolDown{
                     return Application::EXIT_TEMPFAIL;
                 }
 				poco_notice(logger(), "enter main of CoolClient.");
-				//poco_debug_f1(logger(), "%s", ConvertGBKToUtf8("UTF8 String of ascii charactors."));
+				//poco_information_f1(logger(), "%s", ConvertGBKToUtf8("UTF8 String of ascii charactors."));
 				//return Application::EXIT_OK;
 
                 string tracker_ip = config().getString("TrackerAddress", "127.0.0.1");
@@ -219,13 +219,13 @@ namespace CoolDown{
 
 				retcode_t ret = this->LoginTracker(tracker_ip, TRACKER_PORT);
 				this->tracker_addr_ = format("%s:%d", tracker_ip, (int)TRACKER_PORT);
-				poco_debug_f1(logger(), "LoginTracker returns %d", (int)ret);
+				poco_information_f1(logger(), "LoginTracker returns %d", (int)ret);
 
 				ret = this->ConnectResourceServer(resource_server_ip);
 				this->resource_server_ip_ = resource_server_ip;
-				poco_debug_f1(logger(), "ConnectResourceServer returns %d", (int)ret);
+				poco_information_f1(logger(), "ConnectResourceServer returns %d", (int)ret);
 
-				poco_debug_f1(logger(), "run application with args count :%d", (int)args.size());
+				poco_information_f1(logger(), "run application with args count :%d", (int)args.size());
 				//init routine threads
                 this->job_info_collector_thread_.setOSPriority( Thread::getMaxOSPriority() );
                 this->job_info_collector_thread_.start( *(new JobInfoCollector) );
@@ -243,9 +243,9 @@ namespace CoolDown{
 				Thread thread;
 				thread.start(reactor);
 
-				poco_trace(logger(), "Going to wait for the StopClient");
+				poco_information(logger(), "Going to wait for the StopClient");
 				waitForTerminationRequest();
-				poco_trace(logger(), "Wake up by call StopClient");
+				poco_information(logger(), "Wake up by call StopClient");
 
 				reactor.stop();
 				thread.join();
@@ -259,7 +259,7 @@ namespace CoolDown{
 
 			retcode_t CoolClient::PublishResource(const string& torrent_name, const Torrent::Torrent& torrent){
 				string torrent_path = get_torrent_path(torrent_name);
-				poco_trace_f1(logger(), "Publish torrent('%s').", torrent_path);
+				poco_information_f1(logger(), "Publish torrent('%s').", torrent_path);
 				Torrent::Torrent torrent_info(torrent);
 
 				bool is_completed_publish = true;
@@ -661,7 +661,7 @@ namespace CoolDown{
 					try{
 						//Process one File
 						Path p(iter->path());
-						//poco_trace_f1(logger(), "in MakeTorrent, Processing %s.", iter->path());
+						//poco_information_f1(logger(), "in MakeTorrent, Processing %s.", iter->path());
 						string file_check_sum;
 						Verification::ChecksumList checksums;
 						continue_progress = Verification::get_file_and_chunk_checksum_list(*iter, chunk_size,
@@ -713,7 +713,7 @@ namespace CoolDown{
 				retcode_t ret = ERROR_OK;
 				if( continue_progress == false ){
 					ret = ERROR_VERIFY_STOPPED_BY_CLIENT;
-					poco_trace(logger(), "MakeTorrent failed because stopped by client!");
+					poco_information(logger(), "MakeTorrent failed because stopped by client!");
 					ofs.close();
 					//delete this file when it's stopped by client
 					int remove_ret = remove(torrent_file_path.c_str());
@@ -726,7 +726,7 @@ namespace CoolDown{
 					torrent.set_totalsize( total_size );
 					torrent.set_torrentid( torrent_id );
 					poco_assert( torrent.SerializeToOstream(&ofs) );
-					poco_trace_f1(logger(), "MakeTorrent succeed! torrent file : %s", torrent_file_path);
+					poco_information_f1(logger(), "MakeTorrent succeed! torrent file : %s", torrent_file_path);
 					ofs.close();
 					{
 						//test if we can parse this torrent
@@ -741,13 +741,13 @@ namespace CoolDown{
             //communicate with client
             retcode_t CoolClient::shake_hand(const ShakeHand& self, ShakeHand& peer){
                 string peer_clientid( peer.clientid() );
-                poco_trace_f1(logger(), "assert if connect to '%s'", peer_clientid);
+                poco_information_f1(logger(), "assert if connect to '%s'", peer_clientid);
                 poco_assert( sockManager_->is_connected(peer_clientid) );
-                poco_trace_f2(logger(), "pass assert at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
+                poco_information_f2(logger(), "pass assert at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
                 LocalSockManager::SockPtr sock( sockManager_->get_idle_client_sock(peer_clientid) );
                 poco_assert( sock.isNull() == false );
-                poco_trace_f2(logger(), "pass assert at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
+                poco_information_f2(logger(), "pass assert at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
                 //use guard to return_sock automatically 
                 typedef shared_ptr<LocalSockManager::SockPtr> SockGuard;
@@ -881,7 +881,7 @@ namespace CoolDown{
             }
 
             void CoolClient::RegisterTorrent(const string& torrent_id){
-                poco_debug_f1(logger(),"register torrent_id : %s", torrent_id);
+                poco_information_f1(logger(),"register torrent_id : %s", torrent_id);
                 this->torrent_ids_.insert( torrent_id );
             }
 
@@ -940,7 +940,7 @@ namespace CoolDown{
                             oneFile->set_filebitcount( pBitmap->size() );
                             to_block_range( *pBitmap, google::protobuf::RepeatedFieldBackInserter(oneFile->mutable_filebit()) );
                             //double percentage = pBitmap->count() / pBitmap->size();
-                            //poco_debug_f2(logger(), "in SaveJobHistory, file '%s', percentage = '%f'", oneFile->fileid(), percentage);
+                            //poco_information_f2(logger(), "in SaveJobHistory, file '%s', percentage = '%f'", oneFile->fileid(), percentage);
                         }
                     }
                 }
@@ -997,7 +997,7 @@ namespace CoolDown{
                     pBitmap->resize( oneFile.filebitcount() );
                     info->downloadInfo.percentage_map[ oneFile.fileid() ] = pBitmap->count() / pBitmap->size();
                     //double percentage = pBitmap->count() / pBitmap->size();
-                    //poco_debug_f2(logger(), "in ReloadOneJob, file '%s', percentage = '%f'", oneFile.fileid(), percentage);
+                    //poco_information_f2(logger(), "in ReloadOneJob, file '%s', percentage = '%f'", oneFile.fileid(), percentage);
                 }
                 info->downloadInfo.is_job_removed = false;
                 info->downloadInfo.is_stopped = false;
@@ -1036,7 +1036,7 @@ namespace CoolDown{
 					job_status_[this_job_index] = status;
 					++job_index_;
 				}
-                poco_debug_f1(logger(), "add Job to jobs_, torrent_id : %s", info->torrentInfo.torrentid());
+                poco_information_f1(logger(), "add Job to jobs_, torrent_id : %s", info->torrentInfo.torrentid());
                 return ERROR_OK;
             }
 
@@ -1047,7 +1047,7 @@ namespace CoolDown{
                 if( this->HasThisTorrent(torrent_id) ){
                     return ERROR_JOB_EXISTS;
                 }
-                poco_debug_f1(logger(), "in  AddNewDownloadJob, pass unique check of torrent_id : %s", torrent_id);
+                poco_information_f1(logger(), "in  AddNewDownloadJob, pass unique check of torrent_id : %s", torrent_id);
                 this->RegisterTorrent( torrent_id );
                 SharedPtr<JobInfo> info( new JobInfo( torrent, top_path, needs) );
                 retcode_t ret = this->AddNewJob(info, torrent_path, handle);
@@ -1061,7 +1061,7 @@ namespace CoolDown{
                 if( this->HasThisTorrent(torrent_id) ){
                     return ERROR_JOB_EXISTS;
                 }
-                poco_debug_f1(logger(), "in  AddNewUploadJob, pass unique check of torrent_id : %s", torrent_id);
+                poco_information_f1(logger(), "in  AddNewUploadJob, pass unique check of torrent_id : %s", torrent_id);
                 this->RegisterTorrent( torrent_id );
 
                 FileIdentityInfoList needs;
@@ -1083,7 +1083,7 @@ namespace CoolDown{
 						info->downloadInfo.percentage_map[fileid] = 100;
 						info->downloadInfo.is_download_paused = true;
                         retcode_t publish_ret = this->PublishResourceToTracker(torrent.trackeraddress(), fileid);
-                        poco_debug_f2(logger(), "Publish '%s' to tracker return %d", fileid, (int)publish_ret);
+                        poco_information_f2(logger(), "Publish '%s' to tracker return %d", fileid, (int)publish_ret);
                     }
                 }
 				info->downloadInfo.download_total = info->torrentInfo.get_total_size();
@@ -1232,7 +1232,7 @@ namespace CoolDown{
                         }
                         BOOST_FOREACH(const progress_info_list_t::value_type& oneInfo, progress_info_to_report){
                             retcode_t ret = this->ReportProgress(oneInfo.tracker_address, oneInfo.fileid, oneInfo.percentage);
-                            poco_debug_f3(logger(), "Report progress of file '%s', percentage '%d', return %d",
+                            poco_information_f3(logger(), "Report progress of file '%s', percentage '%d', return %d",
                                     oneInfo.fileid, oneInfo.percentage, (int)ret);
                         }
 
@@ -1251,7 +1251,7 @@ namespace CoolDown{
 				std::locale::global(loc);
 
                 if( !ifs ){
-                    poco_debug_f1(logger(), "Cannot open %s in ParseTorrent.", torrent_file_path.toString());
+                    poco_information_f1(logger(), "Cannot open %s in ParseTorrent.", torrent_file_path.toString());
                     return ERROR_FILE_NOT_EXISTS;
                 }
                 poco_assert(pTorrent != NULL);

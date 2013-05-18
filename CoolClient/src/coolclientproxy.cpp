@@ -167,7 +167,7 @@ int CoolClientProxy::SearchResource(lua_State* luaState){
 		}
 
 		InfoList records;
-		poco_debug_f4(logger_, "Keywords : %s, type : %d, begin : %d, end : %d", keywords, type, record_begin, record_end);
+		poco_information_f4(logger_, "Keywords : %s, type : %d, begin : %d, end : %d", keywords, type, record_begin, record_end);
 		retcode_t ret = pCoolClient->SearchResource(keywords, type, 
 												record_begin, record_end, &records);
 		if( ret != ERROR_OK ){
@@ -240,7 +240,7 @@ int CoolClientProxy::GetResourceTorrentById(lua_State* luaState){
 		int torrent_id = lua_tointeger(luaState, 2);
 		string torrent_name = lua_tostring(luaState, 3);
 		torrent_name += ".cd";
-		poco_debug_f2(logger_, "Call CoolClientProxy::GetResourceTorrentById with torrent_id : %d, torrent_name : %s",
+		poco_information_f2(logger_, "Call CoolClientProxy::GetResourceTorrentById with torrent_id : %d, torrent_name : %s",
 			torrent_id, torrent_name);
 		string local_torrent_path;
 		retcode_t ret = pCoolClient->DownloadTorrent(torrent_id, UTF82GBK(torrent_name));
@@ -349,7 +349,7 @@ int CoolClientProxy::MakeTorrentAndPublish(lua_State* luaState){
 			int type = lua_tointeger(luaState, 3);
 			string tracker_address = lua_tostring(luaState, 4);
 			string brief_introduction = lua_tostring(luaState, 5);
-			poco_debug_f4(logger_, 
+			poco_information_f4(logger_, 
 				"Call CoolClientProxy::MakeTorrentAndPublish, path : %s, filename : %s, type : %d, intro : %s",
 				path, torrent_filename, type, brief_introduction);
 
@@ -421,7 +421,7 @@ int CoolClientProxy::AddNewDownload(lua_State* luaState){
 			string gb_torrent_path( UTF82GBK(torrent_path) );
 			string local_path = lua_tostring(luaState, 3);
 			CoolDown::Client::FileIdentityInfoList needs;
-			poco_trace(logger_, "Before traverse the needs file table");
+			poco_information(logger_, "Before traverse the needs file table");
 			
 			int table_index = lua_gettop(luaState);
 			lua_pushnil(luaState);
@@ -439,7 +439,7 @@ int CoolClientProxy::AddNewDownload(lua_State* luaState){
 				Path p(full_relative_path);
 				string filename = p.getFileName();
 				string relative_path = p.parent().toString();
-				poco_trace_f3(logger_, "Split %s into path : %s, name : %s",
+				poco_information_f3(logger_, "Split %s into path : %s, name : %s",
 					full_relative_path, filename, relative_path);
 				needs.push_back(CoolDown::Client::FileIdentityInfo(relative_path, filename));
 			}
@@ -454,7 +454,7 @@ int CoolClientProxy::AddNewDownload(lua_State* luaState){
 				lua_pushinteger(luaState, -1);
 				return 1;
 			}else{
-				poco_trace_f3(logger_, "in CoolClientProxy::AddNewDownload, add new download succeed, "
+				poco_information_f3(logger_, "in CoolClientProxy::AddNewDownload, add new download succeed, "
 					"torrent_path : %s, local_path : %s, count of files to download : %d",
 					torrent_path, local_path, (int)needs.size());
 				pCoolClient->StartJob(handle);
@@ -479,7 +479,7 @@ int CoolClientProxy::AddNewUpload(lua_State* luaState){
 		Torrent::Torrent torrent;
 		poco_assert(ERROR_OK == pCoolClient->ParseTorrent(torrent_path, &torrent));
 		int handle;
-		poco_debug_f2(logger_, "in CoolClientProxy::AddNewUpload, torrent_path : %s, top_path : %s",
+		poco_information_f2(logger_, "in CoolClientProxy::AddNewUpload, torrent_path : %s, top_path : %s",
 			torrent_path, top_path);
 		retcode_t ret = pCoolClient->AddNewUploadJob(torrent_path, top_path, torrent, &handle);
 		if( ret != ERROR_OK ){
@@ -488,7 +488,7 @@ int CoolClientProxy::AddNewUpload(lua_State* luaState){
 			lua_pushinteger(luaState, -1);
 			return 1;
 		}else{
-			poco_trace_f2(logger_, "in CoolClientProxy::AddNewUpload, add new upload succeed, torrent_path : %s, local_path : %s"
+			poco_information_f2(logger_, "in CoolClientProxy::AddNewUpload, add new upload succeed, torrent_path : %s, local_path : %s"
 				,torrent_path, local_path);
 			return 0;
 		}
@@ -666,7 +666,7 @@ int CoolClientProxy::StopMakingTorrent(lua_State* luaState){
 
 int CoolClientProxy::StopClient(lua_State* luaState){
 
-	poco_trace(logger_, "Call CoolClientProxy::StopClient");
+	poco_information(logger_, "Call CoolClientProxy::StopClient");
 	pCoolClient->StopClient();
 	while( pCoolClient->exiting() == false);
 	using namespace boost::interprocess;
@@ -912,7 +912,7 @@ void CoolClientProxy::UpdateJobStatusTable(lua_State* luaState, const CoolDown::
 }
 
 bool CoolClientProxy::MakeTorrentProgressCallback(int current_count, int total_count, lua_State* luaState, long functionRef){
-	poco_debug_f2(logger_, "Call CoolClientProxy::MakeTorrentProgressCallback with current_count : %d, total_count : %d",
+	poco_information_f2(logger_, "Call CoolClientProxy::MakeTorrentProgressCallback with current_count : %d, total_count : %d",
 		current_count, total_count);
 
 	int top = lua_gettop(luaState);

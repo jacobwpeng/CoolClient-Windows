@@ -27,7 +27,7 @@ namespace CoolDown{
                 return ERROR_NET_CONNECT;
             }
             FastMutex::ScopedLock lock(server_sock_map_mutex_);
-            poco_debug_f1(logger_, "connect to tracker succeed, key : %s", tracker_sock->peerAddress().toString());
+            poco_information_f1(logger_, "connect to tracker succeed, key : %s", tracker_sock->peerAddress().toString());
             server_sock_map_[tracker_sock->peerAddress().toString()] = tracker_sock;
             return ERROR_OK;
         }
@@ -68,7 +68,7 @@ namespace CoolDown{
                 return ERROR_NET_CONNECT;
             }
 
-            poco_debug_f3(logger_, "connect to client succeed, id : %s, ip : %s, port : %d",
+            poco_information_f3(logger_, "connect to client succeed, id : %s, ip : %s, port : %d",
                     clientid, ip, port);
             client_sock_map_[clientid].push_back(std::make_pair(sock, IDLE) );
 
@@ -157,7 +157,7 @@ namespace CoolDown{
                 return;
             }
             SockList& sockList = listIter->second;
-            poco_debug_f2(logger_, "sockList of client '%s' length : %d", clientid, (int)sockList.size() );
+            poco_information_f2(logger_, "sockList of client '%s' length : %d", clientid, (int)sockList.size() );
             SockList::iterator iter = find_if(sockList.begin(), sockList.end(), FindSock(sock) );
             if( iter == sockList.end() ){
                 poco_notice_f2(logger_, "return sock that doesnot belong to client, clientid:%s, peer addr:%s",
@@ -167,14 +167,14 @@ namespace CoolDown{
             iter->second = IDLE;
             FastMutex::ScopedLock cond_lock(condition_map_mutex_);
             poco_assert( condition_map_.find(clientid) != condition_map_.end() );
-            poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
+            poco_information_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
             condition_map_[clientid]->signal();
         }
 
         LocalSockManager::ConditionPtr LocalSockManager::get_sock_idel_condition(const string& clientid){
             FastMutex::ScopedLock cond_lock(condition_map_mutex_);
             poco_assert( condition_map_.find(clientid) != condition_map_.end() );
-            poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
+            poco_information_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
             return condition_map_[clientid];
         }
 

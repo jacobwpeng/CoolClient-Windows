@@ -22,19 +22,19 @@ namespace CoolDown{
 				Torrent::Torrent torrent;
 				retcode_t ret = pCoolClient_->MakeTorrent( path_, torrent_name_, chunk_size_, torrent_type_, tracker_address_, 
 					&torrent, &progress_obj_);
-				poco_debug_f1(logger_, "in MakeTorrentRunnable::run, Call CoolClient::MakeTorrent returns %d", 
+				poco_information_f1(logger_, "in MakeTorrentRunnable::run, Call CoolClient::MakeTorrent returns %d", 
 									(int)ret);
 				ret = pCoolClient_->PublishResource(GBK2UTF8(torrent_name_), torrent);
-				poco_debug_f1(logger_, "in MakeTorrentRunnable::run, Call CoolClient::PublishResource returns %d", 
+				poco_information_f1(logger_, "in MakeTorrentRunnable::run, Call CoolClient::PublishResource returns %d", 
 					(int)ret);
 				string torrent_path = pCoolClient_->get_torrent_path(torrent_name_);
 				int handle;
 				string top_path = Path(path_).parent().toString();
 				ret = pCoolClient_->AddNewUploadJob(torrent_path, top_path, torrent, &handle);
-				poco_debug_f1(logger_, "in MakeTorrentRunnable::run, Call CoolClient::AddNewUploadJob returns %d",
+				poco_information_f1(logger_, "in MakeTorrentRunnable::run, Call CoolClient::AddNewUploadJob returns %d",
 					(int)ret);
 				ret = pCoolClient_->StartJob(handle);
-				poco_debug_f1(logger_, "in MakeTorrentRunnable::run, Call CoolClient::StartJob returns %d",
+				poco_information_f1(logger_, "in MakeTorrentRunnable::run, Call CoolClient::StartJob returns %d",
 					(int)ret);
 			}catch(Poco::Exception& e){
 				Application::instance().logger().log(e);

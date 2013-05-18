@@ -88,7 +88,7 @@ namespace CoolDown{
             }
             //stuff all task must do
             pTask->set_reported();
-            poco_debug_f1(logger_, "return sock of client '%s'", pTask->clientid());
+            poco_information_f1(logger_, "return sock of client '%s'", pTask->clientid());
             sockManager_.return_sock(pTask->clientid(), pTask->sock() );
             //max_payload_cond_.signal();
             this->available_thread_cond_.signal();
@@ -111,38 +111,39 @@ namespace CoolDown{
         void Job::reinit_file_owner_info(const string& fileid){
 
             retcode_t ret = this->request_clients(fileid);
-            poco_debug_f2(logger_, "request clients for fileid : %s, return code : %d", fileid, (int)ret);
+            poco_information_f2(logger_, "request clients for fileid : %s, return code : %d", fileid, (int)ret);
             if( ret == ERROR_FILE_NO_OWNER_ONLINE ){
-                poco_debug_f1(logger_, "no online client has file : %s", fileid);
+                poco_information_f1(logger_, "no online client has file : %s", fileid);
             }else{
                 if( ret != ERROR_OK ){
                     poco_warning_f1(logger_, "Cannot request_clients of fileid : %s", fileid);
                 }else{
-                    poco_debug_f1(logger_, "request_clients succeed, fileid : %s", fileid);
+                    poco_information_f1(logger_, "request_clients succeed, fileid : %s", fileid);
                     
                     FileOwnerInfoPtrList& infoList = jobInfo_.ownerInfoMap[fileid];
                     FileOwnerInfoPtrList::iterator infoIter = infoList.begin();
-                    poco_debug(logger_, "Before traverse FileOwnerInfoPtrList to shake_hand");
+                    poco_notice(logger_, "Before traverse FileOwnerInfoPtrList to shake_hand");
 					set<string> invalid_clients;
                     while( infoIter != infoList.end() ){
-                        if( !sockManager_.is_connected((*infoIter)->clientid) ){
+						string clientid( (*infoIter)->clientid);
+                        if( !sockManager_.is_connected( clientid ) ){
                             retcode_t conn_ret = sockManager_.connect_client(
-                                    (*infoIter)->clientid, (*infoIter)->ip, (*infoIter)->message_port);
-                            poco_debug_f1(logger_, "connect_client return %d.", (int)conn_ret);
+                                    clientid, (*infoIter)->ip, (*infoIter)->message_port);
+                            poco_information_f1(logger_, "connect_client return %d.", (int)conn_ret);
 
                             if( conn_ret != ERROR_OK ){
                                 poco_warning_f3(logger_, "Cannot connect client, id : %s, ip :%s, port : %d",
-                                        (*infoIter)->clientid, (*infoIter)->ip, (*infoIter)->message_port);
+                                       clientid, (*infoIter)->ip, (*infoIter)->message_port);
                             }
                         }else{
-                            poco_debug_f1(logger_, "already connect to %s, no need to connect again", (*infoIter)->clientid);
+                            poco_information_f1(logger_, "already connect to %s, no need to connect again", clientid);
                         }
 
-                        retcode_t shake_hand_ret = this->shake_hand(fileid, (*infoIter)->clientid);
+                        retcode_t shake_hand_ret = this->shake_hand(fileid, clientid);
                         if( shake_hand_ret != ERROR_OK ){
                             poco_warning_f2(logger_, "Cannot shake hand with clientid : %s, fileid : %s",
-                                    (*infoIter)->clientid, fileid);
-							invalid_clients.insert( (*infoIter)->clientid );
+                                   clientid, fileid);
+							invalid_clients.insert( clientid );
                         }else{
                         }
                         ++infoIter;
@@ -162,7 +163,7 @@ namespace CoolDown{
 
         void Job::run(){
             is_running_ = true;
-            poco_debug(logger_, "Job start running!");
+            poco_information(logger_, "Job start running!");
             vector<string> fileidlist( cs_.fileidlist() );
             BOOST_FOREACH(const string& fileid, fileidlist){
                 if( jobInfo_.ownerInfoMap.find(fileid) != jobInfo_.ownerInfoMap.end() ){
@@ -172,12 +173,12 @@ namespace CoolDown{
                 this->reinit_file_owner_info(fileid);
             }
 
-            poco_debug(logger_, "Before init_queue.");
+            poco_information(logger_, "Before init_queue.");
             cs_.init_queue();
-            poco_debug(logger_, "After init_queue.");
+            poco_information(logger_, "After init_queue.");
             const int COND_WAIT_TIMEOUT = 1000;
             while(1){
-                poco_debug(logger_, "enter Job::run() while(1)");
+                poco_information(logger_, "enter Job::run() while(1)");
                 if( jobInfo_.downloadInfo.is_job_removed ){
                     poco_notice(logger_, "Exit Job::run() while(1) because is_job_removed = true.");
                     break;
@@ -195,14 +196,14 @@ namespace CoolDown{
                 if( jobInfo_.downloadInfo.is_download_paused ){
 					int i = 0;
                     //FastMutex mutex;
-      //              poco_debug(logger_, "download paused, going to wait the download_pause_cond.");
+      //              poco_information(logger_, "download paused, going to wait the download_pause_cond.");
       //              jobInfo_.downloadInfo.download_pause_cond.wait(
 						//jobInfo_.downloadInfo.download_pause_mutex, 
 						//COND_WAIT_TIMEOUT);
                 }else{
                     ChunkInfoPtr chunk_info = cs_.get_chunk();
                     if( chunk_info.isNull() ){
-                        poco_debug(logger_, "All chunk have been processed. leave the while(1) loop");
+                        poco_information(logger_, "All chunk have been processed. leave the while(1) loop");
                         break;
                     }else if( chunk_info->status == NOOWNER ){
                         poco_notice(logger_, "all chunk left in queue are of no owners.");
@@ -215,7 +216,7 @@ namespace CoolDown{
                         this->reinit_file_owner_info(chunk_info->fileid);
                     }else{
                     }
-                    poco_debug_f2(logger_, "start downloading file '%s', chunk_pos : %d", chunk_info->fileid, chunk_info->chunk_num);
+                    poco_information_f2(logger_, "start downloading file '%s', chunk_pos : %d", chunk_info->fileid, chunk_info->chunk_num);
                     vector<double> payloads;
                     int client_count = chunk_info->clientLists.size();
                     if( client_count == 0 ){
@@ -225,20 +226,20 @@ namespace CoolDown{
                         continue;
                     }
 
-                    poco_debug_f1(logger_, "Download chunk from %d clients", client_count);
+                    poco_information_f1(logger_, "Download chunk from %d clients", client_count);
                     payloads.reserve( client_count );
 
                     for(int i = 0; i != chunk_info->clientLists.size(); ++i){
                         FileOwnerInfoPtr ownerInfo = chunk_info->clientLists[i];
                         double payload_percentage = sockManager_.get_payload_percentage(ownerInfo->clientid);
-                        poco_debug_f2(logger_, "client '%s', payload : %f", ownerInfo->clientid, payload_percentage);
+                        poco_information_f2(logger_, "client '%s', payload : %f", ownerInfo->clientid, payload_percentage);
                         payloads.push_back( payload_percentage );
                     }
 
                     vector<double>::iterator iter = min_element(payloads.begin(), payloads.end());
                     int index = iter - payloads.begin();
                     double payload_percentage = *iter;
-                    poco_debug_f2(logger_, "Choose the index %d file owner, payload : %f", index, payload_percentage);
+                    poco_information_f2(logger_, "Choose the index %d file owner, payload : %f", index, payload_percentage);
 
                     string peer_clientid( chunk_info->clientLists[index]->clientid );
                     LocalSockManager::SockPtr sock = sockManager_.get_idle_client_sock(peer_clientid);
@@ -254,7 +255,7 @@ namespace CoolDown{
                                 peer_clientid);
                         poco_assert( sock.isNull() == false );
                     }else{
-                        poco_debug(logger_, "Get peer idle socket succeed.");
+                        poco_information(logger_, "Get peer idle socket succeed.");
                         int chunk_pos = chunk_info->chunk_num;
                         string fileid( chunk_info->fileid );
 
@@ -266,7 +267,7 @@ namespace CoolDown{
                                                                                    fileInfo->relative_path(), 
                                                                                    fileInfo->filename())
                                 );
-                        poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
+                        poco_information_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
                         FilePtr file = jobInfo_.localFileInfo.get_file(fileid);
                         try{
@@ -274,12 +275,12 @@ namespace CoolDown{
                             poco_assert( sock.isNull() == false );
                             poco_assert( file.isNull() == false );
                             
-                            poco_debug_f1(logger_, "available thread : %d", tp_.available() );
+                            poco_information_f1(logger_, "available thread : %d", tp_.available() );
                             while( tp_.available() == 0 ){
 								if( jobInfo_.downloadInfo.is_download_paused == false ){
 									continue;
 								}else{
-									poco_debug(logger_, "break from tp_.available() == 0");
+									poco_information(logger_, "break from tp_.available() == 0");
 									break;
 								}
                             }
@@ -304,11 +305,11 @@ namespace CoolDown{
                 }
             }
 
-			poco_debug(logger_, "Going to wait all task to finish");
+			poco_information(logger_, "Going to wait all task to finish");
             tm_.joinAll();
             typedef map<string, StringList> same_files_map_t ;
             same_files_map_t& same_files = jobInfo_.localFileInfo.same_files_map();
-            poco_debug(logger_, "Going to check if same files exist.");
+            poco_information(logger_, "Going to check if same files exist.");
             BOOST_FOREACH(same_files_map_t::value_type& p, same_files){
                 if( p.second.size() == 1 ){
                     //no same file of this fileid
@@ -328,15 +329,15 @@ namespace CoolDown{
                 }
             }
 
-            poco_debug(logger_, "Job finished!");
+            poco_information(logger_, "Job finished!");
             is_running_ = false;
         }
 
         retcode_t Job::request_clients(const string& fileid){
             string tracker_address(jobInfo_.torrentInfo.tracker_address());
-            poco_debug_f1(logger_, "going to request clients from %s", tracker_address);
+            poco_information_f1(logger_, "going to request clients from %s", tracker_address);
             poco_assert( jobInfo_.downloadInfo.percentage_map.find(fileid) != jobInfo_.downloadInfo.percentage_map.end() );
-            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
+            poco_information_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
             int percentage = jobInfo_.downloadInfo.percentage_map[fileid];
             int needCount = 20;
             CoolClient::ClientIdCollection clientidList;
@@ -355,10 +356,19 @@ namespace CoolDown{
             FileOwnerInfoPtrList res;
             retcode_t ret = app_.RequestClients(tracker_address, fileid, percentage, 
                                           needCount, clientidList, &res);
+			set<string> clients;
+			FileOwnerInfoPtrList unique_res;
+			for(int i = 0; i != res.size(); ++i){
+				if( clients.find( res[i]->clientid ) == clients.end() ){
+					unique_res.push_back(res[i]);
+					clients.insert(res[i]->clientid);
+				}
+			}
+			res = unique_res;
             if( ret != ERROR_OK ){
                 poco_warning_f1(logger_, "app_.request_clients return %d", (int)ret);
             }else{
-                poco_debug_f2(logger_, "request clients return %d clients of fileid : %s", (int)res.size(), fileid);
+                poco_information_f2(logger_, "request clients return %d clients of fileid : %s", (int)res.size(), fileid);
                 if( res.size() == 0 ){
                     return ERROR_FILE_NO_OWNER_ONLINE;
                 }
@@ -376,20 +386,20 @@ namespace CoolDown{
             pInfo->set_fileid(fileid);
             pInfo->set_hasfile(1);
             poco_assert( jobInfo_.downloadInfo.percentage_map.find(fileid) != jobInfo_.downloadInfo.percentage_map.end() );
-            poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
+            poco_information_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
             pInfo->set_percentage(jobInfo_.downloadInfo.percentage_map[fileid]);
             Job::convert_bitmap_to_transport_format(jobInfo_.downloadInfo.bitmap_map[fileid], pInfo);
 
             ShakeHand peer;
             //only fill the clientid as we only know
             peer.set_clientid( clientid );
-            poco_trace_f1(logger_, "before shake_hand with client '%s'", clientid);
+            poco_information_f1(logger_, "before shake_hand with client '%s'", clientid);
             retcode_t ret = app_.shake_hand(self, peer);
             if( ret != ERROR_OK ){
                 poco_warning_f2(logger_, "shake hand with peer error! fileid : %s, clientid : %s", fileid, clientid);
                 return ret;
             }
-            poco_debug_f2(logger_, "shake hand with peer succeed! fileid : %s, clientid : %s", fileid, clientid);
+            poco_information_f2(logger_, "shake hand with peer succeed! fileid : %s, clientid : %s", fileid, clientid);
             if( peer.info().hasfile() == 0 ){
                 poco_information_f2(logger_, "remote peer '%s' has no file '%s'.", clientid, fileid);
                 return ERROR_PEER_FILE_NOT_FOUND;
@@ -399,7 +409,7 @@ namespace CoolDown{
             JobInfo::owner_info_map_t& infoMap = jobInfo_.ownerInfoMap;
             JobInfo::owner_info_map_t::iterator iter = infoMap.find(fileid);
             poco_assert( iter != infoMap.end() );
-            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
+            poco_information_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
             //since all clients are in the list, we just update the bitmap of peer client
             FileOwnerInfoPtrList& infoPtrList = iter->second;
@@ -407,11 +417,11 @@ namespace CoolDown{
                                                            FileOwnerInfoPtrSelector(clientid) );
             FileOwnerInfoPtr info;
             poco_assert( infoPtrList.end() != infoIter );
-            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
+            poco_information_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
             info = *infoIter;
             Job::conver_transport_format_bitmap(peer.info(), info->bitmap_ptr);
             poco_assert( peer.info().filebitcount() == info->bitmap_ptr->size() );
-            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
+            poco_information_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
             return ERROR_OK;
         }

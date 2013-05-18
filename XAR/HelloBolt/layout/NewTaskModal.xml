@@ -210,6 +210,9 @@
 												</attr>
 											</obj>
 										</children>
+										<eventlist>
+											<event name="OnClick" file="NewTaskModal.xml.lua" func="ChooseSavePath" />
+										</eventlist>
 									</obj>
 								</children>
 							</obj>

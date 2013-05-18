@@ -54,7 +54,7 @@ namespace CoolDown{
             }
 
             this->Process(in, &out);
-            poco_trace(logger_, "After Process in ClientConnectionHandler::onReadable.");
+            poco_information(logger_, "After Process in ClientConnectionHandler::onReadable.");
             ret = out.sendBy( sock_ );
 
             if( ret != ERROR_OK ){
@@ -69,7 +69,7 @@ namespace CoolDown{
                 poco_information_f1(logger_, "Finish process 1 request from %s", peerAddress_ );
                 if( this->last_request_upload == true ){
                     //add task to uploadTaskManager and release ownership
-                    poco_debug_f1(logger_, "add upload task to remote addr : '%s'", peerAddress_);
+                    poco_information_f1(logger_, "add upload task to remote addr : '%s'", peerAddress_);
                     app_.upload_manager().start(pTask);
                     pTask = NULL;
                 }
@@ -93,14 +93,14 @@ err:
             ShakeHand sh;
             UploadReply ur;
             UploadTask* pTask = NULL;
-            poco_debug_f1(logger_, "in ClientConnectionHandler, Processing request, type : %d", in.payloadtype() );
+            poco_information_f1(logger_, "in ClientConnectionHandler, Processing request, type : %d", in.payloadtype() );
             switch(in.payloadtype()){
                 case PAYLOAD_SHAKE_HAND:
                     ret = this->HandleShakeHand( req, &sh);
                     if( ret != ERROR_OK ){
                         poco_warning_f1(logger_, "HandleShakeHand failed with ret : %d", (int)ret);
                     }else{
-                        poco_debug(logger_, "HandleShakeHand succeed!" );
+                        poco_information(logger_, "HandleShakeHand succeed!" );
                     }
 
                     out->set_message(PAYLOAD_SHAKE_HAND, sh);
@@ -111,10 +111,10 @@ err:
                     if( ret != ERROR_OK ){
                         poco_warning_f1(logger_, "HandleUploadRequest failed with ret : %d", (int)ret);
                     }else{
-                        poco_trace(logger_, "HandleUploadRequest succeed!");
+                        poco_information(logger_, "HandleUploadRequest succeed!");
                         //since the handle func return ERROR_OK, no reason for pTask to be NULL
                         poco_assert( pTask != NULL );
-                        poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
+                        poco_information_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
                         this->pTask = pTask;
                     }
                     out->set_message(PAYLOAD_UPLOAD_REPLY, ur);
@@ -139,11 +139,11 @@ err:
             int chunk_pos = req->chunknumber();
             CoolClient::JobPtr pJob = app_.GetJobByFileid(fileid);
             if( pJob.isNull() ){
-                poco_debug_f1(logger_, "We donot own this file '%s'", fileid);
+                poco_information_f1(logger_, "We donot own this file '%s'", fileid);
                 return ERROR_FILE_NOT_EXISTS;
             }
 
-            poco_trace(logger_, "in HandleUploadRequest, get job succeed!");
+            poco_information(logger_, "in HandleUploadRequest, get job succeed!");
             SharedPtr<File> file = pJob->MutableJobInfo()->localFileInfo.get_file(fileid);
             UInt64 offset =  pJob->MutableJobInfo()->torrentInfo.get_one_file_of_same_fileid(fileid)->chunk_offset(chunk_pos);
             int chunk_size = pJob->MutableJobInfo()->torrentInfo.get_one_file_of_same_fileid(fileid)->chunk_size(chunk_pos);
@@ -151,7 +151,7 @@ err:
             poco_assert( file.isNull() == false );
             poco_assert( chunk_size > 0 );
             pTask = new UploadTask(pJob->MutableJobInfo()->downloadInfo, file, offset, chunk_size, this->sock_);
-            poco_debug_f1(logger_, "Add new UploadTask for file '%s'", fileid);
+            poco_information_f1(logger_, "Add new UploadTask for file '%s'", fileid);
             reply->set_returncode(ERROR_OK);
             return ERROR_OK;
         }
@@ -169,12 +169,12 @@ err:
             CoolClient::JobPtr pJob = app_.GetJobByFileid(fileid);
             FileInfo* pInfo = reply->mutable_info();
             if( pJob.isNull() ){
-                poco_debug_f1(logger_, "peer request for file '%s' but we don't have that job running.", fileid);
+                poco_information_f1(logger_, "peer request for file '%s' but we don't have that job running.", fileid);
                 pInfo->set_hasfile(0);
                 pInfo->set_percentage(0);
                 pInfo->set_filebitcount(0);
             }else if( pJob->MutableJobInfo()->localFileInfo.has_file(fileid) == false ){
-                poco_debug_f1(logger_, "peer request for file '%s' but we don't download that file", fileid);
+                poco_information_f1(logger_, "peer request for file '%s' but we don't download that file", fileid);
                 pInfo->set_hasfile(0);
                 pInfo->set_percentage(0);
                 pInfo->set_filebitcount(0);
@@ -183,7 +183,7 @@ err:
                 double count = pJob->MutableJobInfo()->downloadInfo.bitmap_map[fileid]->count();
                 double size = pJob->MutableJobInfo()->downloadInfo.bitmap_map[fileid]->size();
                 double percentage = count / size;
-                poco_debug_f2(logger_, "in ShakeHand, we have this file : '%s', percentage : '%f'", fileid, percentage);
+                poco_information_f2(logger_, "in ShakeHand, we have this file : '%s', percentage : '%f'", fileid, percentage);
                 pInfo->set_hasfile(1);
                 pInfo->set_percentage( pJob->MutableJobInfo()->downloadInfo.percentage_map[fileid] );
                 Job::convert_bitmap_to_transport_format(pJob->MutableJobInfo()->downloadInfo.bitmap_map[fileid], pInfo);

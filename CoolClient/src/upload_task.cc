@@ -36,7 +36,7 @@ namespace CoolDown{
 
         void UploadTask::runTask(){
             Logger& logger_ = Application::instance().logger();
-            poco_trace(logger_, "enter UploadTask::runTask");
+            poco_information(logger_, "enter UploadTask::runTask");
             string content;
             {
 				using namespace boost::interprocess;
@@ -46,9 +46,9 @@ namespace CoolDown{
                 content = string( sm.begin() + offset_, chunk_size_ );*/
 				content = string( (char*)region.get_address(), chunk_size_);
             }
-			poco_trace(logger_, "Got content by mapped_region.");
+			poco_information(logger_, "Got content by mapped_region.");
             poco_assert( content.size() == chunk_size_ );
-            poco_debug_f2(logger_, "going to send %d bytes to '%s'", chunk_size_, this->peerAddress_);
+            poco_information_f2(logger_, "going to send %d bytes to '%s'", chunk_size_, this->peerAddress_);
             int nSend = 0;
             while( nSend < chunk_size_ ){
                 if( downloadInfo_.is_stopped){
@@ -57,7 +57,7 @@ namespace CoolDown{
                     throw Exception("UploadTask is stopped by setting is_job_removed.");
                 }
                 int send_this_time = sock_.sendBytes( content.data() + nSend , chunk_size_ - nSend);
-                poco_debug_f2( logger_, "in upload task, send %d bytes this time, %d bytes to send.", send_this_time, chunk_size_ - send_this_time );
+                poco_information_f2( logger_, "in upload task, send %d bytes this time, %d bytes to send.", send_this_time, chunk_size_ - send_this_time );
                 if( send_this_time <= 0 ){
                     poco_warning_f1(logger_, "bytes send this time is %d", send_this_time );
                     throw Exception("send bytes <= 0");
@@ -70,8 +70,8 @@ namespace CoolDown{
             }
 
             string vc = Verification::get_verification_code(content);
-            poco_debug_f4(logger_, "UploadTask succeed, \nlocal file path : %s\n offset : %Lu\nchunk_size : %d\nvc : %s", file_->path(), offset_, chunk_size_, vc);
-            poco_debug_f2(logger_, "send %d bytes to '%s' succeed.", nSend, peerAddress_);
+            poco_information_f4(logger_, "UploadTask succeed, \nlocal file path : %s\n offset : %Lu\nchunk_size : %d\nvc : %s", file_->path(), offset_, chunk_size_, vc);
+            poco_information_f2(logger_, "send %d bytes to '%s' succeed.", nSend, peerAddress_);
         }
     }
 }

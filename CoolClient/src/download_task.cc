@@ -46,7 +46,7 @@ namespace CoolDown{
 
         void DownloadTask::runTask(){
             Logger& logger_ = Application::instance().logger();
-            poco_trace(logger_, "Enter DownloadTask::runTask");
+            poco_information(logger_, "Enter DownloadTask::runTask");
             UploadRequest req;
             req.set_clientid(clientid_);
             req.set_fileid(fileInfo_.fileid());
@@ -81,14 +81,14 @@ namespace CoolDown{
 
             //chunk_pos ranges from 0~chunk_count-1
             //bool isLastChunk = chunk_pos_ == ( fileInfo_.get_chunk_count() - 1 );
-            poco_debug(logger_, "Upload Message exchange succeed, now goto the real download.");
+            poco_information(logger_, "Upload Message exchange succeed, now goto the real download.");
             int chunk_size = fileInfo_.chunk_size(chunk_pos_);
             poco_assert( chunk_size != -1 );
-            poco_debug_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
+            poco_information_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
             int nRecv = 0;
             int nLeft = chunk_size;
-            poco_debug_f1(logger_, "Going to receive %d bytes.", chunk_size);
+            poco_information_f1(logger_, "Going to receive %d bytes.", chunk_size);
             Buffer<char> recvBuffer(chunk_size);
 
             while( nRecv < chunk_size){
@@ -119,12 +119,12 @@ namespace CoolDown{
                         continue;
                     }
 
-                    poco_trace(logger_, "before receive contents from peer.");
+                    poco_information(logger_, "before receive contents from peer.");
 
                     int expect_bytes = download_quota > nLeft ? nLeft : download_quota;
-					poco_trace_f1(logger_, "Goint to receive %d bytes", expect_bytes);
+					poco_information_f1(logger_, "Goint to receive %d bytes", expect_bytes);
                     int n = sock_->receiveBytes( static_cast<char*>(recvBuffer.begin()) + nRecv, expect_bytes);
-                    poco_debug_f1(logger_, "receive %d bytes from peer.", n);
+                    poco_information_f1(logger_, "receive %d bytes from peer.", n);
                     if( n <= 0 ){
                         throw Exception("receiveBytes in DownloadTask::runTask return n <= 0");
                     }
@@ -132,13 +132,13 @@ namespace CoolDown{
                     nRecv += n;
                     nLeft -= n;
                 }
-                poco_debug_f2(logger_, "expcet %d bytes, %d bytes received!", chunk_size, nRecv);
+                poco_information_f2(logger_, "expcet %d bytes, %d bytes received!", chunk_size, nRecv);
             }
             string content(recvBuffer.begin(), recvBuffer.size());
             poco_assert(content.length() == chunk_size );
-            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
+            poco_information_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
             poco_assert(nRecv == chunk_size );
-            poco_trace_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
+            poco_information_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
             string content_check_sum( Verification::get_verification_code(content) );
 
@@ -161,7 +161,7 @@ namespace CoolDown{
 				//memcpy(sm.begin() + fileInfo_.chunk_offset(chunk_pos_), content.data(), content.length() );
 
 			}
-			poco_debug_f2(logger_, "Download task finished, file : %s, offset : %Lu",
+			poco_information_f2(logger_, "Download task finished, file : %s, offset : %Lu",
 							file_.path(), fileInfo_.chunk_offset(chunk_pos_));
         }
     }

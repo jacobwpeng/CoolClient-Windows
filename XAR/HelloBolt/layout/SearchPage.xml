@@ -144,7 +144,7 @@
 							<children>
 								<obj id="logo" class="ImageObject">
 									<attr>
-										<left></left>
+										<left>1</left>
 										<top></top>
 										<width>father.width</width>
 										<height>father.height</height>
