@@ -5,6 +5,7 @@
 #include "client.pb.h"
 #include <cstdlib>
 #include <vector>
+#include <set>
 #include <algorithm>
 #include <boost/foreach.hpp>
 #include <Poco/Util/Application.h>
@@ -13,6 +14,7 @@
 #include <Poco/File.h>
 
 using std::vector;
+using std::set;
 using std::min_element;
 using Poco::Util::Application;
 using Poco::Observer;
@@ -121,6 +123,7 @@ namespace CoolDown{
                     FileOwnerInfoPtrList& infoList = jobInfo_.ownerInfoMap[fileid];
                     FileOwnerInfoPtrList::iterator infoIter = infoList.begin();
                     poco_debug(logger_, "Before traverse FileOwnerInfoPtrList to shake_hand");
+					set<string> invalid_clients;
                     while( infoIter != infoList.end() ){
                         if( !sockManager_.is_connected((*infoIter)->clientid) ){
                             retcode_t conn_ret = sockManager_.connect_client(
@@ -139,11 +142,21 @@ namespace CoolDown{
                         if( shake_hand_ret != ERROR_OK ){
                             poco_warning_f2(logger_, "Cannot shake hand with clientid : %s, fileid : %s",
                                     (*infoIter)->clientid, fileid);
+							invalid_clients.insert(fileid);
                         }else{
                         }
                         ++infoIter;
                     }
+					set<string>::const_iterator citer = invalid_clients.begin();
+					while( citer != invalid_clients.end() ){
+						FileOwnerInfoPtrList::iterator end = remove_if(infoList.begin(), infoList.end(), FileOwnerInfoPtrSelector(*citer));
+						infoList.erase(end, infoList.end());
+						++citer;
+					}
+
                 }
+
+				
             }
         }
 
