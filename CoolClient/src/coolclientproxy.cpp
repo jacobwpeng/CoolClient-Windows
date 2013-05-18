@@ -525,7 +525,6 @@ int CoolClientProxy::GetJobStatusTable(lua_State* luaState){
 				lua_pop(luaState, 2);
 				//now the key is at -1, so we dup it
 				lua_pushvalue(luaState, -1);
-				DumpLuaState(luaState);
 				//push nil to gc
 				lua_pushnil(luaState);
 				//then set the table
@@ -794,7 +793,7 @@ int CoolClientProxy::GetConfig(lua_State* luaState){
 		lua_pushstring(luaState, value.c_str());
 		return 1;
 	}else{
-		poco_warning(logger_, "Invalid args of CoolClientProxy::SetConfig");
+		poco_warning(logger_, "Invalid args of CoolClientProxy::GetConfig");
 		DumpLuaState(luaState);
 		return 0;
 	}

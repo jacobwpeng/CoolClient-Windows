@@ -181,7 +181,7 @@ namespace CoolDown{
             void CoolClient::uninitialize(){
 				this->SaveUserConfig();
                 this->SaveJobHistory( history_file_path_ );
-				poco_trace(logger(), "Return from SaveJobHistory");
+				poco_notice(logger(), "Return from SaveJobHistory");
 				
 				//crash when waiting two threads below.... so we just do not wait them....
 				/*
@@ -201,6 +201,7 @@ namespace CoolDown{
 				*/
                 ServerApplication::uninitialize();
 				exiting_ = true;
+				exit(0);
             }
 
             int CoolClient::main(const vector<string>& args){
