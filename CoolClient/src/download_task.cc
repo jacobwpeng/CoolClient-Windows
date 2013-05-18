@@ -5,6 +5,7 @@
 #include "netpack.h"
 #include "payload_type.h"
 #include "verification.h"
+#include "utilities.h"
 #include <Poco/Logger.h>
 #include <Poco/Format.h>
 #include <Poco/Exception.h>
@@ -149,7 +150,7 @@ namespace CoolDown{
 			{
 				using namespace boost::interprocess;
 				uint64_t offset = fileInfo_.chunk_offset(chunk_pos_);
-				file_mapping m_file(file_.path().c_str(), read_write);
+				file_mapping m_file( UTF82GBK(file_.path()).c_str(), read_write);
 				mapped_region region(m_file, read_write, offset, chunk_size);
 				int ret = memcpy_s(region.get_address(), region.get_size(), content.data(), content.length());
 				if( ret != 0 ){
