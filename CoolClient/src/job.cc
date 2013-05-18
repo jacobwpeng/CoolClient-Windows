@@ -142,7 +142,7 @@ namespace CoolDown{
                         if( shake_hand_ret != ERROR_OK ){
                             poco_warning_f2(logger_, "Cannot shake hand with clientid : %s, fileid : %s",
                                     (*infoIter)->clientid, fileid);
-							invalid_clients.insert(fileid);
+							invalid_clients.insert( (*infoIter)->clientid );
                         }else{
                         }
                         ++infoIter;
