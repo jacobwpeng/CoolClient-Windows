@@ -344,7 +344,7 @@ int CoolClientProxy::MakeTorrentAndPublish(lua_State* luaState){
 		&& lua_isstring(luaState, 4)
 		&& lua_isstring(luaState, 5)
 		&& lua_isfunction(luaState, 6)){
-			string path = lua_tostring(luaState, 2);
+			string path = UTF82GBK(lua_tostring(luaState, 2));
 			string torrent_filename = GetTorrentNameByResourcePath(path);
 			int type = lua_tointeger(luaState, 3);
 			string tracker_address = lua_tostring(luaState, 4);

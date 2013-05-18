@@ -608,12 +608,12 @@ namespace CoolDown{
                 poco_notice_f4(logger(), "%s, chunk_size : %d, type : %d, tracker_address : %s", 
                         pathmsg, chunk_size, type, tracker_address);
 
-                File f( path );
+                File f( GBK2UTF8(path.toString()) );
                 string top_path = Path(f.path()).parent().toString();
                 if( !f.exists() ){
                     return ERROR_FILE_NOT_EXISTS;
                 }
-				string torrent_file_path = get_torrent_path( UTF82GBK(torrent_filename) );
+				string torrent_file_path = get_torrent_path( torrent_filename );
 
 				std::locale loc = std::locale::global(std::locale(""));
 				ofstream ofs( torrent_file_path.c_str(), ofstream::binary);
@@ -1015,17 +1015,10 @@ namespace CoolDown{
             }
 
             retcode_t CoolClient::AddNewJob(const SharedPtr<JobInfo>& info, const string& torrent_path, int* handle){
+				//this func never run at parallel condition
                 int this_job_index = job_index_;
-                
-				{
-					FastMutex::ScopedLock lock(mutex_);
-					JobPtr job(new Job(info, *(this->sockManager_), logger()));
-					jobs_[job_index_] = job;
-				}
-                poco_debug_f1(logger(), "add Job to jobs_, torrent_id : %s", info->torrentInfo.torrentid());
-                ++job_index_;
-                *handle = this_job_index;
-                torrent_path_map_[this_job_index] = torrent_path;
+				*handle = this_job_index;
+				torrent_path_map_[this_job_index] = torrent_path;
 
 				JobStatus status;
 				Path tmp(torrent_path);
@@ -1034,8 +1027,16 @@ namespace CoolDown{
 				status.type = info->torrentInfo.get_type();
 				status.status = JOB_PAUSED;	
 				status.handle = this_job_index;
-				FastMutex::ScopedLock lock_(this->job_status_mutex_);
-				job_status_[this_job_index] = status;
+                
+				{
+					FastMutex::ScopedLock lock(mutex_);
+					FastMutex::ScopedLock lock_(this->job_status_mutex_);
+					JobPtr job(new Job(info, *(this->sockManager_), logger()));
+					jobs_[job_index_] = job;
+					job_status_[this_job_index] = status;
+					++job_index_;
+				}
+                poco_debug_f1(logger(), "add Job to jobs_, torrent_id : %s", info->torrentInfo.torrentid());
                 return ERROR_OK;
             }
 
