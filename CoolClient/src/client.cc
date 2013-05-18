@@ -211,9 +211,9 @@ namespace CoolDown{
 				//poco_debug_f1(logger(), "%s", ConvertGBKToUtf8("UTF8 String of ascii charactors."));
 				//return Application::EXIT_OK;
 
-                string tracker_ip("115.156.229.172");
+                string tracker_ip = config().getString("TrackerAddress", "127.0.0.1");
                 string tracker_address( format("%s:%d", tracker_ip, (int)CoolClient::TRACKER_PORT) );
-				string resource_server_ip("115.156.229.166");
+				string resource_server_ip = config().getString("ResourceServerAddress", "127.0.0.1");
 				string resource_server_address( format("%s:%d", resource_server_ip, (int)CoolClient::RESOURCE_SERVER_PORT));
 
 				retcode_t ret = this->LoginTracker(tracker_ip, TRACKER_PORT);
@@ -230,15 +230,6 @@ namespace CoolDown{
                 this->job_info_collector_thread_.start( *(new JobInfoCollector) );
                 Poco::RunnableAdapter<CoolClient> reportProgressRunnable( *this, &CoolClient::ReportProgressRoutine );
                 this->report_progress_thread_.start( reportProgressRunnable );
-
-				{
-					//Torrent::Torrent torrent;
-					//this->ParseTorrent("E:\\repos\\CoolClient-Windows\\CoolClient\\Torrents\\dependences.rar.cd", &torrent);
-					//retcode_t ret = ERROR_OK;
-					//ret = this->DownloadTorrent(46, "");
-					//poco_trace_f1(logger(), "DownloadTorrent returns %d", (int)ret);
-				}
-
 
 
 				ServerSocket svs(LOCAL_PORT);
@@ -258,30 +249,6 @@ namespace CoolDown{
 				reactor.stop();
 				thread.join();
 
-				//Resource Server tests
-				{
-					//StreamSocket sock;
-					//sock.connect(Poco::Net::SocketAddress("115.156.229.166", 9978));
-					////poco_trace(logger(), "After connect");
-					//vector<Info> output;
-					//string keystring("英雄无敌");
-					//int ret = upload(&sock, "this is the content of a seed.", 8, keystring, 
-					//	"这个游戏好像很好玩啊！", 1 << 30);
-
-					//search(&sock, keystring, 8, 0, 10, &output);
-					//for(int i = 0; i != output.size(); ++i){
-					//	printf("%s\n", output.at(i).filename().c_str());
-					//	poco_debug_f1(logger(), "filename : %s", GBK2UTF8(output.at(i).filename()) );
-					//	string introduction;
-					//	check(&sock, output[i].fileid(), &introduction);
-					//	poco_debug_f1(logger(), "Introduction : %s", GBK2UTF8(introduction) );
-					//	string seed_content;
-					//	int ret = download(&sock, output[i].fileid(), &seed_content);
-					//	poco_debug_f2(logger(), "ret : %d, seed_content : %s", ret, GBK2UTF8(seed_content) );
-					//}
-				}
-
-				//poco_debug(logger(), "End application");
                 return Application::EXIT_OK;
             }
 
@@ -369,10 +336,6 @@ namespace CoolDown{
 				}
 				return ERROR_OK;
 			}
-
-			//void CoolClient::set_job_status_callback(JobStatusCallback callback){
-			//	this->status_callback_ = callback;
-			//}
 
 			string CoolClient::GetConfig(const string& key) const{
 				SettingMap::const_iterator iter = current_setting_.find(key);
@@ -806,21 +769,6 @@ namespace CoolDown{
                 return ERROR_OK;
             }
 
-            //retcode_t CoolClient::add_job(const Torrent::Torrent& torrent, const string& top_path, int* internal_handle){
-            //    FileIdentityInfoList needs;
-            //    for(int i = 0; i != torrent.file().size(); ++i){
-            //        const Torrent::File& file = torrent.file().Get(i);
-            //        needs.push_back(FileIdentityInfoList::value_type(file.relativepath(), file.filename()) );
-            //    }
-            //    SharedPtr<JobInfo> info( new JobInfo( torrent, top_path, needs ) );
-            //    int this_job_index = job_index_;
-            //    FastMutex::ScopedLock lock(mutex_);
-            //    jobs_[job_index_] = JobPtr( new Job(info, *(this->sockManager_), logger()) );
-            //    ++job_index_;
-            //    *internal_handle = this_job_index;
-            //    return ERROR_OK;
-            //}
-
             retcode_t CoolClient::StartJob(int handle){
                 FastMutex::ScopedLock lock(mutex_);
                 retcode_t ret = this->ResumeJobWithoutLock(handle);
@@ -1208,20 +1156,12 @@ namespace CoolDown{
 						}
 					}
 
-					/*
-                    poco_notice_f3(logger(), "Job handle : %d, upload speed : %s, download speed : %s",
-                            handle, upload_speed, download_speed);
-							*/
-
                     pInfo->downloadInfo.upload_total += bytes_upload_this_second;
                     pInfo->downloadInfo.download_total += bytes_download_this_second;
                     pInfo->downloadInfo.bytes_upload_this_second = 0;
                     pInfo->downloadInfo.bytes_download_this_second = 0;
                     pInfo->downloadInfo.download_speed_limit_cond.broadcast();
 		
-					//status.percentage = static_cast<int>( 
-					//			(double)pInfo->downloadInfo.download_total / status.size * 100 
-					//	);
 					status.percentage = ((double)pInfo->downloadInfo.download_total / status.size) * 100;
 
 					int status_code = -1;
