@@ -61,10 +61,14 @@ namespace CoolDown{
             info->priority = 0;
 
             BOOST_FOREACH(FileOwnerInfoPtr p, infoList){
-                //poco_debug_f1(logger_, "to_ulong = %lu", p->bitmap_ptr->to_ulong());
-                if( p->bitmap_ptr->test(info->chunk_num) ){
+                
+				if( p->bitmap_ptr.isNull() || p->bitmap_ptr->size() < info->chunk_num ){
+					poco_error_f2(logger_, "in ChunkSelector::get_priority, Null bitmap from client(%s:%d)",
+						p->ip, p->message_port);
+				}else if( p->bitmap_ptr->test(info->chunk_num) ){
                     info->clientLists.push_back(p);
-                }
+				}else{
+				}
             }
 
             if( info->clientLists.size() == 0 ){
