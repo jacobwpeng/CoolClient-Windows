@@ -43,7 +43,8 @@ function OnOKClick(self)
 	self:SetEnable(false)
 	bkg:AddChild(seedMakeProgress)
 	local coolClientProxy = XLGetObject('CoolDown.CoolClient.Proxy')
-	coolClientProxy:MakeTorrentAndPublish(path:GetText(), seedtype, tracker:GetText(), des:GetText(), 
+	coolClientProxy:MakeTorrentAndPublish(path:GetText(), seedtype, tracker:GetText(), des:GetText())
+	--[[
 		function(cur, total)
 			seedMakeProgress:SetProgress((cur/total)*100)
 			if cur == total then
@@ -51,6 +52,17 @@ function OnOKClick(self)
 				self:SetText("确定")
 			end
 		end)
+		]]
+	local timer = SetTimer(
+		function() 
+			local cur, total = coolClientProxy:GetCurrentMakingTorrentProgress() 
+			seedMakeProgress:SetProgress((cur/total)*100)
+			if cur == total then
+				self:SetEnable(true)
+				self:SetText("确定")
+				KillTimer(timer)
+			end			
+		end, 500)
 end
 
 function OnCancelClick(self)
