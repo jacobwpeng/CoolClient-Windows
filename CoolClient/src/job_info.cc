@@ -126,6 +126,7 @@ namespace CoolDown{
 					);
 				poco_information_f1( Application::instance().logger(), "Going to assert CreateFile returns for %s", fileid);
 				poco_assert( hFile != INVALID_HANDLE_VALUE );
+				poco_information( Application::instance().logger(), "pass assert for CreateFile");
 				handles[fileid] = hFile;
 			}
 
