@@ -117,7 +117,7 @@ namespace CoolDown{
 				string path = fileid_path_map[fileid];
 				HANDLE hFile = CreateFileA( path.c_str(),
 					GENERIC_READ | GENERIC_WRITE,
-					FILE_SHARE_READ,
+					FILE_SHARE_READ | FILE_SHARE_WRITE,
 					NULL,
 					OPEN_EXISTING,
 					FILE_ATTRIBUTE_NORMAL,
