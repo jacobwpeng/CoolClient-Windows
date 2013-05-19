@@ -57,6 +57,7 @@ namespace CoolDown{
                 LocalFileInfo(const string& top_path);
                 retcode_t add_file(const string& fileid, const string& relative_path, const string& filename, Int64 filesize);
                 FilePtr get_file(const string& fileid);
+				HANDLE get_file_handle(const string& fileid);
                 bool has_local_file(const string& fileid, const string& relative_path, const string& filename);
                 bool has_file(const string& fileid);
                 map<string, StringList>& same_files_map();
@@ -68,6 +69,10 @@ namespace CoolDown{
             private:
                 string top_path_;
                 map<string, FilePtr> files;
+				map<string, string> fileid_path_map;
+				typedef map<string, HANDLE> HandleMap;
+				HandleMap handles;
+				FastMutex handles_mutex_;
                 
                 //this map is used when a Torrent has same file in different path.
                 //key : fileid, value : (relative_path + filename) of all same files
@@ -75,6 +80,7 @@ namespace CoolDown{
                 //when the download one complete, we simply copy from it to the rest.
                 map<string, StringList> same_files_;
                 FastMutex mutex_;
+				
         };
 
         class TorrentFileInfo{

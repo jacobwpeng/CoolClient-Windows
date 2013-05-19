@@ -24,6 +24,9 @@ namespace CoolDown{
 					&torrent, &progress_obj_);
 				poco_information_f1(logger_, "in MakeTorrentRunnable::run, Call CoolClient::MakeTorrent returns %d", 
 									(int)ret);
+				if( ret == ERROR_VERIFY_STOPPED_BY_CLIENT ){
+					return;
+				}
 				ret = pCoolClient_->PublishResource(GBK2UTF8(torrent_name_), torrent);
 				poco_information_f1(logger_, "in MakeTorrentRunnable::run, Call CoolClient::PublishResource returns %d", 
 					(int)ret);

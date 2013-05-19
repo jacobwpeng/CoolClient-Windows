@@ -22,7 +22,7 @@ namespace CoolDown{
         class DownloadTask : public Task{
             public:
                 DownloadTask(const TorrentFileInfo& info, DownloadInfo& downloadInfo, 
-                        const string& clientid, const SockPtr& sock, int chunk_pos, const File& file);
+                        const string& clientid, const SockPtr& sock, int chunk_pos, HANDLE hFile);
 
                 void runTask();
                 int chunk_pos() const{
@@ -54,7 +54,8 @@ namespace CoolDown{
                 SockPtr sock_;
                 int chunk_pos_;
                 string check_sum_;
-                File file_;
+                //File file_;
+				HANDLE hFile_;
                 bool reported_;
         };
     }

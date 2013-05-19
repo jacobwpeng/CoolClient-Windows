@@ -912,7 +912,7 @@ namespace CoolDown{
 
                 JobHistory::History history;
                 FastMutex::ScopedLock lock(mutex_);
-
+				
                 BOOST_FOREACH(JobMap::value_type& p, jobs_){
                     int handle = p.first;
                     JobPtr pJob = p.second;

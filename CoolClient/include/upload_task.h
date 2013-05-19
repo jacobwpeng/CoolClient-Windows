@@ -26,7 +26,7 @@ namespace CoolDown{
         struct DownloadInfo;
         class UploadTask : public Task{
             public:
-                UploadTask(DownloadInfo& downloadInfo, const FilePtr& file, UInt64 offset, int chunk_size, StreamSocket& sock);
+                UploadTask(DownloadInfo& downloadInfo, HANDLE hFile, UInt64 offset, int chunk_size, StreamSocket& sock);
                 ~UploadTask();
 
                 void runTask();
@@ -42,18 +42,15 @@ namespace CoolDown{
                     return this->peerAddress_;
                 }
 
-                string file_path() const{
-                    return file_->path();
-                }
-
                 string DebugString() const{
-                    return format("path = '%s', peer addr = '%s', offset = %Lu, chunk_size = %d", file_path(), peer_address(), offset(), chunk_size());
+                    return format("peer addr = '%s', offset = %Lu, chunk_size = %d", peer_address(), offset(), chunk_size());
                 }
 
             private:
                 string peerAddress_;
                 DownloadInfo& downloadInfo_;
-                FilePtr file_;
+                //FilePtr file_;
+				HANDLE hFile_;
                 UInt64 offset_;
                 int chunk_size_;
                 StreamSocket& sock_;

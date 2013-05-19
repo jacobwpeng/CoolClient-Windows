@@ -82,6 +82,9 @@ CoolClient* CoolClientProxy::pCoolClient(new CoolClient);
 Logger& CoolClientProxy::logger_( CoolClientProxy::pCoolClient->logger() );
 atomic_bool CoolClientProxy::stop_making_torrent(false);
 
+int CoolClientProxy::current_count = 0;
+int CoolClientProxy::total_count = 0;
+
 CoolClientProxy* __stdcall CoolClientProxy::Instance(void*){
 
 	static CoolClientProxy* pCoolClientProxy = NULL;
@@ -343,7 +346,9 @@ int CoolClientProxy::MakeTorrentAndPublish(lua_State* luaState){
 		&& lua_isnumber(luaState, 3)
 		&& lua_isstring(luaState, 4)
 		&& lua_isstring(luaState, 5)
-		&& lua_isfunction(luaState, 6)){
+		){
+			current_count = 0;
+			total_count = 0;
 			string path = UTF82GBK(lua_tostring(luaState, 2));
 			string torrent_filename = GetTorrentNameByResourcePath(path);
 			int type = lua_tointeger(luaState, 3);
@@ -353,11 +358,10 @@ int CoolClientProxy::MakeTorrentAndPublish(lua_State* luaState){
 				"Call CoolClientProxy::MakeTorrentAndPublish, path : %s, filename : %s, type : %d, intro : %s",
 				path, torrent_filename, type, brief_introduction);
 
-			long functionRef = luaL_ref(luaState,LUA_REGISTRYINDEX);
+			//long functionRef = luaL_ref(luaState,LUA_REGISTRYINDEX);
 			const static int chunk_size = 1 << 21;
 			MakeTorrentRunnable *p = new MakeTorrentRunnable(pCoolClient, path, torrent_filename, chunk_size, type, tracker_address, 
-				boost::bind<bool>( &CoolClientProxy::MakeTorrentProgressCallback, _1, _2, 
-				luaState, functionRef) );
+				&CoolClientProxy::MakeTorrentProgressCallback);
 			stop_making_torrent = false;
 			ThreadPool::defaultPool().start(*p);
 			
@@ -366,6 +370,12 @@ int CoolClientProxy::MakeTorrentAndPublish(lua_State* luaState){
 		DumpLuaState(luaState);
 	}
 	return 0;
+}
+
+int CoolClientProxy::GetCurrentMakingTorrentProgress(lua_State* luaState){
+	lua_pushinteger(luaState, CoolClientProxy::current_count);
+	lua_pushinteger(luaState, CoolClientProxy::total_count);
+	return 2;
 }
 
 string CoolClientProxy::GetTorrentNameByResourcePath(const string& resource_path){
@@ -596,70 +606,12 @@ int CoolClientProxy::GetJobStatusTable(lua_State* luaState){
 	}
 	lua_settop(luaState, table_index);
 	return 1;
-	//CoolDown::Client::JobStatusMap job_status;
-	//job_status.swap( pCoolClient->JobStatuses() );
-	////const CoolDown::Client::JobStatusMap& job_status = pCoolClient->ConstJobStatuses();
-	//int status_count = job_status.size();
-	//CoolDown::Client::JobStatusMap::const_iterator citer = job_status.begin();
-	//CoolDown::Client::JobStatusMap::const_iterator cend = job_status.end();
-
-	//while( citer != cend ){
-	//	int this_top = lua_gettop(luaState);
-	//	int handle = citer->first;
-	//	const CoolDown::Client::JobStatus& status = citer->second;
-	//	//lua_pushinteger(luaState, handle);
-	//	lua_pushinteger(luaState, handle);
-	//	lua_gettable(luaState, table_index);
-	//	poco_notice(logger_, "Before judge the type of obj in given index");
-	//	//DumpLuaState(luaState);
-	//	if( lua_type(luaState, -1) == LUA_TTABLE) {
-	//		//we have this job info in table, so just update it
-	//	}
-	//	else if( lua_type(luaState, -1) == LUA_TNIL){
-	//		//DumpLuaState(luaState);
-	//		lua_pop(luaState, 1);
-	//		//DumpLuaState(luaState);
-	//		//we create the job info table
-	//		lua_createtable(luaState, 0, 8);
-	//		//DumpLuaState(luaState);
-	//		int this_table_index = lua_gettop(luaState);
-	//		//push invariant variables here( eg : Name, Type, Size )
-	//		lua_pushstring(luaState, "Name");
-	//		lua_pushstring(luaState, status.name.c_str());
-	//		lua_settable(luaState, this_table_index);
-
-	//		lua_pushstring(luaState, "Type");
-	//		lua_pushinteger(luaState, (int)status.status);
-	//		lua_settable(luaState, this_table_index);
-
-	//		lua_pushstring(luaState, "Size");
-	//		lua_pushnumber(luaState, status.size);
-	//		lua_settable(luaState, this_table_index);
-
-	//	}else{
-	//		poco_warning_f2(logger_, "Unknown type of lua_Status at index : %d, type : %d",
-	//			handle, lua_type(luaState, -1));
-	//		lua_pushinteger(luaState, -1);
-	//		return 1;
-	//	}
-	//	//when we are here, the top of the stack is the table for this job
-	//	//we just update the variants
-	//	//DumpLuaState(luaState);
-	//	UpdateJobStatusTable(luaState, status);
-	//	//DumpLuaState(luaState);
-	//	lua_pushinteger(luaState, handle);
-	//	lua_insert(luaState, -2);
-	//	//poco_notice(logger_, "Before set table of one job");
-	//	//DumpLuaState(luaState);
-	//	lua_settable(luaState, table_index);
-	//	lua_settop(luaState, this_top);
-	//	++citer;
-	//}
-	//return 1;
 }
 
 int CoolClientProxy::StopMakingTorrent(lua_State* luaState){
 	stop_making_torrent = true;
+	current_count = -1;
+	total_count = 0;
 	return 0;
 }
 
@@ -675,24 +627,6 @@ int CoolClientProxy::StopClient(lua_State* luaState){
 }
 
 int CoolClientProxy::TestTable(lua_State* luaState){
-	//poco_notice_f1(pCoolClient->logger(), "Call TestTable with argument type : %s", string(luaL_typename(luaState, 1)));
-	//int top = lua_gettop(luaState);
-	//for(int i = 0; i <= top; ++i){
-	//	poco_notice_f2(pCoolClient->logger(), "lua state index %d is %s", i, string(luaL_typename(luaState, i)));
-	//}
-	//CoolClientProxy** ppCoolClientProxy = reinterpret_cast<CoolClientProxy**>(luaL_checkudata(luaState, 1, COOLCLIENT_PROXY_LUA_CLASS));
-	//if( lua_isfunction(luaState, 2) ){
-	//	int nNowTop = lua_gettop(luaState);
-	//	long functionRef = luaL_ref(luaState,LUA_REGISTRYINDEX);
-	//	lua_rawgeti(luaState, LUA_REGISTRYINDEX, functionRef);
-	//	lua_createtable(luaState, 0, 1);
-	//	lua_pushinteger(luaState, 1);
-	//	lua_pushinteger(luaState, 2);
-	//	lua_settable(luaState, -3);
-	//	int nLuaResult = XLLRT_LuaCall(luaState,1,0, L"CoolClientProxy::TestTable");
-	//	lua_settop(luaState,nNowTop);
-	//}
-
 	return 0;
 
 }
@@ -847,6 +781,7 @@ static XLLRTGlobalAPI CoolClientProxyMemberFunctions[] = {
 	{"AddNewUpload", CoolClientProxy::AddNewUpload},
 	{"ChoosePath", CoolClientProxy::ChoosePath},
 	{"MakeTorrentAndPublish", CoolClientProxy::MakeTorrentAndPublish},
+	{"GetCurrentMakingTorrentProgress", CoolClientProxy::GetCurrentMakingTorrentProgress},
 	{"GetJobStatusTable", CoolClientProxy::GetJobStatusTable},
 	{"RemoveJob", CoolClientProxy::RemoveJob},
 	{"StopJob", CoolClientProxy::StopJob},
@@ -911,23 +846,17 @@ void CoolClientProxy::UpdateJobStatusTable(lua_State* luaState, const CoolDown::
 	poco_assert(lua_type(luaState, -1) == LUA_TTABLE);
 }
 
-bool CoolClientProxy::MakeTorrentProgressCallback(int current_count, int total_count, lua_State* luaState, long functionRef){
+bool CoolClientProxy::MakeTorrentProgressCallback(int current, int total){
 	poco_information_f2(logger_, "Call CoolClientProxy::MakeTorrentProgressCallback with current_count : %d, total_count : %d",
 		current_count, total_count);
 
-	int top = lua_gettop(luaState);
-	lua_rawgeti(luaState, LUA_REGISTRYINDEX, functionRef);
-
+	CoolClientProxy::current_count = current;
+	CoolClientProxy::total_count = total;
 
 	if( stop_making_torrent ){
-		lua_pushnumber(luaState, -1);
-	}else{
-		lua_pushnumber(luaState, current_count);
+		current_count = -1;
 	}
 
-	lua_pushnumber(luaState, total_count);
-	XLLRT_LuaCall(luaState, 2, 0, L"CoolClientProxy::MakeTorrentProgressCallback");
-	lua_settop(luaState, top);
 	return !stop_making_torrent;
 }
 

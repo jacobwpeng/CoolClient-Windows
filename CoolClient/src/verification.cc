@@ -6,6 +6,7 @@
 #include <Poco/File.h>
 #include <Poco/Bugcheck.h>
 #include <Poco/Types.h>
+#include <Poco/Buffer.h>
 #include <Poco/Util/Application.h>
 #include <boost/interprocess/file_mapping.hpp>
 #include <boost/interprocess/mapped_region.hpp>
@@ -63,91 +64,74 @@ namespace CoolDown{
 			poco_assert( pList != NULL );
 			poco_assert( file.exists() );
 
+			HANDLE hFile = 	CreateFileA( UTF82GBK(file.path()).c_str(),
+				GENERIC_READ,
+				FILE_SHARE_READ,
+				NULL,
+				OPEN_EXISTING,
+				FILE_ATTRIBUTE_NORMAL,
+				NULL
+				);
+			poco_assert( hFile != INVALID_HANDLE_VALUE );
+			
+
 			FastMutex::ScopedLock lock(mutex_);
 			file_engine_.reset();
-			using namespace boost::interprocess;
+			//using namespace boost::interprocess;
 			Int64 file_size = file.getSize();
-			string gbFilename(UTF82GBK(file.path()));
-			file_mapping m_file( gbFilename.c_str(), read_only);
+			//string gbFilename(UTF82GBK(file.path()));
+			//file_mapping m_file( gbFilename.c_str(), read_only);
 			Int64 offset = 0;
+			Poco::Buffer<char> buf(chunk_size);
+			OVERLAPPED overlapped;
+			memset(&overlapped, 0, sizeof(OVERLAPPED));
 			while( offset + chunk_size < file_size ){
-				mapped_region region(m_file, read_only, offset, chunk_size);
-				char* start = static_cast<char*>( region.get_address() );
+				LARGE_INTEGER file_offset;
+				file_offset.QuadPart = offset;
+				overlapped.Offset = file_offset.LowPart;
+				overlapped.OffsetHigh = file_offset.HighPart;
+
+				int rc = ReadFile(hFile, buf.begin(), buf.size(), NULL, &overlapped);
+				poco_assert(rc != 0);
+				//mapped_region region(m_file, read_only, offset, chunk_size);
+				//char* start = static_cast<char*>( region.get_address() );
+				char* start = buf.begin();
 				pList->push_back(get_verification_code_without_lock(start, start + chunk_size) );
 				file_engine_.update(start, chunk_size);
 
 				if( pProgressObj ){
 					bool continue_this_progress = (*pProgressObj)();
 					if( continue_this_progress == false ){
+						CloseHandle(hFile);
 						return false;
 					}
 				}
 
 				offset += chunk_size;
 			}
-			
-			mapped_region region(m_file, read_only, offset, file_size - offset);
-			char* last_chunk_start = static_cast<char*>( region.get_address() );
+
+			LARGE_INTEGER file_offset;
+			file_offset.QuadPart = offset;
+			overlapped.Offset = file_offset.LowPart;
+			overlapped.OffsetHigh = file_offset.HighPart;
+
+			int rc = ReadFile(hFile, buf.begin(), file_size - offset, NULL, &overlapped);
+			poco_assert(rc != 0);
+			char* last_chunk_start = buf.begin();
+
 			pList->push_back(get_verification_code_without_lock(last_chunk_start, last_chunk_start + file_size - offset));
 			file_engine_.update(last_chunk_start, file_size - offset);
 			if( pProgressObj ){
 				bool continue_this_progress = (*pProgressObj)();
 				if( continue_this_progress == false ){
+					CloseHandle(hFile);
 					return false;
 				}
 			}
 			pFileChecksum->assign(DigestEngine::digestToHex(file_engine_.digest()));
+			CloseHandle(hFile);
 			return true;
-	
-			//SharedMemory sm(file, SharedMemory::AM_READ);
-			//char* start = sm.begin();
-			//while( start + chunk_size < sm.end() ){
-			//	pList->push_back( get_verification_code_without_lock(start, start + chunk_size ) );
-			//	file_engine_.update(start, chunk_size);
-			//	start += chunk_size;
-
-			//	if( pProgressObj ){
-			//		bool continue_this_progress = (*pProgressObj)();
-			//		if( continue_this_progress == false ){
-			//			return false;
-			//		}
-			//	}
-			//}
-			//pList->push_back( get_verification_code_without_lock(start, sm.end()) );
-			//file_engine_.update(start, sm.end() - start );
-			//if( pProgressObj ){
-			//	bool continue_this_progress = (*pProgressObj)();
-			//	if( continue_this_progress == false ){
-			//		return false;
-			//	}
-			//}
-			//pFileChecksum->assign(DigestEngine::digestToHex(file_engine_.digest()));
-			//return true;
-
-
 		}
-
-        //string Verification::get_file_verification_code(const string& fullpath) {
-        //    FastMutex::ScopedLock lock(mutex_);
-        //    File f(fullpath);
-        //    SharedMemory sm(f, SharedMemory::AM_READ);
-        //    engine_.update(sm.begin(), f.getSize() );
-        //    return DigestEngine::digestToHex(engine_.digest());
-        //}
-        //void Verification::get_file_checksum_list(const File& file, int chunk_size, ChecksumList* pList){
-        //    poco_assert( chunk_size > 0 );
-        //    poco_assert( pList != NULL );
-        //    poco_assert( file.exists() );
-
-        //    FastMutex::ScopedLock lock(mutex_);
-        //    SharedMemory sm(file, SharedMemory::AM_READ);
-        //    char* start = sm.begin();
-        //    while( start + chunk_size < sm.end() ){
-        //        pList->push_back( get_verification_code_without_lock(start, start + chunk_size ) );
-        //        start += chunk_size;
-        //    }
-        //    pList->push_back( get_verification_code_without_lock(start, sm.end()) );
-        //}
 
         string Verification::get_verification_code(const char* begin, const char* end) {
             FastMutex::ScopedLock lock(mutex_);

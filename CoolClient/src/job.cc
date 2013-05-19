@@ -269,11 +269,13 @@ namespace CoolDown{
                                 );
                         poco_information_f2(logger_, "assert passed at file : %s, line : %d", string(__FILE__), static_cast<int>(__LINE__ - 1));
 
-                        FilePtr file = jobInfo_.localFileInfo.get_file(fileid);
+                        //FilePtr file = jobInfo_.localFileInfo.get_file(fileid);
+						HANDLE hFile = jobInfo_.localFileInfo.get_file_handle(fileid);
                         try{
                             poco_assert( fileInfo.isNull() == false );
                             poco_assert( sock.isNull() == false );
-                            poco_assert( file.isNull() == false );
+							poco_assert( hFile != INVALID_HANDLE_VALUE );
+                            //poco_assert( file.isNull() == false );
                             
                             poco_information_f1(logger_, "available thread : %d", tp_.available() );
                             while( tp_.available() == 0 ){
@@ -294,7 +296,7 @@ namespace CoolDown{
                                         peer_clientid,
                                         sock, 
                                         chunk_pos, 
-                                        *file
+                                        hFile
                                         ) 
                                     );
                         }catch(Poco::Exception& e){

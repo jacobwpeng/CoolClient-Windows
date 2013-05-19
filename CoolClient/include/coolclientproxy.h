@@ -28,6 +28,7 @@ public:
 	static int GetResourceTorrentById(lua_State* luaState);
 	static int ChoosePath(lua_State* luaState);
 	static int MakeTorrentAndPublish(lua_State* luaState);
+	static int GetCurrentMakingTorrentProgress(lua_State* luaState);
 	static int SelectTorrent(lua_State* luaState);
 	static int AddNewDownload(lua_State* luaState);
 	static int AddNewUpload(lua_State* luaState);
@@ -53,13 +54,16 @@ public:
 private:
 	static void JobStatusCallback(lua_State* luaState, const CoolDown::Client::JobStatusMap& job_status);
 	static void UpdateJobStatusTable(lua_State* luaState, const CoolDown::Client::JobStatus& status);
-	static bool MakeTorrentProgressCallback(int current_count, int total_count, lua_State* luaState, long functionRef);
+	static bool MakeTorrentProgressCallback(int current_count, int total_count);
 	static string GetTorrentNameByResourcePath(const string& resource_path);
 	static void DumpLuaState(lua_State* luaState);
 	
 	static CoolClient* pCoolClient;
 	static Logger& logger_;
 	static atomic_bool stop_making_torrent;
+
+	static int current_count;
+	static int total_count;
 };
 
 #endif

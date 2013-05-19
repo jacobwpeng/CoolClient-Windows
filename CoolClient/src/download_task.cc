@@ -28,7 +28,7 @@ namespace CoolDown{
     namespace Client{
 
         DownloadTask::DownloadTask(const TorrentFileInfo& info, DownloadInfo& downloadInfo, 
-                const string& clientid, const SockPtr& sock, int chunk_pos, const File& file)
+                const string& clientid, const SockPtr& sock, int chunk_pos, HANDLE hFile)
         :Task(format("%s:%d", sock->peerAddress().host().toString(), chunk_pos)), 
          fileInfo_(info), 
          downloadInfo_(downloadInfo),
@@ -36,7 +36,7 @@ namespace CoolDown{
          sock_(sock), 
          chunk_pos_(chunk_pos), 
          check_sum_(fileInfo_.chunk_checksum(chunk_pos_)), 
-         file_(file), 
+         hFile_(hFile), 
          reported_(false){
         }
 
@@ -144,12 +144,21 @@ namespace CoolDown{
 
             if( content_check_sum != check_sum_){
                 throw Exception(format("verify failed, file : %s, offset : %Ld, original : %s, download_checksum : %s", 
-                            file_.path(), fileInfo_.chunk_offset(chunk_pos_), check_sum_, content_check_sum));
+                            fileInfo_.filename(), fileInfo_.chunk_offset(chunk_pos_), check_sum_, content_check_sum));
             }
 
 			{
 				using namespace boost::interprocess;
 				uint64_t offset = fileInfo_.chunk_offset(chunk_pos_);
+				LARGE_INTEGER file_offset;
+				file_offset.QuadPart = offset;
+				OVERLAPPED overlapped;
+				memset(&overlapped, 0, sizeof(OVERLAPPED));
+				overlapped.Offset = file_offset.LowPart;
+				overlapped.OffsetHigh = file_offset.HighPart;
+				DWORD nWrite;
+				WriteFile(hFile_, content.data(), content.length(), &nWrite, &overlapped);
+				/*
 				file_mapping m_file( UTF82GBK(file_.path()).c_str(), read_write);
 				mapped_region region(m_file, read_write, offset, chunk_size);
 				int ret = memcpy_s(region.get_address(), region.get_size(), content.data(), content.length());
@@ -159,10 +168,11 @@ namespace CoolDown{
 				//SharedMemory sm(file_, SharedMemory::AM_WRITE);
 				////64bits problem???
 				//memcpy(sm.begin() + fileInfo_.chunk_offset(chunk_pos_), content.data(), content.length() );
+				*/
 
 			}
 			poco_information_f2(logger_, "Download task finished, file : %s, offset : %Lu",
-							file_.path(), fileInfo_.chunk_offset(chunk_pos_));
+							fileInfo_.filename(), fileInfo_.chunk_offset(chunk_pos_));
         }
     }
 }

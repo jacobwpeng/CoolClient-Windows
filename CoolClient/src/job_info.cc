@@ -1,5 +1,6 @@
 #include "job_info.h"
 #include "client.h"
+#include <Windows.h>
 #include <set>
 #include <algorithm>
 #include <iterator>
@@ -73,6 +74,7 @@ namespace CoolDown{
                 dir.createDirectories();
 
                 files[fileid] = FilePtr( new File(filepath) );
+				fileid_path_map[fileid] = filepath;
                 poco_information_f1(logger_, "in LocalFileInfo::add_file, filepath : %s", filepath);
 
                 if( files[fileid]->exists() == false ){
@@ -106,6 +108,28 @@ namespace CoolDown{
             }
             return res;
         }
+
+		HANDLE LocalFileInfo::get_file_handle(const string& fileid){
+			FastMutex::ScopedLock lock_(handles_mutex_);
+			if( handles.find( fileid ) == handles.end() ){
+				//create the handle for this file
+				poco_assert( fileid_path_map.find(fileid) != fileid_path_map.end() );
+				string path = fileid_path_map[fileid];
+				HANDLE hFile = CreateFileA( path.c_str(),
+					GENERIC_READ | GENERIC_WRITE,
+					FILE_SHARE_READ,
+					NULL,
+					OPEN_EXISTING,
+					FILE_ATTRIBUTE_NORMAL,
+					NULL
+					);
+				poco_information_f1( Application::instance().logger(), "Going to assert CreateFile returns for %s", fileid);
+				poco_assert( hFile != INVALID_HANDLE_VALUE );
+				handles[fileid] = hFile;
+			}
+
+			return handles[fileid];
+		}
         
         bool LocalFileInfo::has_local_file(const string& fileid, const string& relative_path, const string& filename){
             FastMutex::ScopedLock lock(mutex_);

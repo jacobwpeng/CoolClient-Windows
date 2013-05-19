@@ -144,13 +144,14 @@ err:
             }
 
             poco_information(logger_, "in HandleUploadRequest, get job succeed!");
-            SharedPtr<File> file = pJob->MutableJobInfo()->localFileInfo.get_file(fileid);
+            //SharedPtr<File> file = pJob->MutableJobInfo()->localFileInfo.get_file(fileid);
+			HANDLE hFile = pJob->MutableJobInfo()->localFileInfo.get_file_handle(fileid);
             UInt64 offset =  pJob->MutableJobInfo()->torrentInfo.get_one_file_of_same_fileid(fileid)->chunk_offset(chunk_pos);
             int chunk_size = pJob->MutableJobInfo()->torrentInfo.get_one_file_of_same_fileid(fileid)->chunk_size(chunk_pos);
 
-            poco_assert( file.isNull() == false );
+            poco_assert( hFile != INVALID_HANDLE_VALUE );
             poco_assert( chunk_size > 0 );
-            pTask = new UploadTask(pJob->MutableJobInfo()->downloadInfo, file, offset, chunk_size, this->sock_);
+            pTask = new UploadTask(pJob->MutableJobInfo()->downloadInfo, hFile, offset, chunk_size, this->sock_);
             poco_information_f1(logger_, "Add new UploadTask for file '%s'", fileid);
             reply->set_returncode(ERROR_OK);
             return ERROR_OK;
