@@ -98,7 +98,7 @@
 									<width>350</width>
 									<height>60</height>
 									<Multiline>true</Multiline>
-									<Text>115.156.229.172:9977</Text>
+									<Text>192.168.20.1:9977</Text>
 								</attr>
 							</obj>
 							<obj id="" class="TextObject">

@@ -152,7 +152,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 					   int       nCmdShow)
 {
 	// TODO: 在此放置代码。
-
 	bool isUnique = test_unique();
 	if( isUnique == false ){
 		MessageBoxA(NULL, "只允许创建一个CoolClient实例!", NULL, MB_OK);

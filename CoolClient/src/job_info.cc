@@ -1,5 +1,6 @@
 #include "job_info.h"
 #include "client.h"
+#include "utilities.h"
 #include <Windows.h>
 #include <set>
 #include <algorithm>
@@ -115,7 +116,7 @@ namespace CoolDown{
 				//create the handle for this file
 				poco_assert( fileid_path_map.find(fileid) != fileid_path_map.end() );
 				string path = fileid_path_map[fileid];
-				HANDLE hFile = CreateFileA( path.c_str(),
+				HANDLE hFile = CreateFileA( UTF82GBK(path).c_str(),
 					GENERIC_READ | GENERIC_WRITE,
 					FILE_SHARE_READ | FILE_SHARE_WRITE,
 					NULL,
@@ -305,6 +306,7 @@ namespace CoolDown{
 
                 poco_information_f2(logger_, "add file to Job, fileid : '%s', name : '%s'", fileid, filename );
                 downloadInfo.percentage_map[fileid] = 0;
+
                 downloadInfo.bitmap_map[fileid] = new file_bitmap_t( chunk_size, 0 );
                 localFileInfo.add_file(fileid, relative_path, filename, filesize);
                 fileidlist_.push_back(fileid);

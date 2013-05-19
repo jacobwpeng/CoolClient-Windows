@@ -682,6 +682,7 @@ namespace CoolDown{
 						pair<string::iterator, string::iterator> pa = mismatch(top_path.begin(), top_path.end(), abs_path.begin() );
 						string relative_path( pa.second, abs_path.end() );
 						aFile->set_relativepath( relative_path );
+						//string filename = p.getFileName();
 						aFile->set_filename( p.getFileName() );
 						aFile->set_size( file_size );
 						aFile->set_checksum( file_check_sum );
